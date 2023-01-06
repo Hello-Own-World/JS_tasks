@@ -30,10 +30,11 @@ router.post('/', async (req, res) => {
     })
 
     try {
-        const newBook = await book.save()
-        if (newBook.name === '') {
+        if (book.name === '') {
             throw Error("Empty name")
         }
+        const newBook = await book.save()
+        
         res.redirect('/books')
 
     } catch {
