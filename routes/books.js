@@ -3,8 +3,14 @@ const router = express.Router()
 const Book = require('../models/book')
 
 //Get all books 
-router.get('/', (req, res) => {
-    res.render("books/index")
+router.get('/', async (req, res) => {
+    try {
+        const books = await Book.find({}) // no condition
+        res.render("books/index", { books: books })
+    } catch {
+        res.redirect('/')
+    }
+
 })
 
 //New book route 
@@ -13,22 +19,43 @@ router.get('/new', (req, res) => {
 })
 
 //Create book route 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const book = new Book({
         name: req.body.name
     })
-    book.save((err, newBook)=>{
-        if(err){
-            res.render('books/new', {
-                book: book,
-                errorMessage: "Error creating book"
-            })
-        }else{
-            // res.redirect('books/${newBook.id}')
-            res.redirect('/books')
+
+    try {
+        const newBook = await book.save()
+        if (newBook.name === '') {
+            throw Error("Empty name")
         }
-    })
-    // res.send(req.body.name)
+        res.redirect('/books')
+
+    } catch {
+        res.render('books/new', {
+            book: book,
+            errorMessage: "Error creating book"
+        })
+    }
+
+
+    // console.log(book.name)
+
+    // book.save((err, newBook)=>{
+    //     if(err || book.name !== ''){
+    //         res.render('books/new', {
+    //             book: book,
+    //             errorMessage: "Error creating book"
+    //         })
+    //     }else{
+    //         // res.redirect('books/${newBook.id}')
+    //         res.redirect('/books')
+    //     }
+    // })
+    // // res.send(req.body.name)
+
+
+
 })
 
 module.exports = router
