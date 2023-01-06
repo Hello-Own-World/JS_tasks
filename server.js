@@ -1,7 +1,3 @@
-if (process.env.NODE_ENV !== "production") {
-    require('dotenv').config()
-}
-
 const express = require("express")
 const mongoose = require("mongoose");
 const expressLayouts = require('express-ejs-layouts')
@@ -12,7 +8,7 @@ const app = express()
 const indexRouter = require("./routes/index")
 const bookRouter = require("./routes/books")
 
-mongoose.connect(process.env.DATABASE_URL, {
+mongoose.connect("mongodb://localhost:27023/js_task", {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
