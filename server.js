@@ -4,16 +4,12 @@ if (process.env.NODE_ENV !== "production"){
 
 const express = require("express")
 const mongoose = require("mongoose");
+const expressLayouts = require('express-ejs-layouts')
 
 const app = express()
-// const expressLayouts = require("express-ejs-layouts")
 
 const indexRouter = require("./routes/index")
-
-// mongoose.connect("mongodb://localhost:27017/collectionName", {
-//    useNewUrlParser: true,
-//    useUnifiedTopology: true
-// });
+const bookRouter = require("./routes/books")
 
 mongoose.connect(process.env.DATABASE_URL, {
    useNewUrlParser: true,
@@ -21,15 +17,18 @@ mongoose.connect(process.env.DATABASE_URL, {
 });
 
 const db = mongoose.connection
-db.on('error', error => console.error(error))
-db.once('open', error => console.log("Connecterd to mongoose"))
 
+db.on('error', error => console.error(error))
+db.once('open', open => console.log("Connecterd to mongoose"))
+
+app.use(expressLayouts)
 app.set("view engine", "ejs")
-// app.set("views", __dirname + "/views")
-// app.set("layout", "layouts/layout")
-// app.set(expressLayouts)
-// app.use(express.static("public"))
+
+app.set("views", __dirname + '/views')
+app.set("layout", "layouts/layout")
+
 
 app.use('/', indexRouter)
+app.use('/books', bookRouter)
 
 app.listen(process.env.PORT || 3000)
