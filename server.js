@@ -8,7 +8,7 @@ const app = express()
 const indexRouter = require("./routes/index")
 const bookRouter = require("./routes/books")
 
-mongoose.connect("mongodb://localhost:27017/js_task", {
+mongoose.connect("mongodb://mongo_db:27017/js_task", {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -32,4 +32,4 @@ app.use(bodyParser.urlencoded({limit:'10mb', extended: false}))
 app.use('/', indexRouter)
 app.use('/books', bookRouter)
 
-app.listen(process.env.PORT || 3000)
+app.listen(3000)
