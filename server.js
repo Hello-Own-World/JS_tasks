@@ -8,7 +8,7 @@ const app = express()
 const indexRouter = require("./routes/index")
 const bookRouter = require("./routes/books")
 
-mongoose.connect("mongodb://localhost:27023/js_task", {
+mongoose.connect("mongodb://localhost:27017/js_task", {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
