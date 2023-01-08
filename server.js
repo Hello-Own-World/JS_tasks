@@ -1,24 +1,14 @@
 const express = require("express")
-const mongoose = require("mongoose");
 const expressLayouts = require('express-ejs-layouts')
 const bodyParser = require("body-parser")
 
-const app = express()
-
+const { initConnection } = require("./db");
 const indexRouter = require("./routes/index")
-const bookRouter = require("./routes/books")
+const bookRouter = require("./routes/books");
 
-mongoose.connect("mongodb://mongo_db:27017/js_task", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+const { PORT } = process.env;
 
-const db = mongoose.connection
-
-console.log(mongoose.connection.readyState + "ASDADADASDASD");
-
-db.on('error', error => console.error(error))
-db.once('open', open => console.log("Connecterd to mongoose"))
+const app = express()
 
 app.use(expressLayouts)
 app.set("view engine", "ejs")
@@ -32,4 +22,10 @@ app.use(bodyParser.urlencoded({limit:'10mb', extended: false}))
 app.use('/', indexRouter)
 app.use('/books', bookRouter)
 
-app.listen(3000)
+initConnection((err) => {
+    if (err) throw err;
+    
+    app.listen(PORT, () => {
+        console.log(`Listening http://localhost:${PORT}`);
+    })
+});

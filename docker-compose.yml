@@ -14,9 +14,8 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      MONGODB_URI: mongo_db://mongo_db:27017
-      DB_NAME: js_task
-      NAME: JS_ENV
+      MONGODB_URI: mongodb://mongo_db:27017
+      MONGODB_DB_NAME: js_task
     ports:
       - 4000:3000
     depends_on:
