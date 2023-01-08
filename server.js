@@ -8,7 +8,7 @@ const bookRouter = require("./routes/books");
 
 const { PORT } = process.env;
 
-const app = express()
+const app = express();
 
 app.use(expressLayouts)
 app.set("view engine", "ejs")

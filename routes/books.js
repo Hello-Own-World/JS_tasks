@@ -5,12 +5,14 @@ const Book = require('../models/book')
 //Get all books 
 router.get('/', async (req, res) => {
     let searchOptions = {}
-    if (req.query.name != null && req.query.name != '') {
+
+    if (req.query.name) {
         searchOptions.name = new RegExp(req.query.name, 'i')
     }
-    console.log(searchOptions.name)
+
     try {
-        const books = await Book.find(searchOptions) // no condition
+        const books = await Book.find(searchOptions)
+
         res.render("books/index", { books: books, searchOptions: req.query })
     } catch {
         res.redirect('/')
