@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.1 (HEAD)
+  
+  labels:
+    io.kompose.service: server
+  name: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: server
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.1 (HEAD)
+      
+      labels:
+        io.kompose.service: server
+    spec:
+      containers:
+        - args:
+            - npm
+            - run
+            - server
+          env:
+            - name: MONGODB_DB_NAME
+              value: js_task
+            - name: MONGODB_URI
+              value: mongodb://mongo-db:27017
+            - name: NODE_ENV
+              value: development
+            - name: PORT
+              value: "3000"
+            - name: REDIS_URL
+              value: redis:6379
+          image: jstasks
+          imagePullPolicy: Never
+          name: server
+          ports:
+            - containerPort: 3000
+          resources: {}
+      restartPolicy: Always
+status: {}
