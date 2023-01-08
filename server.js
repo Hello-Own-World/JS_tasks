@@ -3,6 +3,8 @@ const expressLayouts = require('express-ejs-layouts')
 const bodyParser = require("body-parser")
 
 const { initConnection } = require("./db");
+const defaultQueue = require('./queue');
+
 const indexRouter = require("./routes/index")
 const bookRouter = require("./routes/books");
 
@@ -18,13 +20,18 @@ app.set("layout", "layouts/layout")
 
 app.use(bodyParser.urlencoded({limit:'10mb', extended: false}))
 
+app.use((req, res, next) => {
+    req.defaultQueue = defaultQueue;
+
+    next();
+})
 
 app.use('/', indexRouter)
 app.use('/books', bookRouter)
 
 initConnection((err) => {
     if (err) throw err;
-    
+
     app.listen(PORT, () => {
         console.log(`Listening http://localhost:${PORT}`);
     })

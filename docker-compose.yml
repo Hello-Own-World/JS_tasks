@@ -8,18 +8,41 @@ services:
     volumes: 
       - mongo_db:/data/db
 
-  jstasks:
+  server:
     image: jstasks
+    command: npm run server
     build: . 
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       PORT: 3000
+      REDIS_URL: redis:6379
       MONGODB_URI: mongodb://mongo_db:27017
       MONGODB_DB_NAME: js_task
     ports:
-      - 4000:3000
+      - 3000:3000
     depends_on:
-    - mongo_db
+      - mongo_db
+      - redis
 
+  worker:
+    image: jstasks
+    command: npm run worker
+    deploy:
+      replicas: 2
+    build: . 
+    environment:
+      NODE_ENV: dev
+      REDIS_URL: redis:6379
+      MONGODB_URI: mongodb://mongo_db:27017
+      MONGODB_DB_NAME: js_task
+    depends_on:
+      - mongo_db
+      - redis
+
+  redis:
+    image: 'bitnami/redis:latest'
+    container_name: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
 volumes:
   mongo_db: {}

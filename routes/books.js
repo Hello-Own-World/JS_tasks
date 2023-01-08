@@ -27,9 +27,11 @@ router.get('/new', (req, res) => {
 
 //Create book route 
 router.post('/', async (req, res) => {
-    const book = new Book({
-        name: req.body.name
-    })
+    const { name } = req.body
+
+    const book = new Book({ name })
+
+    req.defaultQueue.add({ name });
 
     try {
         if (book.name === '') {
