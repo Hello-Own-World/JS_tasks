@@ -5,10 +5,9 @@
   "main": "server.js",
   "scripts": {
     "server": "node server.js",
-    "server:dev": "nodemon server.js",
+    "server:dev": "nodemon -L server.js",
     "worker": "node worker.js",
     "worker:dev": "nodemon worker.js"
-    
   },
   "keywords": [],
   "author": "",
