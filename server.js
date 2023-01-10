@@ -7,6 +7,7 @@ const defaultQueue = require('./queue');
 
 const indexRouter = require("./routes/index")
 const bookRouter = require("./routes/books");
+const userRouter = require("./routes/users");
 
 const { PORT } = process.env;
 
@@ -28,10 +29,13 @@ app.use((req, res, next) => {
 
 app.use('/', indexRouter)
 app.use('/books', bookRouter)
+app.use('/user', userRouter)
+
+
 
 initConnection((err) => {
     if (err) log(err);
-
+    
     app.listen(PORT, () => {
         console.log(`Listening http://localhost:${PORT}`);
     })

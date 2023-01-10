@@ -13,7 +13,7 @@ services:
   server:
     image: jstasks
     command: npm run server:dev
-    build: . 
+    build: .
     environment:
       NODE_ENV: development
       PORT: 3000
@@ -27,6 +27,7 @@ services:
       - redis
     volumes:
       - .:/app
+
 
   worker:
     image: jstasks
