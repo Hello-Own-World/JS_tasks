@@ -14,17 +14,22 @@ router.get('/signUp', async (req, res) => {
 
 router.post('/signUp', async (req, res) => {
    const userData = req.body
-   if (!userData.login || 
-      !userData.pass || 
-      !userData.firstName || 
+   if (!userData.login ||
+      !userData.pass ||
+      !userData.firstName ||
       !userData.lastName) {
-         console.log("Invalid form data")
-         res.redirect('signUp')
-         return
+      console.log("Invalid form data")
+      res.redirect('signUp')
+      return
    }
 
    const user = new User(userData)
    console.log('post sign up')
+   if (User.findOne({ login: user.login })) {
+      console.log("Such user alredy exist")
+      return
+   }
+
    try {
       const newUser = user.save()
    }
