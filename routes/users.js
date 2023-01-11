@@ -24,14 +24,13 @@ router.post('/signUp', async (req, res) => {
    }
 
    const user = new User(userData)
-   console.log('post sign up')
-   if (User.findOne({ login: user.login })) {
+   if (User.find({ login: user.login }).toString()) {
       console.log("Such user alredy exist")
       return
    }
 
    try {
-      const newUser = user.save()
+      user.save()
    }
    catch {
       console.log(err)
