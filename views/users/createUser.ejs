@@ -1,14 +1,18 @@
 <h1>Create User</h1>
-Email: <input type="email">
-<br>
-<br>
-Password: <input type="password">
-<br>
-<br>
-Firstname: <input type="text">
-<br>
-<br>
-Lastname: <input type="text">
-<br>
-<br>
-Phone number: <input type="number">
+<form action="/user/signUp" method="post">
+    Email: <input type="email" name="login" required minlength="5">
+    <br>
+    <br>
+    Password: <input type="password" name="pass" required minlength="5" >
+    <br>
+    <br>
+    Firstname: <input type="text" name="firstName" required minlength="1">
+    <br>
+    <br>
+    Lastname: <input type="text" name="lastName" required minlength="1">
+    <br>
+    <br>
+    Phone number: <input type="number" name="phone">
+    <br>
+    <button type = "submit">Sign up</button>
+</form>

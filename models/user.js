@@ -1,26 +1,42 @@
 const mongoose = require("mongoose")
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-    login:{
+    login: {
         type: String,
         require: true
     },
-    pass:{
+    pass: {
         type: String,
         require: true
     },
-    firstName:{
+    firstName: {
         type: String,
         require: true
     },
-    lastName:{
+    lastName: {
         type: String,
         require: true
     },
-    phone:{
+    phone: {
         type: String,
-        require: true
+        require: false
     }
 })
+
+userSchema.pre('save', async function (next) {
+    try {
+        console.log("Pre function")
+        const user = this;
+        if (!user.isModified('pass')) next(); // checks if pass was changed to avoid double hashing
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(this.pass, salt);
+        this.pass = hashedPassword;
+        console.log(hashedPassword)
+        next();
+    } catch (error) {
+        return next(error);
+    }
+});
 
 module.exports = mongoose.model('User', userSchema)
