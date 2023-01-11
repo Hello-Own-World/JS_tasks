@@ -23,19 +23,42 @@ router.post('/signUp', async (req, res) => {
       return
    }
 
-   const user = new User(userData)
-   if (User.find({ login: user.login }).toString()) {
-      console.log("Such user alredy exist")
-      return
-   }
+   const findUser = new Promise(async (resolve, reject) => {
+      const foundUser = (await User.findOne({ login: userData.login }))
+      if (!foundUser) {
+         resolve("User not found")
+      } else {
+         console.log(foundUser)
+         reject("User found")
 
-   try {
-      user.save()
-   }
-   catch {
-      console.log(err)
-   }
-   res.redirect('signUp')
+      }
+   })
+
+   findUser.then((msg) => {
+      console.log(msg)
+
+      const saveUser = new Promise((resolve, reject) => {
+         const user = new User(userData)
+         if (user.save()) {
+            resolve("User saved")
+         } else {
+            reject("User not saved")
+         }
+      })
+
+      saveUser.then((msg) => {
+         res.redirect('signUp')
+      }).catch((err) => {
+         console.log("Error occured while saving user: " + err)
+      })
+
+   }).catch((err) => {
+
+      console.log("error occured " + err)
+      res.redirect('signUp')
+
+   })
+
 })
 
 module.exports = router
