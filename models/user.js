@@ -4,7 +4,8 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
     login: {
         type: String,
-        require: true
+        require: true,
+        unique: true
     },
     pass: {
         type: String,
