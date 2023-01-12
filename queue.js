@@ -1,6 +1,6 @@
 const Bull = require('bull');
 
-const redisClient = require('./redis');
+const redisClient = require('./config/redis');
 
 const defaultQueue = new Bull('default', {
   createClient: (type) => {

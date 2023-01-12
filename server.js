@@ -2,7 +2,7 @@ const express = require("express")
 const expressLayouts = require('express-ejs-layouts')
 const bodyParser = require("body-parser")
 
-const { initConnection } = require("./db");
+const { initConnection } = require("./config/db");
 const defaultQueue = require('./queue');
 
 const indexRouter = require("./routes/index")
@@ -23,7 +23,6 @@ app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }))
 
 app.use((req, res, next) => {
     req.defaultQueue = defaultQueue;
-
     next();
 })
 
