@@ -8,6 +8,7 @@ const defaultQueue = require('./queue');
 const indexRouter = require("./routes/index")
 const bookRouter = require("./routes/books");
 const userRouter = require("./routes/users");
+const chatRouter = require("./routes/chats");
 
 const { PORT } = process.env;
 
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 app.use('/', indexRouter)
 app.use('/books', bookRouter)
 app.use('/user', userRouter)
+app.use('/chat', chatRouter)
 
 
 
