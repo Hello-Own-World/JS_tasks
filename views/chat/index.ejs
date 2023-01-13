@@ -1,1 +1,15 @@
 <h1>Global chat</h1>
+
+<form action="/chat/sendMsg" method='post'>
+    <label>Enter message: </label>
+    <input type="text" name='body'>
+    <button type="submit">Send</button>
+</form>
+
+<br>
+<% console.log("start" + messages + "finish"); messages.forEach(msg=>{ %>
+    <div>
+        <%=msg.body + "         time:" + msg.datetime%>
+    </div>
+
+    <% }) %>
