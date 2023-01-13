@@ -4,7 +4,6 @@ const User = require('../models/user')
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcryptjs');
 
-
 router.get('/', async (req, res) => {
    res.render('users/loginUser')
 })
@@ -41,20 +40,6 @@ router.post('/signUp', async (req, res) => { // register
 
       const saveUser = new Promise((resolve, reject) => {
          const user = new User(userData)
-         const { TOKEN_KEY } = process.env
-         console.log(TOKEN_KEY)
-         const token = jwt.sign(
-            { user_id: user._id, email: user.login },
-            TOKEN_KEY,
-            {
-               expiresIn: "1h",
-            }
-         );
-         // save user token
-         user.token = token;
-
-
-
          if (user.save()) {
             resolve("User saved")
          } else {
@@ -96,8 +81,11 @@ router.post('/signIn', async (req, res) => { // login
             expiresIn: "1h",
          }
       )
-      user.token = token
+
+      // setJwtToken(token)
       console.log("New token created")
+      console.log(token)
+
       res.status(200).redirect("/")
    } else {
       console.log("Wrong input")
