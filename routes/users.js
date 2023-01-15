@@ -20,11 +20,12 @@ router.post('/signUp', async (req, res) => { // register
       !userData.firstName ||
       !userData.lastName) {
       console.log("Invalid form data")
-      res.redirect('signUp')
+      res.redirect(404, 'signUp')
       return
    }
 
    const findUser = new Promise(async (resolve, reject) => {
+      userData.login = (userData.login).toLowerCase()
       const foundUser = (await User.findOne({ login: userData.login }))
       if (!foundUser) {
          resolve("User not found")
@@ -48,15 +49,14 @@ router.post('/signUp', async (req, res) => { // register
       })
 
       saveUser.then((msg) => {
-         res.redirect('signUp')
+         res.redirect(200, 'signUp')
       }).catch((err) => {
          console.log("Error occured while saving user: " + err)
       })
 
    }).catch((err) => {
-
       console.log("error occured " + err)
-      res.redirect('signUp')
+      res.redirect(404, 'signUp')
 
    })
 
@@ -71,9 +71,14 @@ router.post('/signIn', async (req, res) => { // login
    }
 
    const user = await User.findOne({ login: login });
-   console.log("1) " + pass + "2) " + user.pass)
+
+   //del after test
+   if (user) {
+      console.log("1) " + pass + "2) " + user.pass)
+   }
 
    if (user && (await bcrypt.compare(pass, user.pass))) {
+
       const token = jwt.sign(
          { user_id: user._id, email: user.login },
          process.env.TOKEN_KEY,
@@ -82,14 +87,13 @@ router.post('/signIn', async (req, res) => { // login
          }
       )
 
-      // setJwtToken(token)
       console.log("New token created")
       console.log(token)
 
-      res.status(200).redirect("/")
+      res.redirect("../chat")
    } else {
       console.log("Wrong input")
-      res.status(404).redirect("/")
+      res.redirect(404, "/")
    }
 
 
