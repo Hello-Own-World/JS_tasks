@@ -13,7 +13,9 @@ router.get('/', async (req, res) => {
     try {
         const books = await Book.find(searchOptions)
 
-        res.render("books/index", { books: books, searchOptions: req.query })
+        // res.render("books/index", { books: books, searchOptions: req.query }) // render page with search option and display list of books
+
+        res.send(books) //return json with all books
     } catch {
         res.redirect('/')
     }
@@ -25,9 +27,13 @@ router.get('/new', (req, res) => {
     res.render("books/new", { book: new Book() })
 })
 
-//Create book route 
+//Create book  
 router.post('/', async (req, res) => {
     const { name } = req.body
+    if (!name){
+        res.redirect(400, '/')
+        return
+    }
 
     const book = new Book({ name })
 
@@ -47,24 +53,6 @@ router.post('/', async (req, res) => {
             errorMessage: "Error creating book"
         })
     }
-
-
-    // console.log(book.name)
-
-    // book.save((err, newBook)=>{
-    //     if(err || book.name !== ''){
-    //         res.render('books/new', {
-    //             book: book,
-    //             errorMessage: "Error creating book"
-    //         })
-    //     }else{
-    //         // res.redirect('books/${newBook.id}')
-    //         res.redirect('/books')
-    //     }
-    // })
-    // // res.send(req.body.name)
-
-
 
 })
 

@@ -56,17 +56,16 @@ router.post('/signUp', async (req, res) => { // register
 
    }).catch((err) => {
       console.log("error occured " + err)
-      res.redirect(404, 'signUp')
-
+      res.redirect(400, 'signUp')
    })
 
 })
 
 router.post('/signIn', async (req, res) => { // login
-   const { login, pass } = req.body;
-
+   let { login, pass } = req.body;
+   login = login.toLowerCase()
    if (!(login && pass)) {
-      res.status(400).send("Wrong input, all fields required");
+      res.redirect(400, 'signIn')
       return
    }
 
@@ -90,12 +89,13 @@ router.post('/signIn', async (req, res) => { // login
       console.log("New token created")
       console.log(token)
 
-      res.redirect("../chat")
+      // res.redirect("../chat") 
+
+      res.status(200).send(JSON.stringify({'token:' : token}))
    } else {
       console.log("Wrong input")
       res.redirect(404, "/")
    }
-
 
 })
 
