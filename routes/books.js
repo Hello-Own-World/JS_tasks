@@ -1,6 +1,8 @@
 const express = require("express")
 const router = express.Router()
 const Book = require('../models/book')
+const validate = require("../middleware/validation")
+const schemas = require('../modules/schemas'); 
 
 //Get all books 
 router.get('/', async (req, res) => {
@@ -28,7 +30,7 @@ router.get('/new', (req, res) => {
 })
 
 //Create book  
-router.post('/', async (req, res) => {
+router.post('/', validate(schemas.bookPOST), async (req, res) => {
     const { name } = req.body
     if (!name){
         res.redirect(400, '/')
