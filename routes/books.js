@@ -32,10 +32,6 @@ router.get('/new', (req, res) => {
 //Create book  
 router.post('/', validate(schemas.bookPOST), async (req, res) => {
     const { name } = req.body
-    if (!name){
-        res.redirect(400, '/')
-        return
-    }
 
     const book = new Book({ name })
 

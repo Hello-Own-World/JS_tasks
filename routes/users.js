@@ -1,8 +1,10 @@
 const express = require("express")
 const router = express.Router()
 const User = require('../models/user')
-const jwt = require("jsonwebtoken");
-const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken")
+const bcrypt = require('bcryptjs')
+const validate = require("../middleware/validation")
+const schemas = require('../modules/schemas')
 
 router.get('/', async (req, res) => {
    res.render('users/loginUser')
@@ -13,16 +15,8 @@ router.get('/signUp', async (req, res) => {
 })
 
 
-router.post('/signUp', async (req, res) => { // register
+router.post('/signUp', validate(schemas.userSignUpPOST), async (req, res) => { // register
    const userData = req.body
-   if (!userData.login ||
-      !userData.pass ||
-      !userData.firstName ||
-      !userData.lastName) {
-      console.log("Invalid form data")
-      res.redirect(404, 'signUp')
-      return
-   }
 
    const findUser = new Promise(async (resolve, reject) => {
       userData.login = (userData.login).toLowerCase()
@@ -61,20 +55,11 @@ router.post('/signUp', async (req, res) => { // register
 
 })
 
-router.post('/signIn', async (req, res) => { // login
+router.post('/signIn', validate(schemas.UserSignInPOST), async (req, res) => { // login
    let { login, pass } = req.body;
    login = login.toLowerCase()
-   if (!(login && pass)) {
-      res.redirect(400, 'signIn')
-      return
-   }
 
    const user = await User.findOne({ login: login });
-
-   //del after test
-   if (user) {
-      console.log("1) " + pass + "2) " + user.pass)
-   }
 
    if (user && (await bcrypt.compare(pass, user.pass))) {
 

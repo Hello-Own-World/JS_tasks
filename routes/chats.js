@@ -2,6 +2,8 @@ const express = require("express")
 const router = express.Router()
 const auth = require("../middleware/auth")
 const Message = require("../models/message")
+const validate = require("../middleware/validation")
+const schemas = require('../modules/schemas'); 
 
 router.get('/', auth, async (req, res) => {
 
@@ -18,14 +20,11 @@ router.get('/', auth, async (req, res) => {
 })
 
 
-router.post('/sendMsg', auth, async (req, res) => {
+router.post('/sendMsg', [validate(schemas.sendMsgPOST), auth], async (req, res) => {
 
     const { body } = req.body
 
     try {
-        if (!body) {
-            throw Error("Empty name")
-        }
 
         let date_ob = new Date();
         const currTime = date_ob.getFullYear() + "/" + (date_ob.getMonth() + 1) + "/" + date_ob.getDate() + " " + (date_ob.getHours() + 2) + ":" + date_ob.getMinutes();
