@@ -12,6 +12,10 @@ const msgSchema = new mongoose.Schema({
     datetime:{
         type: String,
         require: true
+    },
+    edited:{
+        type: Boolean,
+        default: false
     }
 })
 

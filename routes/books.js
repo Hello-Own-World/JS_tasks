@@ -88,7 +88,7 @@ router.get('/search', validate(schemas.bookDelGet), async (req, res) => {
     }
 
     try {
-       
+
         res.status(200).send(bookExist)
 
     } catch {
@@ -111,18 +111,18 @@ router.put('/', validate(schemas.bookPUT), async (req, res) => {
     }
 
     try {
-        if(new_title){
+        if (new_title) {
             bookExist.title = new_title
         }
-        if(new_author){
+        if (new_author) {
             bookExist.author = new_author
         }
-        if(genre){
+        if (genre) {
             bookExist.genre = genre
         }
 
         const newBook = await bookExist.save()
-       
+
         res.status(200).send(newBook)
 
     } catch {

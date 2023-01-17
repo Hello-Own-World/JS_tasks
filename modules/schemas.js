@@ -22,6 +22,13 @@ const schemas = {
   sendMsgPOST: Joi.object().keys({
     body: Joi.string().max(160).required() // 160 traditional sms message
   }),
+  sendMsgDELETE: Joi.object().keys({
+    id: Joi.string().required() // 160 traditional sms message
+  }),
+  sendMsgPUT: Joi.object().keys({
+    id: Joi.string().required(), // 160 traditional sms message
+    body: Joi.string().max(160).required() // 160 traditional sms message
+  }),
   userSignUpPOST: Joi.object().keys({
     login: Joi.string().email().required(),
     pass: Joi.string().required(),
