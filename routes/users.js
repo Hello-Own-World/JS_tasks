@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require('bcryptjs')
 const validate = require("../middleware/validation")
 const schemas = require('../modules/schemas')
+const auth = require("../middleware/auth")
 
 router.get('/', async (req, res) => {
    res.render('users/loginUser')
@@ -14,8 +15,8 @@ router.get('/signUp', async (req, res) => {
    res.render('users/createUser')
 })
 
-
-router.post('/signUp', validate(schemas.userSignUpPOST), async (req, res) => { // register
+//Register
+router.post('/signUp', validate(schemas.userSignUpPOST), async (req, res) => {
    const userData = req.body
 
    const findUser = new Promise(async (resolve, reject) => {
@@ -55,7 +56,8 @@ router.post('/signUp', validate(schemas.userSignUpPOST), async (req, res) => { /
 
 })
 
-router.post('/signIn', validate(schemas.UserSignInPOST), async (req, res) => { // login
+//Login
+router.post('/signIn', validate(schemas.UserSignInPOST), async (req, res) => {
    let { login, pass } = req.body;
    login = login.toLowerCase()
 
@@ -76,12 +78,109 @@ router.post('/signIn', validate(schemas.UserSignInPOST), async (req, res) => { /
 
       // res.redirect("../chat") 
 
-      res.status(200).send(JSON.stringify({'token:' : token}))
+      res.status(200).send(JSON.stringify({ 'token:': token }))
    } else {
       console.log("Wrong input")
-      res.redirect(404, "/")
+      res.status(404).send("Wrong input")
+   }
+})
+
+
+//Get particular user  
+router.get('/info', [validate(schemas.UserGetDel), auth], async (req, res) => {
+   const { login } = req.body
+
+   const userExists = await User.findOne({ login: login })
+
+   if (!userExists) {
+      res.status(404).send('User "' + login + '" is not in the DB')
+      return
+   }
+
+   if (userExists.login === req.user.email) {
+      try {
+         userExists.pass = undefined
+         res.status(200).send(userExists)
+
+      } catch {
+         res.status(404).send("Error occured getting user info ")
+
+      }
+   } else {
+      res.status(404).send("Permission denied")
    }
 
 })
+
+//put particular user  
+router.put('/info', [validate(schemas.userPUT), auth], async (req, res) => {
+   const { login, pass, firstName, lastName, phone } = req.body
+
+   const userExists = await User.findOne({ login: login })
+
+   if (!userExists) {
+      res.status(404).send('User "' + login + '" is not in the DB')
+      return
+   }
+
+   if (userExists.login === req.user.email) {
+      try {
+         if (firstName) {
+            userExists.firstName = firstName
+         }
+         if (lastName) {
+            userExists.lastName = lastName
+         }
+         if (phone) {
+            userExists.phone = phone
+         }
+         if (pass) { // not sure about allowing this action
+            userExists.pass = pass
+         }
+
+         const newUser = await userExists.save()
+         res.status(200).send(userExists)
+
+      } catch {
+         res.status(404).send("Error occured editing user info ")
+
+      }
+   } else {
+      res.status(404).send("Permission denied")
+   }
+
+})
+
+//Delete user  
+router.delete('/info', [validate(schemas.UserGetDel), auth], async (req, res) => {
+
+   const { login } = req.body
+
+   const userExists = await User.findOne({ login: login })
+
+   if (!userExists) {
+      res.status(404).send('User "' + login + '" is not in the DB')
+      return
+   }
+
+   if (userExists.login === req.user.email) {
+      try {
+         console.log(login)
+         const result = await User.deleteOne({ login: login })
+
+         res.status(200).send("Successful deletion of user: \n" + userExists.login + "\n")
+
+      } catch {
+         res.status(404).send("Error occured while deleting the user")
+
+      }
+   } else {
+      res.status(404).send("Permission denied")
+   }
+
+})
+
+
+
 
 module.exports = router

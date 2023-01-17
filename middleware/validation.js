@@ -2,18 +2,18 @@ const Joi = require('joi')
 
 const validate = (schema, property) => { 
     return (req, res, next) => { 
-    const { error } = schema.validate(req.body) 
-    console.log(error)
+    const { error, value } = schema.validate(req.body) 
+
     const valid = error == null; 
     
     if (valid) { 
         console.log(valid)
+        req.body = value
         next();
     } else { 
         const { details } = error; 
         const message = details.map(i => i.message).join(',');
     
-        console.log("error", message); 
         res.status(404).json({ error: message }) } 
     } 
   } 

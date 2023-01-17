@@ -30,16 +30,26 @@ const schemas = {
     body: Joi.string().max(160).required() // 160 traditional sms message
   }),
   userSignUpPOST: Joi.object().keys({
-    login: Joi.string().email().required(),
+    login: Joi.string().email().lowercase().required(),
     pass: Joi.string().required(),
     firstName: Joi.string().required(), //better avoid validation
     lastName: Joi.string().required(),  //better avoid validation
     phone: Joi.number().integer().positive().required()
   }),
   UserSignInPOST: Joi.object().keys({
-    login: Joi.string().email().required(),
+    login: Joi.string().email().lowercase().required(),
     pass: Joi.string().required()
-  })
+  }),
+  UserGetDel: Joi.object().keys({
+    login: Joi.string().email().lowercase().required()
+  }),
+  userPUT: Joi.object().keys({
+    login: Joi.string().email().lowercase().required(),
+    pass: Joi.string(),
+    firstName: Joi.string(), //better avoid validation
+    lastName: Joi.string(),  //better avoid validation
+    phone: Joi.number().integer().positive()
+  }),
 
 
 };

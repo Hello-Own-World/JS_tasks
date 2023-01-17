@@ -64,7 +64,7 @@ router.delete('/sendMsg', [validate(schemas.sendMsgDELETE), auth], async (req, r
             res.status(200).send("Successful deletion of message: \n" + message.body + "\n")
 
         } catch {
-            res.status(404).send("Error occured while editing the message")
+            res.status(404).send("Error occured while deleting the message")
 
         }
     } else {
