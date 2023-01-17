@@ -1,10 +1,10 @@
 const defaultQueue = require('./queue');
 
 defaultQueue.process((job, done) => {
-  const { name } = job.data;
+  const { title } = job.data;
 
   setTimeout(() => {
-    console.log(`Book name: ${name}`);
+    console.log(`Book name: ${title}`);
     done();
-  }, 1)
+  }, 1000)
 });
