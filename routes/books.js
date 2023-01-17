@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 const Book = require('../models/book')
 const validate = require("../middleware/validation")
-const schemas = require('../modules/schemas'); 
+const schemas = require('../modules/schemas');
 
 //Get all books 
 router.get('/', async (req, res) => {
@@ -31,18 +31,15 @@ router.get('/new', (req, res) => {
 
 //Create book  
 router.post('/', validate(schemas.bookPOST), async (req, res) => {
-    const { name } = req.body
+    const { title, author, genre } = req.body
 
-    const book = new Book({ name })
+    const book = new Book({ title, author, genre })
 
-    req.defaultQueue.add({ name });
+    req.defaultQueue.add({ title });
 
     try {
-        if (book.name === '') {
-            throw Error("Empty name")
-        }
         const newBook = await book.save()
-        
+
         res.redirect('/books')
 
     } catch {
@@ -53,5 +50,86 @@ router.post('/', validate(schemas.bookPOST), async (req, res) => {
     }
 
 })
+
+//Delete book  
+router.delete('/', validate(schemas.bookDelGet), async (req, res) => {
+    const { title, author } = req.body
+
+    const bookExist = await Book.findOne({ title: title, author: author })
+    console.log('Bookexist' + bookExist)
+
+    if (!bookExist) {
+        res.status(404).send('Book "' + title + '" is not in the DB')
+        return
+    }
+
+    try {
+        const result = await Book.deleteOne({ title: title, author: author })
+
+        res.status(200).send("Successful deletion of book: " + title)
+
+    } catch {
+        res.status(404).send("Error occured while deleting the book")
+
+    }
+
+})
+
+//Get particular book  
+router.get('/search', validate(schemas.bookDelGet), async (req, res) => {
+    const { title, author } = req.body
+
+    const bookExist = await Book.findOne({ title: title, author: author })
+    console.log('Bookexist' + bookExist)
+
+    if (!bookExist) {
+        res.status(404).send('Book "' + title + '" is not in the DB')
+        return
+    }
+
+    try {
+       
+        res.status(200).send(bookExist)
+
+    } catch {
+        res.status(404).send("Error occured getting the book")
+
+    }
+
+})
+
+//Edit particular book  
+router.put('/', validate(schemas.bookPUT), async (req, res) => {
+    const { title, author, genre, new_title, new_author } = req.body
+
+    const bookExist = await Book.findOne({ title: title, author: author })
+    console.log('Bookexist' + bookExist)
+
+    if (!bookExist) {
+        res.status(404).send('Book "' + title + '" is not in the DB')
+        return
+    }
+
+    try {
+        if(new_title){
+            bookExist.title = new_title
+        }
+        if(new_author){
+            bookExist.author = new_author
+        }
+        if(genre){
+            bookExist.genre = genre
+        }
+
+        const newBook = await bookExist.save()
+       
+        res.status(200).send(newBook)
+
+    } catch {
+        res.status(404).send("Error occured while updating the book")
+    }
+
+})
+
 
 module.exports = router
