@@ -32,7 +32,8 @@ app.use('/books', bookRouter)
 app.use('/user', userRouter)
 app.use('/chat', chatRouter)
 
-
+//TODO: add error handling
+//FIXME - Replace responses with error
 
 initConnection((err) => {
     if (err) log(err);

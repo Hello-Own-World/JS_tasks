@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose")
 
 const msgSchema = new mongoose.Schema({
@@ -6,8 +7,9 @@ const msgSchema = new mongoose.Schema({
         require: true
     },
     author:{
-        type: String,
-        require: true
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
+        require: true,
     },
     datetime:{
         type: String,

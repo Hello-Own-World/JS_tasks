@@ -1,19 +1,21 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
 
 const { TOKEN_KEY } = process.env;
 
-const verifyToken = (req, res, next) => {
-  const authHeader = req.headers['authorization']
+const verifyToken = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-  const token = authHeader.split(' ')[1]
-
-  if (!token) {
-    return res.status(403).send("A token is required for authentication");
-  }
   try {
-    const decoded = jwt.verify(token, TOKEN_KEY);
-    req.user = decoded;
+    const token = authHeader?.split(' ')[1]
 
+    if (!token) {
+      return res.status(403).send("A token is required for authentication");
+    }
+ 
+    const {user_id} = jwt.verify(token, TOKEN_KEY);
+    req.user = await User.findById(user_id);
+    
   } catch (err) {
     return res.status(401).send("Invalid Token");
   }

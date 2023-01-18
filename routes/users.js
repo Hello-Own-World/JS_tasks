@@ -15,28 +15,30 @@ router.get('/signUp', async (req, res) => {
    res.render('users/createUser')
 })
 
+// /login
+// /api/login
+
 //Register
 router.post('/signUp', validate(schemas.userSignUpPOST), async (req, res) => {
    const userData = req.body
 
    const findUser = new Promise(async (resolve, reject) => {
       userData.login = (userData.login).toLowerCase()
-      const foundUser = (await User.findOne({ login: userData.login }))
+      const foundUser = await User.findOne({ login: userData.login })
       if (!foundUser) {
          resolve("User not found")
       } else {
          console.log(foundUser)
          reject("User found")
-
       }
    })
 
    findUser.then((msg) => {
       console.log(msg)
 
-      const saveUser = new Promise((resolve, reject) => {
+      const saveUser = new Promise(async (resolve, reject) => {
          const user = new User(userData)
-         if (user.save()) {
+         if (await user.save()) {
             resolve("User saved")
          } else {
             reject("User not saved")
@@ -66,7 +68,7 @@ router.post('/signIn', validate(schemas.UserSignInPOST), async (req, res) => {
    if (user && (await bcrypt.compare(pass, user.pass))) {
 
       const token = jwt.sign(
-         { user_id: user._id, email: user.login },
+         { user_id: user._id},
          process.env.TOKEN_KEY,
          {
             expiresIn: "1h",
@@ -77,8 +79,7 @@ router.post('/signIn', validate(schemas.UserSignInPOST), async (req, res) => {
       console.log(token)
 
       // res.redirect("../chat") 
-
-      res.status(200).send(JSON.stringify({ 'token:': token }))
+      res.status(200).json({ token });
    } else {
       console.log("Wrong input")
       res.status(404).send("Wrong input")
@@ -90,20 +91,20 @@ router.post('/signIn', validate(schemas.UserSignInPOST), async (req, res) => {
 router.get('/info', [validate(schemas.UserGetDel), auth], async (req, res) => {
    const { login } = req.body
 
-   const userExists = await User.findOne({ login: login })
+   const userExists = await User.findOne({ login })
 
    if (!userExists) {
-      res.status(404).send('User "' + login + '" is not in the DB')
+      // FIXME - replace with ``
+      res.status(404).send(`User '${login}' is not in the DB`)
       return
    }
-
-   if (userExists.login === req.user.email) {
+   if (userExists.id === req.user.id) {
       try {
          userExists.pass = undefined
          res.status(200).send(userExists)
 
       } catch {
-         res.status(404).send("Error occured getting user info ")
+         res.status(404).send("Error occured getting user info")
 
       }
    } else {
@@ -113,18 +114,22 @@ router.get('/info', [validate(schemas.UserGetDel), auth], async (req, res) => {
 })
 
 //put particular user  
-router.put('/info', [validate(schemas.userPUT), auth], async (req, res) => {
+router.put('/info', [validate(schemas.userPUT), auth], async (req, res, next) => {
    const { login, pass, firstName, lastName, phone } = req.body
 
    const userExists = await User.findOne({ login: login })
 
    if (!userExists) {
+      // FIXME - next(new Error ())
       res.status(404).send('User "' + login + '" is not in the DB')
       return
    }
 
-   if (userExists.login === req.user.email) {
+   if (userExists.id === req.user.id) {
       try {
+         // Object.keys(bodyData).forEach(key => {
+         //    userExists[key] = bodyData[key]
+         // })
          if (firstName) {
             userExists.firstName = firstName
          }
@@ -141,9 +146,10 @@ router.put('/info', [validate(schemas.userPUT), auth], async (req, res) => {
          const newUser = await userExists.save()
          res.status(200).send(userExists)
 
-      } catch {
+      } catch (err) {
          res.status(404).send("Error occured editing user info ")
-
+         // FIXME - next(err)
+         next(new HttpError(500, err.message))
       }
    } else {
       res.status(404).send("Permission denied")
@@ -163,7 +169,7 @@ router.delete('/info', [validate(schemas.UserGetDel), auth], async (req, res) =>
       return
    }
 
-   if (userExists.login === req.user.email) {
+   if (userExists.id === req.user.id) {
       try {
          console.log(login)
          const result = await User.deleteOne({ login: login })
