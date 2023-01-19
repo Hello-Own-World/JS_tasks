@@ -1,7 +1,7 @@
 const express = require('express');
-const Book = require('../models/book');
-const validate = require('../middleware/validation');
-const schemas = require('../modules/schemas');
+const Book = require('../../models/book');
+const validate = require('../../middleware/validation');
+const schemas = require('../../modules/schemas');
 
 const router = express.Router();
 
@@ -24,11 +24,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// New book route
-router.get('/new', (req, res) => {
-  res.render('books/new', { book: new Book() });
-});
-
 // Create book
 router.post('/', validate(schemas.bookPOST), async (req, res) => {
   const { title, author, genre } = req.body;
@@ -39,13 +34,9 @@ router.post('/', validate(schemas.bookPOST), async (req, res) => {
 
   try {
     await book.save();
-
-    res.redirect('/books');
+    res.status(200).json({ msg: 'Success' });
   } catch {
-    res.render('books/new', {
-      book,
-      errorMessage: 'Error creating book',
-    });
+    res.status(400).json({ msg: 'Fail' });
   }
 });
 

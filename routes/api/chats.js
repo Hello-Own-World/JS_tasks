@@ -1,7 +1,7 @@
 const express = require('express');
-const Message = require('../models/message');
-const { auth, validate } = require('../middleware');
-const schemas = require('../modules/schemas');
+const Message = require('../../models/message');
+const { auth, validate } = require('../../middleware');
+const schemas = require('../../modules/schemas');
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 router.post(
-  '/sendMsg',
+  '/message',
   [validate(schemas.sendMsgPOST), auth],
   async (req, res) => {
     const { body } = req.body;
@@ -25,12 +25,6 @@ router.post(
       const msg = new Message({ body, author: req.user });
 
       const newMsg = await msg.save();
-
-      // console.log(
-      //   `Created at: ${newMsg.createdAt} \n Updated at: ${newMsg.updatedAt}`
-      // );
-
-      // res.redirect('/chat')
 
       res.status(200).json(newMsg);
     } catch {
@@ -43,7 +37,7 @@ router.post(
 
 // Delete message
 router.delete(
-  '/sendMsg',
+  '/message',
   [validate(schemas.sendMsgDELETE), auth],
   async (req, res) => {
     // Deletion is based on mongodb id
@@ -79,7 +73,7 @@ router.delete(
 // FIXME /api/chat/message/:id - PUT/PATCH
 // Edit message
 router.put(
-  '/sendMsg',
+  '/message',
   [validate(schemas.sendMsgPUT), auth],
   async (req, res) => {
     const { id, body } = req.body;
@@ -94,22 +88,6 @@ router.put(
     if (message.author === req.user.id) {
       try {
         message.body = body;
-        message.edited = true;
-
-        const dateObj = new Date();
-        const currTime =
-          dateObj.getFullYear() +
-          '/' +
-          (dateObj.getMonth() + 1) +
-          '/' +
-          dateObj.getDate() +
-          ' ' +
-          (dateObj.getHours() + 2) +
-          ':' +
-          dateObj.getMinutes();
-
-        message.datetime = currTime;
-
         await message.save();
 
         res

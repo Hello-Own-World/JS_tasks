@@ -1,70 +1,33 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const validate = require('../middleware/validation');
-const schemas = require('../modules/schemas');
-const User = require('../models/user');
-const auth = require('../middleware/auth');
+const validate = require('../../middleware/validation');
+const schemas = require('../../modules/schemas');
+const User = require('../../models/user');
+const auth = require('../../middleware/auth');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-  res.render('users/loginUser');
-});
-
-router.get('/signUp', async (req, res) => {
-  res.render('users/createUser');
-});
-
-// /login
-// /api/login
-
 // Register
-router.post('/signUp', validate(schemas.userSignUpPOST), async (req, res) => {
+router.post('/register', validate(schemas.userSignUpPOST), async (req, res) => {
   const userData = req.body;
-
-  const findUser = new Promise(async (resolve, reject) => {
+  try {
     userData.login = userData.login.toLowerCase();
     const foundUser = await User.findOne({ login: userData.login });
-    if (!foundUser) {
-      resolve('User not found');
-    } else {
-      console.log(foundUser);
-      reject('User found');
+    if (foundUser) {
+      throw new Error('User exists');
     }
-  });
-
-  findUser
-    .then((msg) => {
-      console.log(msg);
-
-      const saveUser = new Promise(async (resolve, reject) => {
-        const user = new User(userData);
-        if (await user.save()) {
-          resolve('User saved');
-        } else {
-          reject('User not saved');
-        }
-      });
-
-      saveUser
-        .then((msg) => {
-          res.redirect(200, 'signUp');
-        })
-        .catch((err) => {
-          console.log('Error occured while saving user: ' + err);
-        });
-    })
-    .catch((err) => {
-      console.log('error occured ' + err);
-      res.redirect(400, 'signUp');
-    });
+    const user = new User(userData);
+    await user.save();
+    res.status(200).json({ msg: 'User created' });
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
 });
 
 // Login
-router.post('/signIn', validate(schemas.UserSignInPOST), async (req, res) => {
-  let { login, pass } = req.body;
-  login = login.toLowerCase();
+router.post('/login', validate(schemas.UserSignInPOST), async (req, res) => {
+  const { login, pass } = req.body;
 
   const user = await User.findOne({ login });
 
@@ -73,7 +36,6 @@ router.post('/signIn', validate(schemas.UserSignInPOST), async (req, res) => {
       expiresIn: '1h',
     });
 
-    // res.redirect("../chat")
     res.status(200).json({ token });
   } else {
     res.status(404).send('Wrong input');
@@ -87,7 +49,6 @@ router.get('/info', [validate(schemas.UserGetDel), auth], async (req, res) => {
   const userExists = await User.findOne({ login });
 
   if (!userExists) {
-    // FIXME - replace with ``
     res.status(404).send(`User '${login}' is not in the DB`);
     return;
   }
@@ -103,7 +64,7 @@ router.get('/info', [validate(schemas.UserGetDel), auth], async (req, res) => {
   }
 });
 
-// put particular user
+// PUT particular user
 router.put(
   '/info',
   [validate(schemas.userPUT), auth],
@@ -142,7 +103,8 @@ router.put(
       } catch (err) {
         res.status(404).send('Error occured editing user info ');
         // FIXME - next(err)
-        next(new HttpError(500, err.message));
+        // next(new HttpError(500, err.message));
+        next(new Error(err));
       }
     } else {
       res.status(404).send('Permission denied');
@@ -166,9 +128,7 @@ router.delete(
 
     if (userExists.id === req.user.id) {
       try {
-        console.log(login);
         await User.deleteOne({ login });
-
         res
           .status(200)
           .json({ msg: `Successful deletion of user: ${userExists.login}` });
