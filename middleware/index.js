@@ -1,4 +1,4 @@
-module.exports = { 
-  validate:require('./validation'), 
-  auth: require('./auth')
-}
+module.exports = {
+  validate: require('./validation'),
+  auth: require('./auth'),
+};

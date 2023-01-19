@@ -1,10 +1,11 @@
-const express = require("express")
-const router = express.Router()
+const express = require('express');
+
+const router = express.Router();
 
 router.get('/', (req, res) => {
-    res.render("index", {
-        accessToken: '123123'
-    })
-})
+  res.render('index', {
+    accessToken: '123123',
+  });
+});
 
-module.exports = router
+module.exports = router;

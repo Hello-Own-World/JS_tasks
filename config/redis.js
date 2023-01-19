@@ -8,11 +8,11 @@ const defaultRedisClient = new IORedis(REDIS_URL, {
 });
 
 defaultRedisClient.once('error', (err) => {
-  console.log(err)
-})
+  console.log(err);
+});
 
 defaultRedisClient.once('connect', () => {
-  console.log('Redis Connected')
-})
+  console.log('Redis Connected');
+});
 
 module.exports = defaultRedisClient;

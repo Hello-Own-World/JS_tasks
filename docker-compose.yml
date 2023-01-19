@@ -18,7 +18,7 @@ services:
       REDIS_URL: redis:6379
       MONGODB_URI: mongodb://mongo_db:27017
       MONGODB_DB_NAME: js_task
-      TOKEN_KEY: Secret_key_9928
+      SECRET_KEY: Secret_key_9928
     ports:
       - 3000:3000
     depends_on:
