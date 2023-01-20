@@ -1,15 +1,14 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const validate = require('../../middleware/validation');
-const schemas = require('../../modules/schemas');
 const User = require('../../models/user');
-const auth = require('../../middleware/auth');
+const { userSchema } = require('../../modules');
+const { auth, validate } = require('../../middleware');
 
 const router = express.Router();
 
 // Register
-router.post('/register', validate(schemas.userSignUpPOST), async (req, res) => {
+router.post('/register', validate(userSchema.regBodyPost), async (req, res) => {
   const userData = req.body;
   try {
     userData.login = userData.login.toLowerCase();
@@ -26,7 +25,7 @@ router.post('/register', validate(schemas.userSignUpPOST), async (req, res) => {
 });
 
 // Login
-router.post('/login', validate(schemas.UserSignInPOST), async (req, res) => {
+router.post('/login', validate(userSchema.logBodyPost), async (req, res) => {
   const { login, pass } = req.body;
 
   const user = await User.findOne({ login });
@@ -43,7 +42,7 @@ router.post('/login', validate(schemas.UserSignInPOST), async (req, res) => {
 });
 
 // Get particular user
-router.get('/info', [validate(schemas.UserGetDel), auth], async (req, res) => {
+router.get('/info', [validate(userSchema.bodyDel), auth], async (req, res) => {
   const { login } = req.body;
 
   const userExists = await User.findOne({ login });
@@ -67,7 +66,7 @@ router.get('/info', [validate(schemas.UserGetDel), auth], async (req, res) => {
 // PUT particular user
 router.put(
   '/info',
-  [validate(schemas.userPUT), auth],
+  [validate(userSchema.bodyPut), auth],
   async (req, res, next) => {
     const { login, pass, firstName, lastName, phone } = req.body;
 
@@ -115,7 +114,7 @@ router.put(
 // Delete user
 router.delete(
   '/info',
-  [validate(schemas.UserGetDel), auth],
+  [validate(userSchema.bodyDel), auth],
   async (req, res) => {
     const { login } = req.body;
 

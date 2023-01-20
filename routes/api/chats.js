@@ -1,7 +1,7 @@
 const express = require('express');
 const Message = require('../../models/message');
 const { auth, validate } = require('../../middleware');
-const schemas = require('../../modules/schemas');
+const { chatSchema } = require('../../modules');
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.get('/', auth, async (req, res) => {
 
 router.post(
   '/message',
-  [validate(schemas.sendMsgPOST), auth],
+  [validate(chatSchema.msgBodyPost), auth],
   async (req, res) => {
     const { body } = req.body;
 
@@ -38,7 +38,7 @@ router.post(
 // Delete message
 router.delete(
   '/message',
-  [validate(schemas.sendMsgDELETE), auth],
+  [validate(chatSchema.msgBodyDel), auth],
   async (req, res) => {
     // Deletion is based on mongodb id
     // (idea: you get response from server with list of messages, then client chooses which one to delete and passes that document back to DB)
@@ -74,7 +74,7 @@ router.delete(
 // Edit message
 router.put(
   '/message',
-  [validate(schemas.sendMsgPUT), auth],
+  [validate(chatSchema.msgBodyPut), auth],
   async (req, res) => {
     const { id, body } = req.body;
 

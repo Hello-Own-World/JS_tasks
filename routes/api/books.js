@@ -1,7 +1,8 @@
 const express = require('express');
 const Book = require('../../models/book');
-const validate = require('../../middleware/validation');
-const schemas = require('../../modules/schemas');
+const { validate } = require('../../middleware');
+// const schemas = require('../../modules/schemas');
+const { bookSchema } = require('../../modules');
 
 const router = express.Router();
 
@@ -15,9 +16,6 @@ router.get('/', async (req, res) => {
 
   try {
     const books = await Book.find(searchOptions);
-
-    // res.render("books/index", { books: books, searchOptions: req.query }) // render page with search option and display list of books
-
     res.send(books); // return json with all books
   } catch {
     res.redirect('/');
@@ -25,7 +23,7 @@ router.get('/', async (req, res) => {
 });
 
 // Create book
-router.post('/', validate(schemas.bookPOST), async (req, res) => {
+router.post('/', validate(bookSchema.bodyPost), async (req, res) => {
   const { title, author, genre } = req.body;
 
   const book = new Book({ title, author, genre });
@@ -41,7 +39,7 @@ router.post('/', validate(schemas.bookPOST), async (req, res) => {
 });
 
 // Delete book
-router.delete('/', validate(schemas.bookDelGet), async (req, res) => {
+router.delete('/', validate(bookSchema.bodyDelGet), async (req, res) => {
   const { title, author } = req.body;
 
   const bookExist = await Book.findOne({ title, author });
@@ -61,7 +59,7 @@ router.delete('/', validate(schemas.bookDelGet), async (req, res) => {
 });
 
 // Get particular book
-router.get('/search', validate(schemas.bookDelGet), async (req, res) => {
+router.get('/search', validate(bookSchema.bodyDelGet), async (req, res) => {
   const { title, author } = req.body;
 
   const bookExist = await Book.findOne({ title, author });
@@ -79,7 +77,7 @@ router.get('/search', validate(schemas.bookDelGet), async (req, res) => {
 });
 
 // Edit particular book
-router.put('/', validate(schemas.bookPUT), async (req, res) => {
+router.put('/', validate(bookSchema.bodyPut), async (req, res) => {
   const {
     title,
     author,
