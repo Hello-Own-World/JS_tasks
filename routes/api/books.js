@@ -1,7 +1,7 @@
 const express = require('express');
 const createError = require('http-errors');
 const Book = require('../../models/book');
-const { validateBody, validateParams } = require('../../middleware');
+const { validate } = require('../../middleware');
 const { bookSchema } = require('../../modules');
 
 const router = express.Router();
@@ -23,70 +23,48 @@ router.get('/', async (req, res, next) => {
 });
 
 // Create book
-router.post('/', validateBody(bookSchema.bodyPost), async (req, res, next) => {
-  const { title, author, genre } = req.body;
+router.post(
+  '/',
+  validate(bookSchema.bodyPost, 'body'),
+  async (req, res, next) => {
+    const { title, author, genre } = req.body;
 
-  const book = new Book({ title, author, genre });
+    const book = new Book({ title, author, genre });
 
-  req.defaultQueue.add({ title });
+    req.defaultQueue.add({ title });
+
+    try {
+      await book.save();
+      res.status(200).json({ msg: 'Success' });
+    } catch {
+      next(createError(500, 'Error occured while saving book to DB'));
+    }
+  }
+);
+
+// Delete book
+router.delete('/:author/:title', async (req, res, next) => {
+  const { title, author } = req.params;
+
+  const bookExist = await Book.findOne({ title, author });
+
+  if (!bookExist) {
+    next(createError(400, "Book doesn't exist"));
+    return;
+  }
 
   try {
-    await book.save();
-    res.status(200).json({ msg: 'Success' });
+    await Book.deleteOne({ title, author });
+
+    res.status(200).json({ msg: `Successful deletion of book: ${title}` });
   } catch {
-    next(createError(500, 'Error occured while saving book to DB'));
+    next(createError(500, 'Error occured while deleting the book from DB'));
   }
 });
 
-// Delete book
-router.delete(
-  '/:author/:title',
-  validateParams(bookSchema.bodyDelGet),
-  async (req, res, next) => {
-    const { title, author } = req.params;
-
-    const bookExist = await Book.findOne({ title, author });
-
-    if (!bookExist) {
-      next(createError(400, "Book doesn't exist"));
-      return;
-    }
-
-    try {
-      await Book.deleteOne({ title, author });
-
-      res.status(200).json({ msg: `Successful deletion of book: ${title}` });
-    } catch {
-      next(createError(500, 'Error occured while deleting the book from DB'));
-    }
-  }
-);
-
 // Get particular book
-router.get(
-  '/:author/:title',
-  validateParams(bookSchema.bodyDelGet),
-  async (req, res, next) => {
-    const { title, author } = req.params;
-
-    const bookExist = await Book.findOne({ title, author });
-
-    if (!bookExist) {
-      next(createError(400, `Book ${title} is not in the DB`));
-      return;
-    }
-
-    try {
-      res.status(200).send(bookExist);
-    } catch {
-      next(createError(500, 'Error occured while retrieving the book from DB'));
-    }
-  }
-);
-
-// Edit particular book
-router.put('/', validateBody(bookSchema.bodyPut), async (req, res, next) => {
-  const { title, author, genre, newTitle, newAuthor } = req.body;
+router.get('/:author/:title', async (req, res, next) => {
+  const { title, author } = req.params;
 
   const bookExist = await Book.findOne({ title, author });
 
@@ -96,22 +74,44 @@ router.put('/', validateBody(bookSchema.bodyPut), async (req, res, next) => {
   }
 
   try {
-    if (newTitle) {
-      bookExist.title = newTitle;
-    }
-    if (newAuthor) {
-      bookExist.author = newAuthor;
-    }
-    if (genre) {
-      bookExist.genre = genre;
-    }
-
-    const newBook = await bookExist.save();
-
-    res.status(200).send(newBook);
+    res.status(200).send(bookExist);
   } catch {
-    next(createError(500, 'Error occured while updating the book from DB'));
+    next(createError(500, 'Error occured while retrieving the book from DB'));
   }
 });
+
+// Edit particular book
+router.put(
+  '/',
+  validate(bookSchema.bodyPut, 'body'),
+  async (req, res, next) => {
+    const { title, author, genre, newTitle, newAuthor } = req.body;
+
+    const bookExist = await Book.findOne({ title, author });
+
+    if (!bookExist) {
+      next(createError(400, `Book ${title} is not in the DB`));
+      return;
+    }
+
+    try {
+      if (newTitle) {
+        bookExist.title = newTitle;
+      }
+      if (newAuthor) {
+        bookExist.author = newAuthor;
+      }
+      if (genre) {
+        bookExist.genre = genre;
+      }
+
+      const newBook = await bookExist.save();
+
+      res.status(200).send(newBook);
+    } catch {
+      next(createError(500, 'Error occured while updating the book from DB'));
+    }
+  }
+);
 
 module.exports = router;

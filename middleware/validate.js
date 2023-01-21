@@ -1,12 +1,12 @@
 const createError = require('http-errors');
 
-const validate = (schema) => (req, res, next) => {
-  const { error, value } = schema.validate(req.params);
+const validate = (schema, reqPart) => (req, res, next) => {
+  const { error, value } = schema.validate(req[reqPart]);
 
   const valid = error == null;
 
   if (valid) {
-    req.params = value;
+    req[reqPart] = value;
     next();
   } else {
     const { details } = error;

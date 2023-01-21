@@ -1,7 +1,7 @@
 const express = require('express');
 const createError = require('http-errors');
 const Message = require('../../models/message');
-const { auth, validateBody, validateParams } = require('../../middleware');
+const { auth, validate } = require('../../middleware');
 const { chatSchema } = require('../../modules');
 
 const router = express.Router();
@@ -20,7 +20,7 @@ router.get('/', auth, async (req, res, next) => {
 // Send message
 router.post(
   '/message',
-  [validateBody(chatSchema.msgBodyPostPut), auth],
+  [validate(chatSchema.msgBodyPostPut, 'body'), auth],
   async (req, res, next) => {
     const { body } = req.body;
 
@@ -39,7 +39,7 @@ router.post(
 // Delete message
 router.delete(
   '/message/:id',
-  [validateParams(chatSchema.msgParamDelPut), auth],
+  [validate(chatSchema.msgParamDelPut, 'body'), auth],
   async (req, res, next) => {
     const { id } = req.params;
 
@@ -69,8 +69,8 @@ router.delete(
 router.put(
   '/message/:id',
   [
-    validateBody(chatSchema.msgBodyPut),
-    validateParams(chatSchema.msgParamPut),
+    validate(chatSchema.msgBodyPostPut, 'body'),
+    validate(chatSchema.msgParamDelPut, 'params'),
     auth,
   ],
   async (req, res, next) => {
@@ -91,7 +91,7 @@ router.put(
 
         res
           .status(200)
-          .json({ msg: `Successful deletion of message: ${message.body}` });
+          .json({ msg: `Successful message update: ${message.body}` });
       } catch {
         next(createError(500, 'Error occured while updating messages in DB'));
       }

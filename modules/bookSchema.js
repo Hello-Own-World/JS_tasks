@@ -6,10 +6,6 @@ const schemas = {
     author: Joi.string().min(2).max(30).required(),
     genre: Joi.string().min(2).max(30).required(),
   }),
-  bodyDelGet: Joi.object().keys({
-    title: Joi.string().max(30).required(),
-    author: Joi.string().min(2).max(30).required(),
-  }),
   bodyPut: Joi.object().keys({
     title: Joi.string().max(30).required(),
     author: Joi.string().min(2).max(30).required(),

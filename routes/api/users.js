@@ -4,14 +4,14 @@ const bcrypt = require('bcryptjs');
 const createError = require('http-errors');
 const User = require('../../models/user');
 const { userSchema } = require('../../modules');
-const { auth, validateBody, validateParams } = require('../../middleware');
+const { auth, validate } = require('../../middleware');
 
 const router = express.Router();
 
 // Register
 router.post(
   '/register',
-  validateBody(userSchema.regBodyPost),
+  validate(userSchema.regBodyPost, 'body'),
   async (req, res, next) => {
     const userData = req.body;
     try {
@@ -33,7 +33,7 @@ router.post(
 // Login
 router.post(
   '/login',
-  validateBody(userSchema.logBodyPost),
+  validate(userSchema.logBodyPost, 'body'),
   async (req, res, next) => {
     const { login, pass } = req.body;
 
@@ -54,7 +54,7 @@ router.post(
 // Get particular user (public)
 router.get(
   '/:id',
-  [validateParams(userSchema.paramDelPut), auth],
+  [validate(userSchema.paramDelPut, 'params'), auth],
   async (req, res, next) => {
     const { id } = req.params;
 
@@ -78,8 +78,8 @@ router.get(
 router.put(
   '/:id',
   [
-    validateBody(userSchema.bodyPut),
-    validateParams(userSchema.paramDelPut),
+    validate(userSchema.bodyPut, 'body'),
+    validate(userSchema.paramDelPut, 'validate'),
     auth,
   ],
   async (req, res, next) => {
@@ -126,7 +126,7 @@ router.put(
 // Delete user
 router.delete(
   '/:id',
-  [validateParams(userSchema.paramDelPut), auth],
+  [validate(userSchema.paramDelPut, 'params'), auth],
   async (req, res, next) => {
     const { id } = req.params;
 
