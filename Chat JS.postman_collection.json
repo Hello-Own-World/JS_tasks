@@ -1,0 +1,743 @@
+{
+	"info": {
+		"_postman_id": "1784e549-758d-4ae4-8d8e-a12caf291cce",
+		"name": "Chat JS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24031339"
+	},
+	"item": [
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "FE",
+					"item": [
+						{
+							"name": "Render page (add book)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/books/new",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"books",
+										"new"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "BE",
+					"item": [
+						{
+							"name": "Get all books",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/book/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"book",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add book",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "title",
+											"value": "test book 8",
+											"type": "text"
+										},
+										{
+											"key": "author",
+											"value": "book author",
+											"type": "text"
+										},
+										{
+											"key": "genre",
+											"value": "fiction",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/book/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"book",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Del book",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/book/:author/:title",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"book",
+										":author",
+										":title"
+									],
+									"variable": [
+										{
+											"key": "author",
+											"value": "test book 8asdasdasd"
+										},
+										{
+											"key": "title",
+											"value": "book author"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get particular book",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/book/:author/:title",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"book",
+										":author",
+										":title"
+									],
+									"variable": [
+										{
+											"key": "author",
+											"value": "book author"
+										},
+										{
+											"key": "title",
+											"value": "test book 8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit particular book",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "title",
+											"value": "test book 6",
+											"type": "text"
+										},
+										{
+											"key": "author",
+											"value": "book author",
+											"type": "text"
+										},
+										{
+											"key": "genre",
+											"value": "fiction",
+											"type": "text"
+										},
+										{
+											"key": "newTitle",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "newAuthor",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/book/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"book",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Chat",
+			"item": [
+				{
+					"name": "FE",
+					"item": []
+				},
+				{
+					"name": "BE",
+					"item": [
+						{
+							"name": "Get all messeges",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjNjOWIxODI1YTg5NmNmMDQ1NTNmMzI0IiwiaWF0IjoxNjc0MjQwNzA2LCJleHAiOjE2NzQyNDQzMDZ9.aKU4nRg-9byegXE4o5euHnXl6e9JVdQtAnjiKuqWSXU",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/chat",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"chat"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add message",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "body",
+											"value": "This is test message sended via postman",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/chat/message",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"chat",
+										"message"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit particular message",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "id",
+											"value": "63c6ee22614d53408a833f24",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "body",
+											"value": "This is new edted message",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/chat/message/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"chat",
+										"message",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "63cc3575f7ded9e0e1e7f7b9"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Del particular message",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/chat/message/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"chat",
+										"message",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "63cb382fe62c15f8d1f5baa8"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "FE",
+					"item": [
+						{
+							"name": "Render page (login)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/user/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Render page (register)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/user/signUp",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"user",
+										"signUp"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "BE",
+					"item": [
+						{
+							"name": "Add user",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "login",
+											"value": "TestUser11@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "pass",
+											"value": "pass123",
+											"type": "text"
+										},
+										{
+											"key": "firstName",
+											"value": "Test",
+											"type": "text"
+										},
+										{
+											"key": "lastName",
+											"value": "User",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "09999999",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/user/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var headerValue = pm.response.json();\r",
+											"pm.environment.set('authToken', headerValue.token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "login",
+											"value": "TestUser11@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "pass",
+											"value": "pass123",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/user/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get particular user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/user/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "63cae323ebf9fd79b47e2d3f"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit particular user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "login",
+											"value": "TestUser6@gmail.com",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "pass",
+											"value": "pass123",
+											"type": "text"
+										},
+										{
+											"key": "firstName",
+											"value": "John",
+											"type": "text"
+										},
+										{
+											"key": "lastName",
+											"value": "Johnson",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "0888888888",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/user/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "63cb406739df31552d98379b"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Del user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/user/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "63cb406739df31552d98379b"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Home",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjNjMDQwNDFmMDEwOGVjYzgwOWE2MTJlIiwiZW1haWwiOiJ0ZXN0dXNlckBnbWFpbC5jb20iLCJpYXQiOjE2NzM1NDM3NDYsImV4cCI6MTY3MzU0NzM0Nn0.UIGb6frh5HmIXftink5WMwWin9mNxR2jF9gQ4Ev8-A0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjNjMDQwNDFmMDEwOGVjYzgwOWE2MTJlIiwiZW1haWwiOiJ0ZXN0dXNlckBnbWFpbC5jb20iLCJpYXQiOjE2NzM1NDM3NDYsImV4cCI6MTY3MzU0NzM0Nn0.UIGb6frh5HmIXftink5WMwWin9mNxR2jF9gQ4Ev8-A0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {}
+				},
+				"url": {
+					"raw": "http://localhost:3000/chat?x-access-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjNjMDQwNDFmMDEwOGVjYzgwOWE2MTJlIiwiZW1haWwiOiJ0ZXN0dXNlckBnbWFpbC5jb20iLCJpYXQiOjE2NzM1NDM3NDYsImV4cCI6MTY3MzU0NzM0Nn0.UIGb6frh5HmIXftink5WMwWin9mNxR2jF9gQ4Ev8-A0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"chat"
+					],
+					"query": [
+						{
+							"key": "x-access-token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjNjMDQwNDFmMDEwOGVjYzgwOWE2MTJlIiwiZW1haWwiOiJ0ZXN0dXNlckBnbWFpbC5jb20iLCJpYXQiOjE2NzM1NDM3NDYsImV4cCI6MTY3MzU0NzM0Nn0.UIGb6frh5HmIXftink5WMwWin9mNxR2jF9gQ4Ev8-A0"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
