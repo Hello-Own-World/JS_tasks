@@ -1,24 +1,25 @@
 const express = require('express');
+const createError = require('http-errors');
 const Message = require('../../models/message');
 const { auth, validate } = require('../../middleware');
 const { chatSchema } = require('../../modules');
 
 const router = express.Router();
 
-router.get('/', auth, async (req, res) => {
+router.get('/', auth, async (req, res, next) => {
   try {
     const messages = await Message.find().populate('author', '-pass');
 
     res.send(messages); // return json of all messages
   } catch {
-    res.redirect('/');
+    next(createError(500, 'Error occured while retrieving messages from DB'));
   }
 });
 
 router.post(
   '/message',
   [validate(chatSchema.msgBodyPost), auth],
-  async (req, res) => {
+  async (req, res, next) => {
     const { body } = req.body;
 
     try {
@@ -28,7 +29,7 @@ router.post(
 
       res.status(200).json(newMsg);
     } catch {
-      res.status(404).send('Error creating a book');
+      next(createError(500, 'Error occured while saving messages into DB'));
     }
   }
 );
@@ -39,33 +40,27 @@ router.post(
 router.delete(
   '/message',
   [validate(chatSchema.msgBodyDel), auth],
-  async (req, res) => {
-    // Deletion is based on mongodb id
-    // (idea: you get response from server with list of messages, then client chooses which one to delete and passes that document back to DB)
-
+  async (req, res, next) => {
     const { id } = req.body;
 
     const message = await Message.findOne({ _id: id });
 
     if (!message) {
-      res.status(404).send('No such message');
+      next(createError(400, "Message does't exist"));
       return;
     }
 
     if (message.author.id === req.user.id) {
       try {
         await Message.deleteOne({ _id: id });
-
         res
           .status(200)
           .json({ msg: `Successful deletion of message: ${message.body}` });
       } catch {
-        res
-          .status(404)
-          .json({ msg: `Error occured while deleting the message` });
+        next(createError(500, 'Error occured while deleting messages from DB'));
       }
     } else {
-      res.status(404).json({ msg: `Permission denied` });
+      next(createError(403, 'Forbidden action'));
     }
   }
 );
@@ -75,13 +70,13 @@ router.delete(
 router.put(
   '/message',
   [validate(chatSchema.msgBodyPut), auth],
-  async (req, res) => {
+  async (req, res, next) => {
     const { id, body } = req.body;
 
     const message = await Message.findOne({ _id: id });
 
     if (!message) {
-      res.status(404).send('No such message');
+      next(createError(400, "Message doesn't exist"));
       return;
     }
 
@@ -94,12 +89,10 @@ router.put(
           .status(200)
           .json({ msg: `Successful deletion of message: ${message.body}` });
       } catch {
-        res
-          .status(404)
-          .json({ msg: `Error occured while editing the message` });
+        next(createError(500, 'Error occured while updating messages in DB'));
       }
     } else {
-      res.status(404).send('Permission denied');
+      next(createError(403, 'Forbidden action'));
     }
   }
 );
