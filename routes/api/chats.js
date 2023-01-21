@@ -1,24 +1,26 @@
 const express = require('express');
 const createError = require('http-errors');
 const Message = require('../../models/message');
-const { auth, validate } = require('../../middleware');
+const { auth, validateBody, validateParams } = require('../../middleware');
 const { chatSchema } = require('../../modules');
 
 const router = express.Router();
 
+// Get all messages
 router.get('/', auth, async (req, res, next) => {
   try {
     const messages = await Message.find().populate('author', '-pass');
 
-    res.send(messages); // return json of all messages
+    res.send(messages);
   } catch {
     next(createError(500, 'Error occured while retrieving messages from DB'));
   }
 });
 
+// Send message
 router.post(
   '/message',
-  [validate(chatSchema.msgBodyPost), auth],
+  [validateBody(chatSchema.msgBodyPostPut), auth],
   async (req, res, next) => {
     const { body } = req.body;
 
@@ -34,14 +36,12 @@ router.post(
   }
 );
 
-// FIXME /api/chat/message/:id - DELETE
-
 // Delete message
 router.delete(
-  '/message',
-  [validate(chatSchema.msgBodyDel), auth],
+  '/message/:id',
+  [validateParams(chatSchema.msgParamDelPut), auth],
   async (req, res, next) => {
-    const { id } = req.body;
+    const { id } = req.params;
 
     const message = await Message.findOne({ _id: id });
 
@@ -50,7 +50,7 @@ router.delete(
       return;
     }
 
-    if (message.author.id === req.user.id) {
+    if (String(message.author) === String(req.user.id)) {
       try {
         await Message.deleteOne({ _id: id });
         res
@@ -65,13 +65,17 @@ router.delete(
   }
 );
 
-// FIXME /api/chat/message/:id - PUT/PATCH
 // Edit message
 router.put(
-  '/message',
-  [validate(chatSchema.msgBodyPut), auth],
+  '/message/:id',
+  [
+    validateBody(chatSchema.msgBodyPut),
+    validateParams(chatSchema.msgParamPut),
+    auth,
+  ],
   async (req, res, next) => {
-    const { id, body } = req.body;
+    const { body } = req.body;
+    const { id } = req.params;
 
     const message = await Message.findOne({ _id: id });
 
@@ -80,7 +84,7 @@ router.put(
       return;
     }
 
-    if (message.author === req.user.id) {
+    if (String(message.author) === String(req.user.id)) {
       try {
         message.body = body;
         await message.save();

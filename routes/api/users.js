@@ -4,14 +4,14 @@ const bcrypt = require('bcryptjs');
 const createError = require('http-errors');
 const User = require('../../models/user');
 const { userSchema } = require('../../modules');
-const { auth, validate } = require('../../middleware');
+const { auth, validateBody, validateParams } = require('../../middleware');
 
 const router = express.Router();
 
 // Register
 router.post(
   '/register',
-  validate(userSchema.regBodyPost),
+  validateBody(userSchema.regBodyPost),
   async (req, res, next) => {
     const userData = req.body;
     try {
@@ -33,7 +33,7 @@ router.post(
 // Login
 router.post(
   '/login',
-  validate(userSchema.logBodyPost),
+  validateBody(userSchema.logBodyPost),
   async (req, res, next) => {
     const { login, pass } = req.body;
 
@@ -51,47 +51,49 @@ router.post(
   }
 );
 
-// Get particular user
+// Get particular user (public)
 router.get(
-  '/info',
-  [validate(userSchema.bodyDel), auth],
+  '/:id',
+  [validateParams(userSchema.paramDelPut), auth],
   async (req, res, next) => {
-    const { login } = req.body;
+    const { id } = req.params;
 
-    const userExists = await User.findOne({ login });
+    const userExists = await User.findOne({ _id: id });
 
     if (!userExists) {
-      next(createError(400, `User '${login}' is not in the DB`));
+      next(createError(400, `User is not in the DB`));
       return;
     }
-    if (userExists.id === req.user.id) {
-      try {
-        userExists.pass = undefined;
-        res.status(200).send(userExists);
-      } catch {
-        next(createError(500, 'Error occured while getting user info from DB'));
-      }
-    } else {
-      next(createError(403, 'Forbidden action'));
+
+    try {
+      userExists.pass = undefined;
+      res.status(200).send(userExists);
+    } catch {
+      next(createError(500, 'Error occured while getting user info from DB'));
     }
   }
 );
 
 // PUT particular user
 router.put(
-  '/info',
-  [validate(userSchema.bodyPut), auth],
+  '/:id',
+  [
+    validateBody(userSchema.bodyPut),
+    validateParams(userSchema.paramDelPut),
+    auth,
+  ],
   async (req, res, next) => {
-    const { login, pass, firstName, lastName, phone } = req.body;
+    const { pass, firstName, lastName, phone } = req.body;
+    const { id } = req.params;
 
-    const userExists = await User.findOne({ login });
+    const userExists = await User.findOne({ _id: id });
 
     if (!userExists) {
-      next(createError(400, `User  ${login}  is not in the DB`));
+      next(createError(400, `User is not in the DB`));
       return;
     }
 
-    if (userExists.id === req.user.id) {
+    if (String(userExists.id) === String(req.user.id)) {
       try {
         // Object.keys(bodyData).forEach(key => {
         //    userExists[key] = bodyData[key]
@@ -123,21 +125,21 @@ router.put(
 
 // Delete user
 router.delete(
-  '/info',
-  [validate(userSchema.bodyDel), auth],
+  '/:id',
+  [validateParams(userSchema.paramDelPut), auth],
   async (req, res, next) => {
-    const { login } = req.body;
+    const { id } = req.params;
 
-    const userExists = await User.findOne({ login });
+    const userExists = await User.findOne({ _id: id });
 
     if (!userExists) {
-      next(createError(400, `User  ${login}  is not in the DB`));
+      next(createError(400, `User is not in the DB`));
       return;
     }
 
-    if (userExists.id === req.user.id) {
+    if (String(userExists.id) === String(req.user.id)) {
       try {
-        await User.deleteOne({ login });
+        await User.deleteOne({ id });
         res
           .status(200)
           .json({ msg: `Successful deletion of user: ${userExists.login}` });

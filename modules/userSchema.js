@@ -12,11 +12,10 @@ const schemas = {
     login: Joi.string().email().lowercase().required(),
     pass: Joi.string().required(),
   }),
-  bodyDel: Joi.object().keys({
-    login: Joi.string().email().lowercase().required(),
+  paramDelPut: Joi.object().keys({
+    id: Joi.string().required(),
   }),
   bodyPut: Joi.object().keys({
-    login: Joi.string().email().lowercase().required(),
     pass: Joi.string(),
     firstName: Joi.string(), // better avoid validation
     lastName: Joi.string(), // better avoid validation

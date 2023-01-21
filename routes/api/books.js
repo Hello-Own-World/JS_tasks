@@ -1,7 +1,7 @@
 const express = require('express');
 const createError = require('http-errors');
 const Book = require('../../models/book');
-const { validate } = require('../../middleware');
+const { validateBody, validateParams } = require('../../middleware');
 const { bookSchema } = require('../../modules');
 
 const router = express.Router();
@@ -23,7 +23,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // Create book
-router.post('/', validate(bookSchema.bodyPost), async (req, res, next) => {
+router.post('/', validateBody(bookSchema.bodyPost), async (req, res, next) => {
   const { title, author, genre } = req.body;
 
   const book = new Book({ title, author, genre });
@@ -39,31 +39,35 @@ router.post('/', validate(bookSchema.bodyPost), async (req, res, next) => {
 });
 
 // Delete book
-router.delete('/', validate(bookSchema.bodyDelGet), async (req, res, next) => {
-  const { title, author } = req.body;
+router.delete(
+  '/:author/:title',
+  validateParams(bookSchema.bodyDelGet),
+  async (req, res, next) => {
+    const { title, author } = req.params;
 
-  const bookExist = await Book.findOne({ title, author });
+    const bookExist = await Book.findOne({ title, author });
 
-  if (!bookExist) {
-    next(createError(401, "Book doesn't exist"));
-    return;
+    if (!bookExist) {
+      next(createError(400, "Book doesn't exist"));
+      return;
+    }
+
+    try {
+      await Book.deleteOne({ title, author });
+
+      res.status(200).json({ msg: `Successful deletion of book: ${title}` });
+    } catch {
+      next(createError(500, 'Error occured while deleting the book from DB'));
+    }
   }
-
-  try {
-    await Book.deleteOne({ title, author });
-
-    res.status(200).json({ msg: `Successful deletion of book: ${title}` });
-  } catch {
-    next(createError(500, 'Error occured while deleting the book from DB'));
-  }
-});
+);
 
 // Get particular book
 router.get(
-  '/search',
-  validate(bookSchema.bodyDelGet),
+  '/:author/:title',
+  validateParams(bookSchema.bodyDelGet),
   async (req, res, next) => {
-    const { title, author } = req.body;
+    const { title, author } = req.params;
 
     const bookExist = await Book.findOne({ title, author });
 
@@ -81,7 +85,7 @@ router.get(
 );
 
 // Edit particular book
-router.put('/', validate(bookSchema.bodyPut), async (req, res, next) => {
+router.put('/', validateBody(bookSchema.bodyPut), async (req, res, next) => {
   const { title, author, genre, newTitle, newAuthor } = req.body;
 
   const bookExist = await Book.findOne({ title, author });
