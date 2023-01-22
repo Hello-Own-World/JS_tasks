@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const { hashPass } = require('../modules/passManager');
 
 const userSchema = new mongoose.Schema(
   {
@@ -34,9 +34,7 @@ userSchema.pre(
     try {
       const user = this;
       if (!user.isModified('pass')) next(); // checks if pass was changed to avoid double hashing
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(this.pass, salt);
-      this.pass = hashedPassword;
+      this.pass = await hashPass(this.pass);
       return next();
     } catch (error) {
       return next(error);

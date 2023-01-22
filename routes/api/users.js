@@ -1,10 +1,10 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 const createError = require('http-errors');
-const User = require('../../models/user');
-const { userSchema } = require('../../modules');
+const { checkPass } = require('../../modules/passManager');
+const { userSchema } = require('../../modules/schemas');
 const { auth, validate } = require('../../middleware');
+const User = require('../../models/user');
 
 const router = express.Router();
 
@@ -21,8 +21,9 @@ router.post(
         next(createError(400, 'User with such login already exists'));
         return;
       }
-      const user = new User(userData);
-      await user.save();
+
+      await User.create(userData);
+
       res.status(200).json({ msg: 'User successfuly created' });
     } catch {
       next(createError(500, 'Error occured while creating user in DB'));
@@ -39,7 +40,7 @@ router.post(
 
     const user = await User.findOne({ login });
 
-    if (user && (await bcrypt.compare(pass, user.pass))) {
+    if (user && (await checkPass(pass, user.pass))) {
       const token = jwt.sign({ user_id: user.id }, process.env.SECRET_KEY, {
         expiresIn: '1h',
       });
@@ -113,6 +114,7 @@ router.put(
         }
 
         await userExists.save();
+
         res.status(200).send(userExists);
       } catch (err) {
         next(createError(500, 'Error occured while updating user info in DB'));

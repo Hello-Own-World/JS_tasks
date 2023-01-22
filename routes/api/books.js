@@ -2,7 +2,7 @@ const express = require('express');
 const createError = require('http-errors');
 const Book = require('../../models/book');
 const { validate } = require('../../middleware');
-const { bookSchema } = require('../../modules');
+const { bookSchema } = require('../../modules/schemas');
 
 const router = express.Router();
 

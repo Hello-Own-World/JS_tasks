@@ -2,7 +2,7 @@ const express = require('express');
 const createError = require('http-errors');
 const Message = require('../../models/message');
 const { auth, validate } = require('../../middleware');
-const { chatSchema } = require('../../modules');
+const { chatSchema } = require('../../modules/schemas');
 
 const router = express.Router();
 
