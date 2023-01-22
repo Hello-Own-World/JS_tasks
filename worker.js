@@ -6,5 +6,5 @@ defaultQueue.process((job, done) => {
   setTimeout(() => {
     console.log(`Book name: ${title}`);
     done();
-  }, 1000)
+  }, 1000);
 });

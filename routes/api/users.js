@@ -84,7 +84,6 @@ router.put(
     auth,
   ],
   async (req, res, next) => {
-    const { pass, firstName, lastName, phone } = req.body;
     const { id } = req.params;
 
     const userExists = await User.findOne({ _id: id });
@@ -96,22 +95,9 @@ router.put(
 
     if (String(userExists.id) === String(req.user.id)) {
       try {
-        // Object.keys(bodyData).forEach(key => {
-        //    userExists[key] = bodyData[key]
-        // })
-        if (firstName) {
-          userExists.firstName = firstName;
-        }
-        if (lastName) {
-          userExists.lastName = lastName;
-        }
-        if (phone) {
-          userExists.phone = phone;
-        }
-        if (pass) {
-          // not sure about allowing this action
-          userExists.pass = pass;
-        }
+        Object.keys(req.body).forEach((key) => {
+          userExists[key] = req.body[key];
+        });
 
         await userExists.save();
 

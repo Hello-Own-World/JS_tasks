@@ -29,9 +29,6 @@ app.use((req, res, next) => {
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
 
-// TODO: add error handling
-// FIXME - Replace responses with error
-
 initConnection((err) => {
   if (err) console.log(err);
 

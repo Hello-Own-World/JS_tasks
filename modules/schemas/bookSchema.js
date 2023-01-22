@@ -10,8 +10,8 @@ const schemas = {
     title: Joi.string().max(30).required(),
     author: Joi.string().min(2).max(30).required(),
     genre: Joi.string().min(2).max(30).required(),
-    new_title: Joi.string().max(30).allow(null, ''), // may be avoided in case no new value provided
-    new_author: Joi.string().max(30).allow(null, ''), // may be avoided in case no new value provided
+    newTitle: Joi.string().max(30).allow(null, ''), // may be avoided in case no new value provided
+    newAuthor: Joi.string().max(30).allow(null, ''), // may be avoided in case no new value provided
   }),
 };
 
