@@ -1,8 +1,12 @@
 import React from 'react';
+import Register from './components/user/register'
 
 const App = () => {
+    
   return (
-    <h1>Welcome to React App thats build using Webpack and Babel separately</h1>
+    <div>
+      <Register>Register</Register> 
+    </div>
   );
 };
 
