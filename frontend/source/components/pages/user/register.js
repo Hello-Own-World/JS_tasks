@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import Card from '../UI/Card';
-import Button from '../UI/Button';
-import ErrorModal from '../UI/ErrorModal';
+import Card from '../../UI/Card';
+import Button from '../../UI/Button';
+import ErrorModal from '../../UI/ErrorModal';
 
 import classes from './register.module.css';
 
@@ -76,6 +76,7 @@ const Register = () => {
 
   return (
     <div>
+      <h1 className={classes.h1}>Register</h1>
       {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
       <Card className={classes.input}>
         <form onSubmit={submitHandler}>
@@ -102,7 +103,7 @@ const Register = () => {
           <label>Phone number:</label>
           <input onChange={phoneInputHandler} value={phone} type="number" name="phone"></input>
           <br></br>
-          <Button type="submit">Sign up</Button>
+          <Button type="submit">Register</Button>
         </form>
       </Card>
     </div>

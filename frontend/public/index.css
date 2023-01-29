@@ -1,3 +1,8 @@
-html{
-    background: #5b5555;
+html {
+  background: #5b5555;
+}
+
+.logo {
+  color: white;
+  text-shadow: 2px 2px black;
 }
