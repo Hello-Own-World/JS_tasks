@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Card from '../../UI/Card';
 import Button from '../../UI/Button';
 import ErrorModal from '../../UI/ErrorModal';
+import Header from '../../UI/Header';
 
 import classes from './login.module.css';
 
@@ -48,6 +49,7 @@ const Login = () => {
 
   return (
     <div>
+      <Header />
       <h1 className={classes.h1}>Login</h1>
       {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
       <Card className={classes.input}>
