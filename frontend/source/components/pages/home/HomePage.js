@@ -1,15 +1,12 @@
 import React from 'react';
 
-// import { Link } from 'react-router-dom';
-
-import classes from './HomePage.module.css'
+import classes from './HomePage.module.css';
 
 import Header from '../../UI/Header';
 
 const Home = () => {
   return (
     <div>
-      <Header />
       <h1 className={classes.h1}>About Chat App:</h1>
       <p className={classes.p}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut

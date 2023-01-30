@@ -77,7 +77,6 @@ const Register = () => {
 
   return (
     <div>
-       <Header />
       <h1 className={classes.h1}>Register</h1>
       {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
       <Card className={classes.input}>

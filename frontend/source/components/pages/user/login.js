@@ -32,6 +32,8 @@ const Login = () => {
     setLogin('');
     setPass('');
 
+    
+
     console.log(inputData);
   }
 
@@ -49,7 +51,6 @@ const Login = () => {
 
   return (
     <div>
-      <Header />
       <h1 className={classes.h1}>Login</h1>
       {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
       <Card className={classes.input}>

@@ -51,7 +51,7 @@ module.exports = {
      * disable live reload on the browser. "hot" must be set to false for this to work
      */
     liveReload: true,
-    historyApiFallback: true, // redirectі 404s to /index.html.
+    historyApiFallback: true // redirectі 404s to /index.html.
   },
   resolve: {
     /** "extensions"
@@ -75,7 +75,7 @@ module.exports = {
         use: 'babel-loader' // loader which we are going to use
       },
       {
-        test: /\.(css)$/, // rule for css files 
+        test: /\.(css)$/, // rule for css files
         use: [
           'style-loader',
           {
@@ -83,6 +83,17 @@ module.exports = {
             options: {
               importLoaders: 1,
               modules: true
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(png)(\?[a-z0-9=.]+)?$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 1000
             }
           }
         ]

@@ -45,3 +45,18 @@
   align-items: center;
   justify-content: space-around;
 }
+
+.img{
+  width: 8%;
+  height: 8%;
+  filter: invert(100%);
+}
+
+.userCircle{
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  
+}
