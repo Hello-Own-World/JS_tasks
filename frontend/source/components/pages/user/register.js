@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Form, json, redirect } from 'react-router-dom';
 
-// import axios from 'axios';
+import axios from 'axios';
 
 import Card from '../../UI/Card';
 import Button from '../../UI/Button';
@@ -120,7 +120,7 @@ const Register = () => {
 export async function action({ request }) {
   // const searchParams = new URL(request.url).searchParams;
 
-  console.log('ACTION METHOD INVOKED');
+  console.log('ACTION REGISTER METHOD INVOKED');
 
   const data = await request.formData();
 
@@ -132,24 +132,16 @@ export async function action({ request }) {
     phone: data.get('phone')
   };
 
-  const response = await fetch('http://localhost:3000/api/user/register', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(authData)
-  });
+  // try axios request
+  axios
+    .post('http://localhost:3000/api/user/register', authData, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then((data) => console.log(data))
+    .catch((error) => console.log(error));
 
-  if (response.status === 422 || response.status === 401) {
-    // 422 - validation errors | 401 - invalid credentials
-    return response;
-  }
-
-  if (!response.ok) {
-    throw json({ message: 'Error saving event' }, { status: 500 });
-  }
-
-  // later manage token
   return redirect('/home');
 }
 

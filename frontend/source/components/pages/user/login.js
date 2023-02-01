@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Form } from 'react-router-dom';
+import { Form, redirect } from 'react-router-dom';
+import axios from 'axios';
 
 import Card from '../../UI/Card';
 import Button from '../../UI/Button';
@@ -14,13 +15,15 @@ const Login = () => {
   const [error, setError] = useState();
 
   function submitHandler(event) {
-    event.preventDefault(); // preventing page from reloading
+    // event.preventDefault(); // preventing page from reloading
 
     if (login.trim().length === 0 || pass.trim().length === 0) {
       setError({
         title: 'Invalid input',
         message: 'Please enter all data'
       });
+
+      event.preventDefault(); // preventing page from reloading
       return;
     }
 
@@ -32,8 +35,6 @@ const Login = () => {
     // manually clearing fields
     setLogin('');
     setPass('');
-
-    
 
     console.log(inputData);
   }
@@ -55,7 +56,7 @@ const Login = () => {
       <h1 className={classes.h1}>Login</h1>
       {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
       <Card className={classes.input}>
-        <Form onSubmit={submitHandler}>
+        <Form method="post" onSubmit={submitHandler}>
           <label>Login:</label>
           <input onChange={loginInputHandler} value={login} type="email" name="login"></input>
           <br></br>
@@ -68,5 +69,31 @@ const Login = () => {
     </div>
   );
 };
+
+export async function action({ request }) {
+  console.log('ACTION LOGIN METHOD INVOKED');
+
+  const data = await request.formData();
+
+  const authData = {
+    login: data.get('login'),
+    pass: data.get('pass')
+  };
+
+  axios
+    .post('http://localhost:3000/api/user/login', authData, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then((data) => {
+      console.log(data);
+      console.log(data.data.token);
+      localStorage.setItem('AccessToken', 'Bearer ' + data.data.token);
+    })
+    .catch((error) => console.log(error));
+
+  return redirect('/home');
+}
 
 export default Login;
