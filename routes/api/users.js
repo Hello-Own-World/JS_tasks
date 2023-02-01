@@ -45,7 +45,7 @@ router.post(
         expiresIn: '1h',
       });
 
-      res.status(200).json({ token });
+      res.status(200).json({ token, userId: user.id, login: user.login });
     } else {
       next(createError(400, 'Wrong input'));
     }
@@ -55,7 +55,7 @@ router.post(
 // Get particular user (public)
 router.get(
   '/:id',
-  [validate(userSchema.paramDelPut, 'params'), auth],
+  [validate(userSchema.paramDelPut, 'params')],
   async (req, res, next) => {
     const { id } = req.params;
 

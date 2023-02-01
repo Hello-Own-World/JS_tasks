@@ -5,6 +5,7 @@ import Login, { action as LoginUserAction } from './components/pages/user/login'
 import Home from './components/pages/home/HomePage';
 import Chat from './components/pages/chat/chat';
 import Header from './components/UI/Header';
+import UserInfo from './components/pages/user/UserInfo';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -16,7 +17,8 @@ const router = createBrowserRouter([
       { path: '/register', element: <Register />, action: CreateUserAction },
       { path: '/login', element: <Login />, action: LoginUserAction },
       { path: '/chat', element: <Chat /> },
-      { path: '/home', element: <Home /> }
+      { path: '/home', element: <Home /> },
+      { path: '/userInfo', element: <UserInfo /> }
     ]
   }
 ]);

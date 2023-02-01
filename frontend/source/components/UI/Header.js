@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import classes from './Header.module.css';
 
@@ -10,6 +10,13 @@ import { Outlet } from 'react-router-dom';
 
 const Header = (props) => {
   const [account, setAccount] = useState('Guest');
+
+  useEffect(() => {
+    if (localStorage.getItem('Login')) {
+      setAccount(localStorage.getItem('Login'));
+      console.log('set new account name');
+    }
+  }, []);
 
   return (
     <div>
@@ -46,7 +53,11 @@ const Header = (props) => {
             src={require('/source/images/userIcon.png').default}
             alt="Avatar"
           />
-          <p className={classes.h1}> {account} </p>
+          <p className={classes.h1}>
+            <Link to={'/userInfo'} className={classes.noUnderscore}>
+              {account}
+            </Link>
+          </p>
         </div>
       </div>
       <Outlet />

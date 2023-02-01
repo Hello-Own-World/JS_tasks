@@ -5,7 +5,6 @@ import axios from 'axios';
 import Card from '../../UI/Card';
 import Button from '../../UI/Button';
 import ErrorModal from '../../UI/ErrorModal';
-import Header from '../../UI/Header';
 
 import classes from './login.module.css';
 
@@ -15,8 +14,6 @@ const Login = () => {
   const [error, setError] = useState();
 
   function submitHandler(event) {
-    // event.preventDefault(); // preventing page from reloading
-
     if (login.trim().length === 0 || pass.trim().length === 0) {
       setError({
         title: 'Invalid input',
@@ -89,7 +86,10 @@ export async function action({ request }) {
     .then((data) => {
       console.log(data);
       console.log(data.data.token);
+      console.log(data.data.userId);
       localStorage.setItem('AccessToken', 'Bearer ' + data.data.token);
+      localStorage.setItem('UserId', data.data.userId);
+      localStorage.setItem('Login', data.data.login);
     })
     .catch((error) => console.log(error));
 
