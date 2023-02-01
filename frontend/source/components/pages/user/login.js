@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Form } from 'react-router-dom';
 
 import Card from '../../UI/Card';
 import Button from '../../UI/Button';
@@ -54,7 +55,7 @@ const Login = () => {
       <h1 className={classes.h1}>Login</h1>
       {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
       <Card className={classes.input}>
-        <form onSubmit={submitHandler}>
+        <Form onSubmit={submitHandler}>
           <label>Login:</label>
           <input onChange={loginInputHandler} value={login} type="email" name="login"></input>
           <br></br>
@@ -62,7 +63,7 @@ const Login = () => {
           <input onChange={passInputHandler} value={pass} type="password" name="pass"></input>
           <br></br>
           <Button type="submit">Login</Button>
-        </form>
+        </Form>
       </Card>
     </div>
   );

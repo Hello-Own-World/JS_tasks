@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Register from './components/pages/user/register';
+import Register, { action as CreateUserAction } from './components/pages/user/register';
 import Login from './components/pages/user/login';
 import Home from './components/pages/home/HomePage';
 import Chat from './components/pages/chat/chat';
-import Header from './components/UI/Header'
+import Header from './components/UI/Header';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -13,11 +13,10 @@ const router = createBrowserRouter([
     path: '/',
     element: <Header />,
     children: [
-      { path: '/register', element: <Register /> },
+      { path: '/register', element: <Register />, action: CreateUserAction },
       { path: '/login', element: <Login /> },
-      { path: '/chat', element: <Chat /> }, 
-      { path: '/home', element: <Home /> }, 
-
+      { path: '/chat', element: <Chat /> },
+      { path: '/home', element: <Home /> }
     ]
   }
 ]);
