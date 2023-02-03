@@ -1,19 +1,8 @@
-import React, { useEffect, useContext } from 'react';
-import { UserContext } from '../../../App';
+import React from 'react';
 
 import classes from './HomePage.module.css';
 
 const Home = () => {
-  const [value, setUsername] = useContext(UserContext);
-
-  useEffect(() => {
-    console.log('Use effect triggered');
-    const loggedInUser = localStorage.getItem('Login');
-    if (loggedInUser) {
-      setUsername(loggedInUser);
-    }
-  }, []);
-
   return (
     <div>
       <h1 className={classes.h1}>About Chat App:</h1>

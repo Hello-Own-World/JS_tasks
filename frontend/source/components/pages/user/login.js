@@ -5,6 +5,7 @@ import axios from 'axios';
 import Card from '../../UI/Card';
 import Button from '../../UI/Button';
 import ErrorModal from '../../UI/ErrorModal';
+import { UserContext } from '../../../App';
 
 import classes from './login.module.css';
 
@@ -14,6 +15,7 @@ const Login = () => {
   const [error, setError] = useState();
 
   const navigate = useNavigate();
+  const [value, setUsername] = useContext(UserContext);
 
   function submitHandler(event) {
     event.preventDefault();
@@ -51,6 +53,8 @@ const Login = () => {
         localStorage.setItem('AccessToken', 'Bearer ' + data.data.token);
         localStorage.setItem('UserId', data.data.userId);
         localStorage.setItem('Login', data.data.login);
+        console.log(value + 'value');
+        setUsername(data.data.login);
         return navigate('/home');
       })
       .catch((error) => console.log(error));
