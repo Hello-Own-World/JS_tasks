@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import { Form, json, redirect } from 'react-router-dom';
+import { Form, redirect } from 'react-router-dom';
 
 import axios from 'axios';
 
 import Card from '../../UI/Card';
 import Button from '../../UI/Button';
 import ErrorModal from '../../UI/ErrorModal';
-import Header from '../../UI/Header';
 
 import classes from './register.module.css';
 
@@ -21,8 +20,6 @@ const Register = () => {
   const [error, setError] = useState();
 
   async function submitHandler(event) {
-    // event.preventDefault(); // preventing page from reloading
-
     if (
       login.trim().length === 0 ||
       pass.trim().length === 0 ||
@@ -118,8 +115,6 @@ const Register = () => {
 };
 
 export async function action({ request }) {
-  // const searchParams = new URL(request.url).searchParams;
-
   console.log('ACTION REGISTER METHOD INVOKED');
 
   const data = await request.formData();
@@ -132,7 +127,6 @@ export async function action({ request }) {
     phone: data.get('phone')
   };
 
-  // try axios request
   axios
     .post('http://localhost:3000/api/user/register', authData, {
       headers: {

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Form, redirect } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { Form, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import Card from '../../UI/Card';
@@ -13,7 +13,10 @@ const Login = () => {
   const [pass, setPass] = useState('');
   const [error, setError] = useState();
 
+  const navigate = useNavigate();
+
   function submitHandler(event) {
+    event.preventDefault();
     if (login.trim().length === 0 || pass.trim().length === 0) {
       setError({
         title: 'Invalid input',
@@ -34,6 +37,23 @@ const Login = () => {
     setPass('');
 
     console.log(inputData);
+
+    axios
+      .post('http://localhost:3000/api/user/login', inputData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        console.log(data.data.token);
+        console.log(data.data.userId);
+        localStorage.setItem('AccessToken', 'Bearer ' + data.data.token);
+        localStorage.setItem('UserId', data.data.userId);
+        localStorage.setItem('Login', data.data.login);
+        return navigate('/home');
+      })
+      .catch((error) => console.log(error));
   }
 
   const loginInputHandler = (event) => {
@@ -53,7 +73,7 @@ const Login = () => {
       <h1 className={classes.h1}>Login</h1>
       {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
       <Card className={classes.input}>
-        <Form method="post" onSubmit={submitHandler}>
+        <Form onSubmit={submitHandler}>
           <label>Login:</label>
           <input onChange={loginInputHandler} value={login} type="email" name="login"></input>
           <br></br>
@@ -66,34 +86,5 @@ const Login = () => {
     </div>
   );
 };
-
-export async function action({ request }) {
-  console.log('ACTION LOGIN METHOD INVOKED');
-
-  const data = await request.formData();
-
-  const authData = {
-    login: data.get('login'),
-    pass: data.get('pass')
-  };
-
-  axios
-    .post('http://localhost:3000/api/user/login', authData, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then((data) => {
-      console.log(data);
-      console.log(data.data.token);
-      console.log(data.data.userId);
-      localStorage.setItem('AccessToken', 'Bearer ' + data.data.token);
-      localStorage.setItem('UserId', data.data.userId);
-      localStorage.setItem('Login', data.data.login);
-    })
-    .catch((error) => console.log(error));
-
-  return redirect('/home');
-}
 
 export default Login;

@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 
 import classes from './Header.module.css';
+
+import { UserContext } from '../../App';
 
 import { useState } from 'react';
 
@@ -9,14 +11,9 @@ import { Link } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 
 const Header = (props) => {
-  const [account, setAccount] = useState('Guest');
-
-  useEffect(() => {
-    if (localStorage.getItem('Login')) {
-      setAccount(localStorage.getItem('Login'));
-      console.log('set new account name');
-    }
-  }, []);
+  const [value, setUsername] = useContext(UserContext);
+  
+  console.log(value);
 
   return (
     <div>
@@ -55,7 +52,7 @@ const Header = (props) => {
           />
           <p className={classes.h1}>
             <Link to={'/userInfo'} className={classes.noUnderscore}>
-              {account}
+              {value}
             </Link>
           </p>
         </div>

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, createContext } from 'react';
 
 import Register, { action as CreateUserAction } from './components/pages/user/register';
-import Login, { action as LoginUserAction } from './components/pages/user/login';
+import Login from './components/pages/user/login';
 import Home from './components/pages/home/HomePage';
 import Chat from './components/pages/chat/chat';
 import Header from './components/UI/Header';
@@ -15,7 +15,7 @@ const router = createBrowserRouter([
     element: <Header />,
     children: [
       { path: '/register', element: <Register />, action: CreateUserAction },
-      { path: '/login', element: <Login />, action: LoginUserAction },
+      { path: '/login', element: <Login /> },
       { path: '/chat', element: <Chat /> },
       { path: '/home', element: <Home /> },
       { path: '/userInfo', element: <UserInfo /> }
@@ -23,10 +23,16 @@ const router = createBrowserRouter([
   }
 ]);
 
+export const UserContext = createContext(null);
+
 const App = () => {
+  const [username, setUsername] = useState('No value was provided');
+
   return (
     <div>
-      <RouterProvider router={router} />
+      <UserContext.Provider value={[username, setUsername]}>
+        <RouterProvider router={router} />
+      </UserContext.Provider>
     </div>
   );
 };

@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import classes from './UserInfo.module.css';
 import Card from '../../UI/Card';
+import Button from '../../UI/Button';
+import { UserContext } from '../../../App';
 
 import axios from 'axios';
 
@@ -10,15 +13,26 @@ const UserInfo = (props) => {
 
   if (!userId) {
     console.log('You are not logged in');
+    return <h1 className={classes.h1}>You are not logged in</h1>;
   }
 
   const [response, setResponse] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get(`http://localhost:3000/api/user/${userId}`).then((resp) => {
       setResponse(resp.data);
     });
   }, []);
+
+  const [value, setUsername] = useContext(UserContext);
+  
+  const logout = () => {
+    setUsername('Guest');
+    localStorage.clear();
+    console.log('Local storage was cleared');
+    return navigate('/home');
+  };
 
   return (
     <div>
@@ -32,14 +46,10 @@ const UserInfo = (props) => {
         <p>{response.lastName}</p>
         <h2>Phone:</h2>
         <p>{response.phone}</p>
+        <Button onClick={logout}>Log out</Button>
       </Card>
     </div>
   );
 };
-
-async function getUserData(userId) {
-  const response = await axios.get(`http://localhost:3000/api/user/${userId}`);
-  return response;
-}
 
 export default UserInfo;
