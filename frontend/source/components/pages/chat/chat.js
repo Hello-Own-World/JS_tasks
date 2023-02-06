@@ -8,18 +8,18 @@ import Message from '../../UI/message';
 import Card from '../../UI/Card';
 import Button from '../../UI/Button';
 import { Form } from 'react-router-dom';
+import { isAuthorised } from '../../logic/auth';
 
 const Chat = () => {
   const [response, setResponse] = useState([]);
   const [msg, setMsg] = useState('');
-  const token = localStorage.getItem('AccessToken');
+
+  const token = isAuthorised();
 
   if (!token) {
-    console.log('Absent access token');
+    console.log('You are not logged in');
     return <h1 className={classes.h1}>You must login to view global chat </h1>;
   }
-
-  console.log(token + 'token');
 
   useEffect(() => {
     axios

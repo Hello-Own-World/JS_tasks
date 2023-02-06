@@ -14,8 +14,9 @@ const Login = () => {
   const [pass, setPass] = useState('');
   const [error, setError] = useState();
 
-  const navigate = useNavigate();
   const [value, setUsername] = useContext(UserContext);
+
+  const navigate = useNavigate();
 
   function submitHandler(event) {
     event.preventDefault();
@@ -34,7 +35,6 @@ const Login = () => {
       pass: pass
     };
 
-    // manually clearing fields
     setLogin('');
     setPass('');
 
@@ -47,14 +47,13 @@ const Login = () => {
         }
       })
       .then((data) => {
-        console.log(data);
-        console.log(data.data.token);
-        console.log(data.data.userId);
         localStorage.setItem('AccessToken', 'Bearer ' + data.data.token);
         localStorage.setItem('UserId', data.data.userId);
         localStorage.setItem('Login', data.data.login);
-        console.log(value + 'value');
         setUsername(data.data.login);
+        const expiration = new Date();
+        expiration.setHours(expiration.getHours() + 1);
+        localStorage.setItem('tokenExpiration', expiration.toISOString())
         return navigate('/home');
       })
       .catch((error) => console.log(error));
