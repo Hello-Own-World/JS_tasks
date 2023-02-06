@@ -4,15 +4,20 @@ import classes from './Header.module.css';
 
 import { UserContext } from '../../App';
 
-import { useState } from 'react';
-
 import { Link } from 'react-router-dom';
 
 import { Outlet } from 'react-router-dom';
 
 const Header = (props) => {
   const [value, setUsername] = useContext(UserContext);
-  
+
+  useEffect(() => {
+    const prevLog = localStorage.getItem('Login');
+    if (prevLog) {
+      setUsername(prevLog);
+    }
+  });
+
   console.log(value);
 
   return (

@@ -26,7 +26,7 @@ const router = createBrowserRouter([
 export const UserContext = createContext(null);
 
 const App = () => {
-  const [username, setUsername] = useState('No value was provided');
+  const [username, setUsername] = useState('Guest');
 
   return (
     <div>

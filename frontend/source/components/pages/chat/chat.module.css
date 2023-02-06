@@ -1,6 +1,39 @@
 .h1 {
-    color: white;
-    margin-top: 7%;
-    text-shadow: 2px 2px black;
-    text-align: center;
+  color: white;
+  margin-top: 7%;
+  text-shadow: 2px 2px black;
+  text-align: center;
+}
+
+.input {
+  margin: 2rem auto;
+  padding: 1rem;
+  width: 90%;
+  max-width: 40rem;
+}
+
+.input label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.input input {
+  font: inherit;
+  display: block;
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 0.15rem;
+  margin-bottom: 0.5rem;
+}
+
+.input input:focus {
+  outline: none;
+  border-color: #4f005f;
+}
+
+.chat {
+  margin: 10%;
+  display: flex;
+  flex-direction: column-reverse;
 }

@@ -7,7 +7,7 @@ import classes from './message.module.css';
 
 const Message = (props) => {
   return (
-    <Card>
+    <Card key={props.id}>
       <h3>Name: {props.username}</h3>
       <p>Msg: {props.message}</p>
       <p>Time: {props.time}</p>

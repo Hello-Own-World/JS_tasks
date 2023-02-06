@@ -1,15 +1,15 @@
 .h1 {
-    color: white;
-    margin-top: 10%;
-    text-shadow: 2px 2px black;
-    text-align: center;
+  color: white;
+  margin-top: 10%;
+  text-shadow: 2px 2px black;
+  text-align: center;
 }
 
-.p{
-    color: white;
-    margin-top: 5%;
-    margin-left: 5%;
-    margin-right: 5%;
-    text-shadow: 2px 2px black;
-    text-align: center;
+.p {
+  color: white;
+  margin-top: 5%;
+  margin-left: 5%;
+  margin-right: 5%;
+  text-shadow: 2px 2px black;
+  text-align: center;
 }

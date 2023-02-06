@@ -47,18 +47,17 @@
   width: 33%;
 }
 
-.img{
+.img {
   width: 8%;
   height: auto;
   filter: invert(100%);
 }
 
-.userCircle{
+.userCircle {
   /* flex: 2; */
   width: 33%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   flex-direction: row;
-  
 }

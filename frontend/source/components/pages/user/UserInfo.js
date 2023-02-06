@@ -26,7 +26,7 @@ const UserInfo = (props) => {
   }, []);
 
   const [value, setUsername] = useContext(UserContext);
-  
+
   const logout = () => {
     setUsername('Guest');
     localStorage.clear();
