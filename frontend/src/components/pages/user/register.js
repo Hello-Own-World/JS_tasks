@@ -4,9 +4,9 @@ import { Form, redirect } from 'react-router-dom';
 
 import axios from 'axios';
 
-import Card from '../../UI/Card';
-import Button from '../../UI/Button';
-import ErrorModal from '../../UI/ErrorModal';
+import Card from '../../common/card';
+import Button from '../../common/button';
+import ErrorModal from '../../common/errorModal';
 
 import classes from './register.module.css';
 
@@ -134,7 +134,10 @@ export async function action({ request }) {
       }
     })
     .then((data) => console.log(data))
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      console.log(error);
+      
+    });
 
   return redirect('/home');
 }

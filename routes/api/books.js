@@ -8,13 +8,13 @@ const router = express.Router();
 
 // Get all books
 router.get('/', async (req, res, next) => {
-  const searchOptions = {};
-
-  if (req.query.name) {
-    searchOptions.name = new RegExp(req.query.name, 'i');
-  }
-
   try {
+    const searchOptions = {};
+
+    if (req.query.name) {
+      searchOptions.name = new RegExp(req.query.name, 'i');
+    }
+
     const books = await Book.find(searchOptions);
     res.send(books);
   } catch {
@@ -27,13 +27,13 @@ router.post(
   '/',
   validate(bookSchema.bodyPost, 'body'),
   async (req, res, next) => {
-    const { title, author, genre } = req.body;
-
-    const book = new Book({ title, author, genre });
-
-    req.defaultQueue.add({ title });
-
     try {
+      const { title, author, genre } = req.body;
+
+      const book = new Book({ title, author, genre });
+
+      req.defaultQueue.add({ title });
+
       await book.save();
       res.status(200).json({ msg: 'Success' });
     } catch {
@@ -44,16 +44,16 @@ router.post(
 
 // Delete book
 router.delete('/:author/:title', async (req, res, next) => {
-  const { title, author } = req.params;
-
-  const bookExist = await Book.findOne({ title, author });
-
-  if (!bookExist) {
-    next(createError(400, "Book doesn't exist"));
-    return;
-  }
-
   try {
+    const { title, author } = req.params;
+
+    const bookExist = await Book.findOne({ title, author });
+
+    if (!bookExist) {
+      next(createError(400, "Book doesn't exist"));
+      return;
+    }
+
     await Book.deleteOne({ title, author });
 
     res.status(200).json({ msg: `Successful deletion of book: ${title}` });
@@ -64,16 +64,16 @@ router.delete('/:author/:title', async (req, res, next) => {
 
 // Get particular book
 router.get('/:author/:title', async (req, res, next) => {
-  const { title, author } = req.params;
-
-  const bookExist = await Book.findOne({ title, author });
-
-  if (!bookExist) {
-    next(createError(400, `Book ${title} is not in the DB`));
-    return;
-  }
-
   try {
+    const { title, author } = req.params;
+
+    const bookExist = await Book.findOne({ title, author });
+
+    if (!bookExist) {
+      next(createError(400, `Book ${title} is not in the DB`));
+      return;
+    }
+
     res.status(200).send(bookExist);
   } catch {
     next(createError(500, 'Error occured while retrieving the book from DB'));
@@ -85,16 +85,16 @@ router.put(
   '/',
   validate(bookSchema.bodyPut, 'body'),
   async (req, res, next) => {
-    const { title, author, genre, newTitle, newAuthor } = req.body;
-
-    const bookExist = await Book.findOne({ title, author });
-
-    if (!bookExist) {
-      next(createError(400, `Book ${title} is not in the DB`));
-      return;
-    }
-
     try {
+      const { title, author, genre, newTitle, newAuthor } = req.body;
+
+      const bookExist = await Book.findOne({ title, author });
+
+      if (!bookExist) {
+        next(createError(400, `Book ${title} is not in the DB`));
+        return;
+      }
+
       if (newTitle) {
         bookExist.title = newTitle;
       }

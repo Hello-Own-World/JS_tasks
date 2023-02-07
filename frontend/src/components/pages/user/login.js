@@ -2,9 +2,9 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Form, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import Card from '../../UI/Card';
-import Button from '../../UI/Button';
-import ErrorModal from '../../UI/ErrorModal';
+import Card from '../../common/card';
+import Button from '../../common/button';
+import ErrorModal from '../../common/errorModal';
 import { UserContext } from '../../../App';
 
 import classes from './login.module.css';

@@ -13,8 +13,8 @@ router.post(
   '/register',
   validate(userSchema.regBodyPost, 'body'),
   async (req, res, next) => {
-    const userData = req.body;
     try {
+      const userData = req.body;
       userData.login = userData.login.toLowerCase();
       const foundUser = await User.findOne({ login: userData.login });
       if (foundUser) {
@@ -57,16 +57,16 @@ router.get(
   '/:id',
   [validate(userSchema.paramDelPut, 'params')],
   async (req, res, next) => {
-    const { id } = req.params;
-
-    const userExists = await User.findOne({ _id: id });
-
-    if (!userExists) {
-      next(createError(400, `User is not in the DB`));
-      return;
-    }
-
     try {
+      const { id } = req.params;
+
+      const userExists = await User.findOne({ _id: id });
+
+      if (!userExists) {
+        next(createError(400, `User is not in the DB`));
+        return;
+      }
+
       userExists.pass = undefined;
       res.status(200).send(userExists);
     } catch {

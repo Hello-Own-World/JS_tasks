@@ -2,10 +2,10 @@ import React, { useState, createContext } from 'react';
 
 import Register, { action as CreateUserAction } from './components/pages/user/register';
 import Login from './components/pages/user/login';
-import Home from './components/pages/home/HomePage';
+import Home from './components/pages/home/homePage';
 import Chat from './components/pages/chat/chat';
-import Header from './components/UI/Header';
-import UserInfo from './components/pages/user/UserInfo';
+import Header from './components/common/header';
+import UserInfo from './components/pages/user/userInfo';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 

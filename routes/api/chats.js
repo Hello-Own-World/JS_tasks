@@ -22,9 +22,9 @@ router.post(
   '/message',
   [validate(chatSchema.msgBodyPostPut, 'body'), auth],
   async (req, res, next) => {
-    const { body } = req.body;
-
     try {
+      const { body } = req.body;
+
       const msg = new Message({ body, author: req.user });
 
       const newMsg = await msg.save();

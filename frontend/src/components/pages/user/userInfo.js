@@ -2,8 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import classes from './UserInfo.module.css';
-import Card from '../../UI/Card';
-import Button from '../../UI/Button';
+import Card from '../../common/card';
+import Button from '../../common/button';
 import { UserContext } from '../../../App';
 
 import axios from 'axios';

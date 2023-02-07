@@ -4,9 +4,9 @@ import axios from 'axios';
 
 import classes from './chat.module.css';
 
-import Message from '../../UI/message';
-import Card from '../../UI/Card';
-import Button from '../../UI/Button';
+import Message from '../../common/message';
+import Card from '../../common/card';
+import Button from '../../common/button';
 import { Form } from 'react-router-dom';
 import { isAuthorised } from '../../logic/auth';
 
@@ -55,7 +55,6 @@ const Chat = () => {
     axios
       .post('http://localhost:3000/api/chat/message', inputData, {
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `${token}`
         }
       })

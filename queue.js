@@ -16,6 +16,6 @@ const defaultQueue = new Bull('default', {
         return redisClient;
     }
   },
-}) 
+});
 
 module.exports = defaultQueue;

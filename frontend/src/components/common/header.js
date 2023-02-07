@@ -52,7 +52,7 @@ const Header = (props) => {
         <div className={classes.userCircle}>
           <img
             className={classes.img}
-            src={require('/source/images/userIcon.png').default}
+            src={require('/src/images/userIcon.png').default}
             alt="Avatar"
           />
           <p className={classes.h1}>
