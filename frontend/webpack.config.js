@@ -1,4 +1,5 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 /* We are basically telling webpack to take index.js from entry. Then check for all file extensions in resolve. 
 After that apply all the rules in module.rules and produce the output and place it in main.js in the public folder. */
@@ -17,7 +18,7 @@ module.exports = {
     /** "path"
      * the folder path of the output file
      */
-    path: path.resolve(__dirname, 'public'),
+    path: path.resolve(__dirname, '../dist'),
     /** "filename"
      * the name of the output file
      */
@@ -36,7 +37,7 @@ module.exports = {
     /** "static"
      * This property tells Webpack what static file it should serve
      */
-    static: ['./public'],
+    // static: ['./public'],
     /** "open"
      * opens the browser after server is successfully started
      */
@@ -61,6 +62,9 @@ module.exports = {
      */
     extensions: ['.js', '.jsx', '.json', '.css']
   },
+  plugins: [new HtmlWebpackPlugin({
+    template: './public/index.html'
+  })],
   module: {
     /** "rules"
      * This says - "Hey webpack compiler, when you come across a path that resolves to a '.js or .jsx'
