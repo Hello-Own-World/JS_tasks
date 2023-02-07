@@ -87,7 +87,7 @@ const Chat = () => {
             <Message
               message={el.body}
               username={el.author.login}
-              time={new Date(el.updatedAt).toJSON()}
+              time={new Date(el.updatedAt).toString().substring(0, 24)}
               id={el._id}
               className={classes.msg}></Message>
           );

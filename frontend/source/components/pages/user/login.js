@@ -13,8 +13,9 @@ const Login = () => {
   const [login, setLogin] = useState('');
   const [pass, setPass] = useState('');
   const [error, setError] = useState();
+  const [errorLogin, setErrorLogin] = useState();
 
-  const [value, setUsername] = useContext(UserContext);
+  const [username, setUsername] = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -47,16 +48,23 @@ const Login = () => {
         }
       })
       .then((data) => {
+        setErrorLogin(null);
         localStorage.setItem('AccessToken', 'Bearer ' + data.data.token);
         localStorage.setItem('UserId', data.data.userId);
         localStorage.setItem('Login', data.data.login);
         setUsername(data.data.login);
         const expiration = new Date();
         expiration.setHours(expiration.getHours() + 1);
-        localStorage.setItem('tokenExpiration', expiration.toISOString())
+        localStorage.setItem('tokenExpiration', expiration.toISOString());
         return navigate('/home');
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        if (error.response.status === 400) {
+          setErrorLogin('Wrong input');
+          console.log(errorLogin);
+          return null;
+        }
+      });
   }
 
   const loginInputHandler = (event) => {
@@ -85,6 +93,7 @@ const Login = () => {
           <br></br>
           <Button type="submit">Login</Button>
         </Form>
+        {errorLogin ? <label className={classes.errorMsg}>{errorLogin}</label> : null}
       </Card>
     </div>
   );

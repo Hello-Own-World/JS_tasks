@@ -1,0 +1,17 @@
+.nickname {
+  color: black;
+  margin: 5px;
+  text-align: left;
+}
+
+.body {
+  color: black;
+  margin: 5px;
+  text-align: left;
+}
+
+.time {
+  color: gray;
+  margin: 5px;
+  text-align: right;
+}
