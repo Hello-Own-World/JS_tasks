@@ -3,19 +3,23 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: [
-    'plugin:react/recommended',
-    'eslint:recommended',
-    'airbnb',
-    'prettier',
+  extends: ['eslint:recommended', 'airbnb', 'prettier'],
+  overrides: [
+    {
+      files: ['frontend/**/*.js', 'frontend/**/*.jsx'],
+      extends: ['plugin:react/recommended'],
+      rules: {
+        'react/react-in-jsx-scope': 'off',
+      },
+      plugins: ['jsx'],
+    },
   ],
-  overrides: [],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
   plugins: ['react', 'prettier'],
   rules: {
-    'prettier/prettier': 'error',
+    'prettier/prettier': 1,
   },
 };

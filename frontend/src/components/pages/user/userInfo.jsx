@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import classes from './UserInfo.module.css';
-import Card from '../../common/card';
-import Button from '../../common/button';
 import { UserContext } from '../../../App';
+import Button from '../../common/button';
+import Card from '../../common/card';
+import classes from './UserInfo.module.css';
 
 import axios from 'axios';
 

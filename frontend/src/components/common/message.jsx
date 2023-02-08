@@ -1,7 +1,6 @@
 import React from 'react';
 
 import Card from './card';
-import Button from './button';
 
 import classes from './message.module.css';
 
