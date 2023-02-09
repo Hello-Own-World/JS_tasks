@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 
 import { Form, redirect } from 'react-router-dom';
 
-import axios from 'axios';
-
-import Card from '../../common/card';
 import Button from '../../common/button';
+import Card from '../../common/card';
 import ErrorModal from '../../common/errorModal';
-
+import { tryRegister } from '../../logic/requests';
 import classes from './register.module.css';
 
 const Register = () => {
@@ -16,7 +14,6 @@ const Register = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
-
   const [error, setError] = useState();
 
   async function submitHandler(event) {
@@ -29,7 +26,7 @@ const Register = () => {
     ) {
       setError({
         title: 'Invalid input',
-        message: 'Please enter all data'
+        message: 'Please enter all data',
       });
 
       event.preventDefault(); // preventing page from reloading
@@ -41,7 +38,7 @@ const Register = () => {
       pass: pass,
       firstName: firstName,
       lastName: lastName,
-      phone: phone
+      phone: phone,
     };
 
     // manually clearing fields
@@ -83,31 +80,23 @@ const Register = () => {
       <h1 className={classes.h1}>Register</h1>
       {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
       <Card className={classes.input}>
-        <Form method="post" onSubmit={submitHandler}>
+        <Form method='post' onSubmit={submitHandler}>
           <label>Login:</label>
-          <input onChange={loginInputHandler} value={login} type="email" name="login"></input>
+          <input onChange={loginInputHandler} value={login} type='email' name='login'></input>
           <br></br>
           <label>Password:</label>
-          <input onChange={passInputHandler} value={pass} type="password" name="pass"></input>
+          <input onChange={passInputHandler} value={pass} type='password' name='pass'></input>
           <br></br>
           <label>First name:</label>
-          <input
-            onChange={firstNameInputHandler}
-            value={firstName}
-            type="text"
-            name="firstName"></input>
+          <input onChange={firstNameInputHandler} value={firstName} type='text' name='firstName'></input>
           <br></br>
           <label>Last name:</label>
-          <input
-            onChange={lastNameInputHandler}
-            value={lastName}
-            type="text"
-            name="lastName"></input>
+          <input onChange={lastNameInputHandler} value={lastName} type='text' name='lastName'></input>
           <br></br>
           <label>Phone number:</label>
-          <input onChange={phoneInputHandler} value={phone} type="number" name="phone"></input>
+          <input onChange={phoneInputHandler} value={phone} type='number' name='phone'></input>
           <br></br>
-          <Button type="submit">Register</Button>
+          <Button type='submit'>Register</Button>
         </Form>
       </Card>
     </div>
@@ -124,19 +113,13 @@ export async function action({ request }) {
     pass: data.get('pass'),
     firstName: data.get('firstName'),
     lastName: data.get('lastName'),
-    phone: data.get('phone')
+    phone: data.get('phone'),
   };
 
-  axios
-    .post('http://localhost:3000/api/user/register', authData, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+  tryRegister(authData)
     .then((data) => console.log(data))
     .catch((error) => {
       console.log(error);
-      
     });
 
   return redirect('/home');

@@ -13,7 +13,7 @@ module.exports = {
   /** "entry"
    * the entry point
    */
-  entry: './index.js',
+  entry: ['./index.js'],
   output: {
     /** "path"
      * the folder path of the output file
@@ -22,7 +22,7 @@ module.exports = {
     /** "filename"
      * the name of the output file
      */
-    filename: 'main.js'
+    filename: 'main.js',
   },
   /** "target"
    * setting "node" as target app (server side), and setting it as "web" is
@@ -42,6 +42,11 @@ module.exports = {
      * opens the browser after server is successfully started
      */
     open: true,
+    proxy: {
+      "/api/*": {
+        target:"http://localhost:3000",
+      }
+    },
     /** "hot"
      * enabling and disabling HMR. takes "true", "false" and "only".
      * "only" is used if enable Hot Module Replacement without page
@@ -52,7 +57,7 @@ module.exports = {
      * disable live reload on the browser. "hot" must be set to false for this to work
      */
     liveReload: true,
-    historyApiFallback: true // redirectі 404s to /index.html.
+    historyApiFallback: true, // redirectі 404s to /index.html.
   },
   resolve: {
     /** "extensions"
@@ -60,11 +65,13 @@ module.exports = {
      * resolve the one with the extension listed first in the array and skip the rest.
      * This is what enables users to leave off the extension when importing
      */
-    extensions: ['.js', '.jsx', '.json', '.css']
+    extensions: ['.js', '.jsx', '.json', '.css'],
   },
-  plugins: [new HtmlWebpackPlugin({
-    template: './public/index.html'
-  })],
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+    }),
+  ],
   module: {
     /** "rules"
      * This says - "Hey webpack compiler, when you come across a path that resolves to a '.js or .jsx'
@@ -76,7 +83,7 @@ module.exports = {
       {
         test: /\.(js|jsx)$/, // kind of file extension this rule should look for and apply in test
         exclude: /node_modules/, // folder to be excluded
-        use: 'babel-loader' // loader which we are going to use
+        use: 'babel-loader', // loader which we are going to use
       },
       {
         test: /\.(css)$/, // rule for css files
@@ -86,10 +93,10 @@ module.exports = {
             loader: 'css-loader',
             options: {
               importLoaders: 1,
-              modules: true
-            }
-          }
-        ]
+              modules: true,
+            },
+          },
+        ],
       },
       {
         test: /\.(png)(\?[a-z0-9=.]+)?$/,
@@ -97,11 +104,11 @@ module.exports = {
           {
             loader: 'url-loader',
             options: {
-              limit: 1000
-            }
-          }
-        ]
-      }
-    ]
-  }
+              limit: 1000,
+            },
+          },
+        ],
+      },
+    ],
+  },
 };

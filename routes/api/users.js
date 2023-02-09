@@ -9,80 +9,64 @@ const User = require('../../models/user');
 const router = express.Router();
 
 // Register
-router.post(
-  '/register',
-  validate(userSchema.regBodyPost, 'body'),
-  async (req, res, next) => {
-    try {
-      const userData = req.body;
-      userData.login = userData.login.toLowerCase();
-      const foundUser = await User.findOne({ login: userData.login });
-      if (foundUser) {
-        next(createError(400, 'User with such login already exists'));
-        return;
-      }
-
-      await User.create(userData);
-
-      res.status(200).json({ msg: 'User successfuly created' });
-    } catch {
-      next(createError(500, 'Error occured while creating user in DB'));
+router.post('/register', validate(userSchema.regBodyPost, 'body'), async (req, res, next) => {
+  try {
+    const userData = req.body;
+    userData.login = userData.login.toLowerCase();
+    const foundUser = await User.findOne({ login: userData.login });
+    if (foundUser) {
+      next(createError(400, 'User with such login already exists'));
+      return;
     }
+
+    await User.create(userData);
+
+    res.status(200).json({ msg: 'User successfuly created' });
+  } catch {
+    next(createError(500, 'Error occured while creating user in DB'));
   }
-);
+});
 
 // Login
-router.post(
-  '/login',
-  validate(userSchema.logBodyPost, 'body'),
-  async (req, res, next) => {
-    const { login, pass } = req.body;
+router.post('/login', validate(userSchema.logBodyPost, 'body'), async (req, res, next) => {
+  const { login, pass } = req.body;
 
-    const user = await User.findOne({ login });
+  const user = await User.findOne({ login });
 
-    if (user && (await checkPass(pass, user.pass))) {
-      const token = jwt.sign({ user_id: user.id }, process.env.SECRET_KEY, {
-        expiresIn: '1h',
-      });
+  if (user && (await checkPass(pass, user.pass))) {
+    const token = jwt.sign({ user_id: user.id }, process.env.SECRET_KEY, {
+      expiresIn: '1h',
+    });
 
-      res.status(200).json({ token, userId: user.id, login: user.login });
-    } else {
-      next(createError(400, 'Wrong input'));
-    }
+    res.status(200).json({ token, userId: user.id, login: user.login });
+  } else {
+    next(createError(400, 'Wrong input'));
   }
-);
+});
 
 // Get particular user (public)
-router.get(
-  '/:id',
-  [validate(userSchema.paramDelPut, 'params')],
-  async (req, res, next) => {
-    try {
-      const { id } = req.params;
+router.get('/:id', [validate(userSchema.paramDelPut, 'params')], async (req, res, next) => {
+  try {
+    const { id } = req.params;
 
-      const userExists = await User.findOne({ _id: id });
+    const userExists = await User.findOne({ _id: id });
 
-      if (!userExists) {
-        next(createError(400, `User is not in the DB`));
-        return;
-      }
-
-      userExists.pass = undefined;
-      res.status(200).send(userExists);
-    } catch {
-      next(createError(500, 'Error occured while getting user info from DB'));
+    if (!userExists) {
+      next(createError(400, `User is not in the DB`));
+      return;
     }
+
+    userExists.pass = undefined;
+    res.status(200).send(userExists);
+  } catch {
+    next(createError(500, 'Error occured while getting user info from DB'));
   }
-);
+});
 
 // PUT particular user
 router.put(
   '/:id',
-  [
-    validate(userSchema.bodyPut, 'body'),
-    validate(userSchema.paramDelPut, 'validate'),
-    auth,
-  ],
+  [validate(userSchema.bodyPut, 'body'), validate(userSchema.paramDelPut, 'validate'), auth],
   async (req, res, next) => {
     const { id } = req.params;
 
@@ -112,32 +96,26 @@ router.put(
 );
 
 // Delete user
-router.delete(
-  '/:id',
-  [validate(userSchema.paramDelPut, 'params'), auth],
-  async (req, res, next) => {
-    const { id } = req.params;
+router.delete('/:id', [validate(userSchema.paramDelPut, 'params'), auth], async (req, res, next) => {
+  const { id } = req.params;
 
-    const userExists = await User.findOne({ _id: id });
+  const userExists = await User.findOne({ _id: id });
 
-    if (!userExists) {
-      next(createError(400, `User is not in the DB`));
-      return;
-    }
-
-    if (String(userExists.id) === String(req.user.id)) {
-      try {
-        await User.deleteOne({ id });
-        res
-          .status(200)
-          .json({ msg: `Successful deletion of user: ${userExists.login}` });
-      } catch {
-        next(createError(500, 'Error occured while deleting the user from DB'));
-      }
-    } else {
-      next(createError(403, 'Forbidden action'));
-    }
+  if (!userExists) {
+    next(createError(400, `User is not in the DB`));
+    return;
   }
-);
+
+  if (String(userExists.id) === String(req.user.id)) {
+    try {
+      await User.deleteOne({ id });
+      res.status(200).json({ msg: `Successful deletion of user: ${userExists.login}` });
+    } catch {
+      next(createError(500, 'Error occured while deleting the user from DB'));
+    }
+  } else {
+    next(createError(403, 'Forbidden action'));
+  }
+});
 
 module.exports = router;

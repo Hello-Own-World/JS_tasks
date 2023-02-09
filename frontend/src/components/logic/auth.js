@@ -1,9 +1,11 @@
+import { getLocalItem } from './localStorage';
+
 export function isAuthorised() {
-  const token = localStorage.getItem('AccessToken');
+  const token = getLocalItem('AccessToken');
   if (!token) {
     return null;
   }
-  const expirationTime = new Date(localStorage.getItem('tokenExpiration'));
+  const expirationTime = new Date(getLocalItem('tokenExpiration'));
   const now = new Date();
   if (!expirationTime || expirationTime.getTime() - now.getTime() < 0) {
     return null;

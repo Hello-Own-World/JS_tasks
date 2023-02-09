@@ -1,18 +1,16 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { UserContext } from '../../App';
+import { Link } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import { getPrevLogin } from '../logic/localStorage';
 
 import classes from './Header.module.css';
-
-import { UserContext } from '../../App';
-
-import { Link } from 'react-router-dom';
-
-import { Outlet } from 'react-router-dom';
 
 const Header = (props) => {
   const [value, setUsername] = useContext(UserContext);
 
   useEffect(() => {
-    const prevLog = localStorage.getItem('Login');
+    const prevLog = getPrevLogin();
     if (prevLog) {
       setUsername(prevLog);
     }
@@ -50,11 +48,7 @@ const Header = (props) => {
         </div>
 
         <div className={classes.userCircle}>
-          <img
-            className={classes.img}
-            src={require('/src/images/userIcon.png').default}
-            alt="Avatar"
-          />
+          <img className={classes.img} src={require('/src/images/userIcon.png').default} alt='Avatar' />
           <p className={classes.h1}>
             <Link to={'/userInfo'} className={classes.noUnderscore}>
               {value}

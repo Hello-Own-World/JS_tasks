@@ -1,11 +1,12 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Form, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
-import Card from '../../common/card';
-import Button from '../../common/button';
-import ErrorModal from '../../common/errorModal';
 import { UserContext } from '../../../App';
+import Button from '../../common/button';
+import Card from '../../common/card';
+import ErrorModal from '../../common/errorModal';
+import { setLocalInfo } from '../../logic/localStorage';
+import { tryLogin } from '../../logic/requests';
 
 import classes from './login.module.css';
 
@@ -24,7 +25,7 @@ const Login = () => {
     if (login.trim().length === 0 || pass.trim().length === 0) {
       setError({
         title: 'Invalid input',
-        message: 'Please enter all data'
+        message: 'Please enter all data',
       });
 
       event.preventDefault(); // preventing page from reloading
@@ -33,7 +34,7 @@ const Login = () => {
 
     const inputData = {
       login: login,
-      pass: pass
+      pass: pass,
     };
 
     setLogin('');
@@ -41,27 +42,16 @@ const Login = () => {
 
     console.log(inputData);
 
-    axios
-      .post('http://localhost:3000/api/user/login', inputData, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+    tryLogin(inputData)
       .then((data) => {
         setErrorLogin(null);
-        localStorage.setItem('AccessToken', 'Bearer ' + data.data.token);
-        localStorage.setItem('UserId', data.data.userId);
-        localStorage.setItem('Login', data.data.login);
         setUsername(data.data.login);
-        const expiration = new Date();
-        expiration.setHours(expiration.getHours() + 1);
-        localStorage.setItem('tokenExpiration', expiration.toISOString());
+        setLocalInfo(data.data.token, data.data.userId, data.data.login);
         return navigate('/home');
       })
       .catch((error) => {
         if (error.response.status === 400) {
           setErrorLogin('Wrong input');
-          console.log(errorLogin);
           return null;
         }
       });
@@ -86,12 +76,12 @@ const Login = () => {
       <Card className={classes.input}>
         <Form onSubmit={submitHandler}>
           <label>Login:</label>
-          <input onChange={loginInputHandler} value={login} type="email" name="login"></input>
+          <input onChange={loginInputHandler} value={login} type='email' name='login'></input>
           <br></br>
           <label>Password:</label>
-          <input onChange={passInputHandler} value={pass} type="password" name="pass"></input>
+          <input onChange={passInputHandler} value={pass} type='password' name='pass'></input>
           <br></br>
-          <Button type="submit">Login</Button>
+          <Button type='submit'>Login</Button>
         </Form>
         {errorLogin ? <label className={classes.errorMsg}>{errorLogin}</label> : null}
       </Card>

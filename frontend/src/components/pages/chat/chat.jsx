@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-
-import axios from 'axios';
-
-import classes from './chat.module.css';
-
-import Message from '../../common/message';
-import Card from '../../common/card';
-import Button from '../../common/button';
+import React, { useEffect, useState } from 'react';
 import { Form } from 'react-router-dom';
 import { isAuthorised } from '../../logic/auth';
+import { tryGetMsg, trySendMsg } from '../../logic/requests';
+
+import Button from '../../common/button';
+import Card from '../../common/card';
+import Message from '../../common/message';
+
+import classes from './chat.module.css';
 
 const Chat = () => {
   const [response, setResponse] = useState([]);
@@ -22,8 +21,7 @@ const Chat = () => {
   }
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3000/api/chat`, { headers: { Authorization: `${token}` } })
+    tryGetMsg(token)
       .then((resp) => {
         setResponse(resp.data);
       })
@@ -44,7 +42,7 @@ const Chat = () => {
     }
 
     const inputData = {
-      body: msg
+      body: msg,
     };
 
     // manually clearing fields
@@ -52,19 +50,13 @@ const Chat = () => {
 
     console.log(inputData);
 
-    axios
-      .post('http://localhost:3000/api/chat/message', inputData, {
-        headers: {
-          Authorization: `${token}`
-        }
-      })
+    trySendMsg(inputData, token)
       .then((data) => {
         console.log('Successful delivery' + data.status);
       })
       .catch((error) => console.log(error));
 
-    axios
-      .get(`http://localhost:3000/api/chat`, { headers: { Authorization: `${token}` } })
+    tryGetMsg(token)
       .then((resp) => {
         setResponse(resp.data);
       })
@@ -76,8 +68,8 @@ const Chat = () => {
       <h1 className={classes.h1}>Chat</h1>
       <Card className={classes.input}>
         <Form onSubmit={msgSubmitHandler}>
-          <input onChange={msgInputHandler} value={msg} type="text" name="body"></input>
-          <Button type="submit">Send</Button>
+          <input onChange={msgInputHandler} value={msg} type='text' name='body'></input>
+          <Button type='submit'>Send</Button>
         </Form>
       </Card>
       <div className={classes.chat}>

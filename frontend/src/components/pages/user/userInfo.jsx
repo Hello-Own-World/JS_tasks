@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../../App';
 import Button from '../../common/button';
 import Card from '../../common/card';
+import { getLocalItem } from '../../logic/localStorage';
+import { tryGetUserInfo } from '../../logic/requests';
 import classes from './UserInfo.module.css';
 
-import axios from 'axios';
-
 const UserInfo = (props) => {
-  const userId = localStorage.getItem('UserId');
+  const userId = getLocalItem('UserId');
 
   if (!userId) {
     console.log('You are not logged in');
@@ -20,7 +20,7 @@ const UserInfo = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/api/user/${userId}`).then((resp) => {
+    tryGetUserInfo(userId).then((resp) => {
       setResponse(resp.data);
     });
   }, []);
