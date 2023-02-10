@@ -8,6 +8,17 @@ import Login from './components/pages/user/login';
 import Register, { action as CreateUserAction } from './components/pages/user/register';
 import UserInfo from './components/pages/user/userInfo';
 
+// Import our custom CSS
+import '../src/styles.scss';
+
+// // Import all of Bootstrap's JS
+// import * as bootstrap from 'bootstrap';
+
+// import Alert from 'bootstrap/js/dist/alert';
+
+// // or, specify which plugins you need:
+// import { Tooltip, Toast, Popover } from 'bootstrap';
+
 const router = createBrowserRouter([
   {
     path: '/',

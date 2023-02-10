@@ -16,8 +16,6 @@ const Header = (props) => {
     }
   });
 
-  console.log(value);
-
   return (
     <div>
       <div className={classes.headerDiv}>
