@@ -9,7 +9,7 @@ module.exports = {
       files: ['frontend/**/*.js', 'frontend/**/*.jsx'],
       extends: ['plugin:react/recommended'],
       rules: {
-        'react/react-in-jsx-scope': 'off',
+        'react/react-in-jsx-scope': 'on',
       },
       plugins: ['jsx'],
     },

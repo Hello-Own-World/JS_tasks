@@ -1,6 +1,6 @@
-import { isAuthorised } from './auth';
+import { getToken } from './auth';
 
-export function setLocalInfo(token, userId, login) {
+export function setLocalUserInfo(token, userId, login) {
   localStorage.setItem('AccessToken', token);
   localStorage.setItem('UserId', userId);
   localStorage.setItem('Login', login);
@@ -9,10 +9,17 @@ export function setLocalInfo(token, userId, login) {
   localStorage.setItem('tokenExpiration', expiration.toISOString());
 }
 
+export function clearLocalUserInfo() {
+  localStorage.removeItem('AccessToken');
+  localStorage.removeItem('UserId');
+  localStorage.removeItem('Login');
+  localStorage.removeItem('tokenExpiration');
+}
+
 export function getLocalItem(itemName) {
   return localStorage.getItem(itemName);
 }
 
 export function getPrevLogin() {
-  return isAuthorised() ? localStorage.getItem('Login') : 'Guest';
+  return getToken() ? localStorage.getItem('Login') : 'Guest';
 }

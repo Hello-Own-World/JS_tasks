@@ -1,7 +1,5 @@
 import React from 'react';
-
 import Card from './card';
-
 import classes from './message.module.css';
 
 const Message = (props) => {

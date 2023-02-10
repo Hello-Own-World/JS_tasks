@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../../App';
 import Button from '../../common/button';
 import Card from '../../common/card';
-import { getLocalItem } from '../../logic/localStorage';
+import { clearLocalUserInfo, getLocalItem } from '../../logic/localStorage';
 import { tryGetUserInfo } from '../../logic/requests';
 import classes from './UserInfo.module.css';
 
@@ -12,7 +12,6 @@ const UserInfo = (props) => {
   const userId = getLocalItem('UserId');
 
   if (!userId) {
-    console.log('You are not logged in');
     return <h1 className={classes.h1}>You are not logged in</h1>;
   }
 
@@ -25,12 +24,11 @@ const UserInfo = (props) => {
     });
   }, []);
 
-  const [value, setUsername] = useContext(UserContext);
+  const [username, setUsername] = useContext(UserContext);
 
   const logout = () => {
     setUsername('Guest');
-    localStorage.clear();
-    console.log('Local storage was cleared');
+    clearLocalUserInfo();
     return navigate('/home');
   };
 

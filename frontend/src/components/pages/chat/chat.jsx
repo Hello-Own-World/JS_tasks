@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Form } from 'react-router-dom';
-import { isAuthorised } from '../../logic/auth';
+import { Form, useNavigate, redirect, Navigate } from 'react-router-dom';
+import { getToken } from '../../logic/auth';
 import { tryGetMsg, trySendMsg } from '../../logic/requests';
 
 import Button from '../../common/button';
@@ -13,11 +13,13 @@ const Chat = () => {
   const [response, setResponse] = useState([]);
   const [msg, setMsg] = useState('');
 
-  const token = isAuthorised();
+  const navigate = useNavigate();
+
+  const token = getToken();
 
   if (!token) {
-    console.log('You are not logged in');
-    return <h1 className={classes.h1}>You must login to view global chat </h1>;
+    alert('You are not logged in');
+    return navigate('/login');
   }
 
   useEffect(() => {

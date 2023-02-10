@@ -5,7 +5,7 @@ import { UserContext } from '../../../App';
 import Button from '../../common/button';
 import Card from '../../common/card';
 import ErrorModal from '../../common/errorModal';
-import { setLocalInfo } from '../../logic/localStorage';
+import { setLocalUserInfo } from '../../logic/localStorage';
 import { tryLogin } from '../../logic/requests';
 
 import classes from './login.module.css';
@@ -46,7 +46,7 @@ const Login = () => {
       .then((data) => {
         setErrorLogin(null);
         setUsername(data.data.login);
-        setLocalInfo(data.data.token, data.data.userId, data.data.login);
+        setLocalUserInfo(data.data.token, data.data.userId, data.data.login);
         return navigate('/home');
       })
       .catch((error) => {

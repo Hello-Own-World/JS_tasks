@@ -1,6 +1,6 @@
 import { getLocalItem } from './localStorage';
 
-export function isAuthorised() {
+export function getToken() {
   const token = getLocalItem('AccessToken');
   if (!token) {
     return null;
