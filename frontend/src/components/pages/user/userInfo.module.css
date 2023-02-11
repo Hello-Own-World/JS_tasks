@@ -31,3 +31,9 @@
   outline: none;
   border-color: #4f005f;
 }
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -13,7 +13,7 @@ export async function tryRegister(authData) {
 export async function trySendMsg(inputData, token) {
   const resp = await axios.post('/api/chat/message', inputData, {
     headers: {
-      Authorization: `${token}`,
+      Authorization: `Bearer ${token}`,
     },
   });
   return resp;

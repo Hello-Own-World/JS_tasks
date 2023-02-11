@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Form, useNavigate, redirect, Navigate } from 'react-router-dom';
+import { Form, useNavigate } from 'react-router-dom';
 import { getToken } from '../../logic/auth';
 import { tryGetMsg, trySendMsg } from '../../logic/requests';
+import { formatHtmlText } from '../../logic/helpers';
 
 import Button from '../../common/button';
 import Card from '../../common/card';
@@ -12,25 +13,34 @@ import classes from './chat.module.css';
 const Chat = () => {
   const [response, setResponse] = useState([]);
   const [msg, setMsg] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
   const token = getToken();
 
   if (!token) {
-    alert('You are not logged in');
-    return navigate('/login');
+    return (
+      <div class='alert alert-danger'>
+        <strong>Error!</strong> You have to be logged in to access global chat.{' '}
+        <a href='/login' class='alert-link'>
+          Log in page
+        </a>
+      </div>
+    );
+
+    // return navigate('/login');
   }
 
   useEffect(() => {
+    setLoading(true);
     tryGetMsg(token)
       .then((resp) => {
         setResponse(resp.data);
+        setLoading(false);
       })
       .catch((err) => console.log(err));
   }, []);
-
-  response.map((el) => console.log(el));
 
   const msgInputHandler = (event) => {
     setMsg(event.target.value);
@@ -69,19 +79,27 @@ const Chat = () => {
     <div>
       <h1 className={classes.h1}>Chat</h1>
       <Card className={classes.input}>
-        <Form onSubmit={msgSubmitHandler}>
-          <input onChange={msgInputHandler} value={msg} type='text' name='body'></input>
+        <form onSubmit={msgSubmitHandler}>
+          <textarea onChange={msgInputHandler} value={msg} type='text' name='body' class='form-control'></textarea>
+          <br />
           <Button type='submit'>Send</Button>
-        </Form>
+        </form>
       </Card>
+
+      {loading ? (
+        <div className={classes.spinner}>
+          <div class='spinner-border text-light'></div>
+        </div>
+      ) : null}
+
       <div className={classes.chat}>
         {response.map((el) => {
           return (
             <Message
-              message={el.body}
+              message={formatHtmlText(el.body)}
               username={el.author.login}
               time={new Date(el.updatedAt).toString().substring(0, 24)}
-              id={el._id}
+              key={el._id}
               className={classes.msg}></Message>
           );
         })}

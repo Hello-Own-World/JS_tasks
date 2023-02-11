@@ -6,7 +6,7 @@ const Message = (props) => {
   return (
     <Card key={props.id}>
       <h3 className={classes.nickname}>{props.username}</h3>
-      <p className={classes.body}>{props.message}</p>
+      <p className={classes.body} dangerouslySetInnerHTML={{ __html: props.message }}></p>
       <p className={classes.time}>{props.time}</p>
     </Card>
   );
