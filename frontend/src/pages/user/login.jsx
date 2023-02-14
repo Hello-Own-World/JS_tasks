@@ -13,12 +13,10 @@ import classes from './login.module.css';
 const Login = () => {
   const [login, setLogin] = useState('');
   const [pass, setPass] = useState('');
-
   const [error, setError] = useState();
   const [errorLogin, setErrorLogin] = useState();
 
   const { setUsername } = useContext(UserContext);
-
   const navigate = useNavigate();
 
   function submitHandler(event) {

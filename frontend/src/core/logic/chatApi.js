@@ -4,26 +4,22 @@ import { axiosRequestErrorHandler } from '../errors/axiosErrors';
 
 class ChatApi {
   static SendMsg(inputData) {
-    axios
+    return axios
       .post('/api/chat/message', inputData, {
         headers: {
           Authorization: `Bearer ${AuthApi.getToken()}`,
         },
       })
-      .then((resp) => {
-        return resp;
-      })
+      .then((resp) => resp)
       .catch((err) => {
         axiosRequestErrorHandler(err);
       });
   }
 
   static GetMsg() {
-    axios
+    return axios
       .get(`/api/chat`, { headers: { Authorization: `Bearer ${AuthApi.getToken()}` } })
-      .then((resp) => {
-        return resp;
-      })
+      .then((resp) => resp)
       .catch((err) => {
         axiosRequestErrorHandler(err);
       });

@@ -37,7 +37,7 @@ class AuthApi {
     localStorage.removeItem('Login');
     localStorage.removeItem('tokenExpiration');
   }
-  /** Returns item from local storage or throws error there is none*/
+  /** Returns item from local storage or throws error if there is none*/
   static getLocalItem(itemName) {
     const item = localStorage.getItem(itemName);
     if (!item) {

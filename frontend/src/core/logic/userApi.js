@@ -4,22 +4,18 @@ import AuthApi from './authApi';
 
 class UserApi {
   static Login(inputData) {
-    axios
+    return axios
       .post('/api/user/login', inputData, {})
-      .then((resp) => {
-        return resp;
-      })
+      .then((resp) => resp)
       .catch((err) => {
         axiosRequestErrorHandler(err);
       });
   }
 
   static Register(authData) {
-    axios
+    return axios
       .post('/api/user/register', authData, {})
-      .then((resp) => {
-        return resp;
-      })
+      .then((resp) => resp)
       .catch((err) => {
         axiosRequestErrorHandler(err);
       });
@@ -33,11 +29,9 @@ class UserApi {
     try {
       const userId = AuthApi.getLocalItem('UserId');
 
-      axios
+      return axios
         .get(`/api/user/${userId}`)
-        .then((resp) => {
-          return resp;
-        })
+        .then((resp) => resp)
         .catch((err) => {
           axiosRequestErrorHandler(err);
         });
