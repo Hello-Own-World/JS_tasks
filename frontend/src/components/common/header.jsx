@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import { UserContext } from '../../App';
-// import { UserContext } from '../../core/logic/utils';
+import { UserContext } from '../../core/contexts/userContext';
 import AuthApi from '../../core/logic/authApi';
 
 import classes from './Header.module.css';
@@ -46,7 +45,7 @@ const Header = (props) => {
         </div>
 
         <div className={classes.userCircle}>
-          <img className={classes.img} src={require('/src/images/userIcon.png').default} alt='Avatar' />
+          <img className={classes.img} src={require('../../images/userIcon.png').default} alt='Avatar' />
           <p className={classes.h1}>
             <Link to={'/userInfo'} className={classes.noUnderscore}>
               {username}

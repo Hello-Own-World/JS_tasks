@@ -1,5 +1,6 @@
-import React, { createContext, useState } from 'react';
+import React, { useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { UserContext } from './core/contexts/userContext';
 
 import Header from './components/common/header';
 import Chat from './pages/chat/chat';
@@ -7,7 +8,6 @@ import Home from './pages/home/homePage';
 import Login from './pages/user/login';
 import Register from './pages/user/register';
 import UserInfo from './pages/user/userInfo';
-// import UserContext from './core/logic/authApi';
 import '../src/styles.scss';
 
 const router = createBrowserRouter([
@@ -23,8 +23,6 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
-export const UserContext = createContext(null);
 
 function App() {
   const [username, setUsername] = useState('Guest');

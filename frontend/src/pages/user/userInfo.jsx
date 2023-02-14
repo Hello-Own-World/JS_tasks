@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { UserContext } from '../../App';
 import Button from '../../components/common/button';
 import Card from '../../components/common/card';
+import { UserContext } from '../../core/contexts/userContext';
 import AuthApi from '../../core/logic/authApi';
 import UserApi from '../../core/logic/userApi';
 import classes from './UserInfo.module.css';
-// import { UserContext } from '../../core/logic/';
+
 
 const UserInfo = (props) => {
   const [loading, setLoading] = useState(false);

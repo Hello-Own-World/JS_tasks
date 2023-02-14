@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Form, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../App';
+import { UserContext } from '../../core/contexts/userContext';
 import AuthApi from '../../core/logic/authApi';
 import UserApi from '../../core/logic/userApi';
 
