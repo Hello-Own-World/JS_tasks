@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Form, useNavigate } from 'react-router-dom';
-import { getToken } from '../../logic/auth';
-import { tryGetMsg, trySendMsg } from '../../logic/requests';
-import { formatHtmlText } from '../../logic/helpers';
+import { useNavigate } from 'react-router-dom';
+import ChatApi from '../../core/logic/chatApi';
+import UserApi from '../../core/logic/userApi';
+import { formatHtmlText } from '../../core/logic/utils';
 
-import Button from '../../common/button';
-import Card from '../../common/card';
-import Message from '../../common/message';
+import Button from '../../components/common/button';
+import Card from '../../components/common/card';
+import Message from '../../components/common/message';
 
 import classes from './chat.module.css';
 
@@ -17,13 +17,11 @@ const Chat = () => {
 
   const navigate = useNavigate();
 
-  const token = getToken();
-
-  if (!token) {
+  if (!UserApi.IsLoggedIn()) {
     return (
-      <div class='alert alert-danger'>
+      <div className='alert alert-danger'>
         <strong>Error!</strong> You have to be logged in to access global chat.{' '}
-        <a href='/login' class='alert-link'>
+        <a href='/login' className='alert-link'>
           Log in page
         </a>
       </div>
@@ -34,7 +32,7 @@ const Chat = () => {
 
   useEffect(() => {
     setLoading(true);
-    tryGetMsg(token)
+    ChatApi.GetMsg()
       .then((resp) => {
         setResponse(resp.data);
         setLoading(false);
@@ -57,18 +55,17 @@ const Chat = () => {
       body: msg,
     };
 
-    // manually clearing fields
     setMsg('');
 
     console.log(inputData);
 
-    trySendMsg(inputData, token)
+    ChatApi.SendMsg(inputData)
       .then((data) => {
         console.log('Successful delivery' + data.status);
       })
       .catch((error) => console.log(error));
 
-    tryGetMsg(token)
+    ChatApi.GetMsg()
       .then((resp) => {
         setResponse(resp.data);
       })
@@ -80,7 +77,7 @@ const Chat = () => {
       <h1 className={classes.h1}>Chat</h1>
       <Card className={classes.input}>
         <form onSubmit={msgSubmitHandler}>
-          <textarea onChange={msgInputHandler} value={msg} type='text' name='body' class='form-control'></textarea>
+          <textarea onChange={msgInputHandler} value={msg} type='text' name='body' className='form-control'></textarea>
           <br />
           <Button type='submit'>Send</Button>
         </form>
@@ -88,7 +85,7 @@ const Chat = () => {
 
       {loading ? (
         <div className={classes.spinner}>
-          <div class='spinner-border text-light'></div>
+          <div className='spinner-border text-light'></div>
         </div>
       ) : null}
 

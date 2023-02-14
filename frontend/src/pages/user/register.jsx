@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
-import { Form, redirect } from 'react-router-dom';
+import { Form } from 'react-router-dom';
 
-import Button from '../../common/button';
-import Card from '../../common/card';
-import ErrorModal from '../../common/errorModal';
-import { tryRegister } from '../../logic/requests';
+import Button from '../../components/common/button';
+import Card from '../../components/common/card';
+import ErrorModal from '../../components/common/errorModal';
+import UserApi from '../../core/logic/userApi';
 import classes from './register.module.css';
 
 const Register = () => {
@@ -40,6 +40,12 @@ const Register = () => {
       lastName: lastName,
       phone: phone,
     };
+
+    UserApi.Register(inputData)
+      .then((data) => console.log(data))
+      .catch((error) => {
+        console.log(error);
+      });
 
     // manually clearing fields
     setLogin('');
@@ -102,27 +108,5 @@ const Register = () => {
     </div>
   );
 };
-
-export async function action({ request }) {
-  console.log('ACTION REGISTER METHOD INVOKED');
-
-  const data = await request.formData();
-
-  const authData = {
-    login: data.get('login'),
-    pass: data.get('pass'),
-    firstName: data.get('firstName'),
-    lastName: data.get('lastName'),
-    phone: data.get('phone'),
-  };
-
-  tryRegister(authData)
-    .then((data) => console.log(data))
-    .catch((error) => {
-      console.log(error);
-    });
-
-  return redirect('/home');
-}
 
 export default Register;

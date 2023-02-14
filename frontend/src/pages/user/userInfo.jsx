@@ -1,43 +1,43 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { UserContext } from '../../../App';
-import Button from '../../common/button';
-import Card from '../../common/card';
-import { getToken } from '../../logic/auth';
-import { clearLocalUserInfo, getLocalItem } from '../../logic/localStorage';
-import { tryGetUserInfo } from '../../logic/requests';
+import { UserContext } from '../../App';
+import Button from '../../components/common/button';
+import Card from '../../components/common/card';
+import AuthApi from '../../core/logic/authApi';
+import UserApi from '../../core/logic/userApi';
 import classes from './UserInfo.module.css';
+// import { UserContext } from '../../core/logic/';
 
 const UserInfo = (props) => {
-  const userId = getLocalItem('UserId');
-  const token = getToken();
-
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userId) {
+    if (UserApi.IsLoggedIn()) {
       setLoading(true);
-      tryGetUserInfo(userId).then((resp) => {
-        setResponse(resp.data);
-        setLoading(false);
-      });
+      UserApi.GetUserInfo()
+        .then((resp) => {
+          setResponse(resp.data);
+          setLoading(false);
+        })
+        .catch((err) => console.error(err));
     }
   }, []);
 
-  const [username, setUsername] = useContext(UserContext);
+  const { setUsername } = useContext(UserContext);
 
   const logout = () => {
+    console.log('set username guest triggered');
     setUsername('Guest');
-    clearLocalUserInfo();
+    AuthApi.clearLocalUserInfo();
     return navigate('/home');
   };
 
   return (
     <div>
-      {token && userId ? (
+      {UserApi.IsLoggedIn() ? (
         <div>
           <h1 className={classes.h1}>User info:</h1>
           <Card className={classes.input}>
@@ -53,16 +53,16 @@ const UserInfo = (props) => {
           </Card>
         </div>
       ) : (
-        <div class='alert alert-warning'>
+        <div className='alert alert-warning'>
           <strong>Warning!</strong> You are logged in as Guest.{' '}
-          <a href='/login' class='alert-link'>
+          <a href='/login' className='alert-link'>
             Log in page
           </a>
         </div>
       )}
       {loading ? (
         <div className={classes.spinner}>
-          <div class='spinner-border text-light'></div>
+          <div className='spinner-border text-light'></div>
         </div>
       ) : null}
     </div>

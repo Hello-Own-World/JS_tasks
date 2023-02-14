@@ -1,16 +1,16 @@
 import React, { useContext, useEffect } from 'react';
+import { Link, Outlet } from 'react-router-dom';
 import { UserContext } from '../../App';
-import { Link } from 'react-router-dom';
-import { Outlet } from 'react-router-dom';
-import { getPrevLogin } from '../logic/localStorage';
+// import { UserContext } from '../../core/logic/utils';
+import AuthApi from '../../core/logic/authApi';
 
 import classes from './Header.module.css';
 
 const Header = (props) => {
-  const [value, setUsername] = useContext(UserContext);
+  const { username, setUsername } = useContext(UserContext);
 
   useEffect(() => {
-    const prevLog = getPrevLogin();
+    const prevLog = AuthApi.getPrevLogin();
     if (prevLog) {
       setUsername(prevLog);
     }
@@ -49,7 +49,7 @@ const Header = (props) => {
           <img className={classes.img} src={require('/src/images/userIcon.png').default} alt='Avatar' />
           <p className={classes.h1}>
             <Link to={'/userInfo'} className={classes.noUnderscore}>
-              {value}
+              {username}
             </Link>
           </p>
         </div>
