@@ -1,27 +1,32 @@
 import AuthApi from './authApi';
 import axios from 'axios';
+import { axiosRequestErrorHandler } from '../errors/axiosErrors';
 
 class ChatApi {
   static SendMsg(inputData) {
-    try {
-      const token = AuthApi.getToken();
-      return axios.post('/api/chat/message', inputData, {
+    axios
+      .post('/api/chat/message', inputData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${AuthApi.getToken()}`,
         },
+      })
+      .then((resp) => {
+        return resp;
+      })
+      .catch((err) => {
+        axiosRequestErrorHandler(err);
       });
-    } catch (err) {
-      console.error(err);
-    }
   }
 
   static GetMsg() {
-    try {
-      const token = AuthApi.getToken();
-      return axios.get(`/api/chat`, { headers: { Authorization: `Bearer ${token}` } });
-    } catch (err) {
-      console.error(err);
-    }
+    axios
+      .get(`/api/chat`, { headers: { Authorization: `Bearer ${AuthApi.getToken()}` } })
+      .then((resp) => {
+        return resp;
+      })
+      .catch((err) => {
+        axiosRequestErrorHandler(err);
+      });
   }
 }
 

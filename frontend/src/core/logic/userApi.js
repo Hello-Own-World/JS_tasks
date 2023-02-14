@@ -1,13 +1,28 @@
 import axios from 'axios';
+import { axiosRequestErrorHandler } from '../errors/axiosErrors';
 import AuthApi from './authApi';
 
 class UserApi {
   static Login(inputData) {
-    return axios.post('/api/user/login', inputData, {});
+    axios
+      .post('/api/user/login', inputData, {})
+      .then((resp) => {
+        return resp;
+      })
+      .catch((err) => {
+        axiosRequestErrorHandler(err);
+      });
   }
 
   static Register(authData) {
-    return axios.post('/api/user/register', authData, {});
+    axios
+      .post('/api/user/register', authData, {})
+      .then((resp) => {
+        return resp;
+      })
+      .catch((err) => {
+        axiosRequestErrorHandler(err);
+      });
   }
 
   static IsLoggedIn() {
@@ -17,10 +32,15 @@ class UserApi {
   static GetUserInfo() {
     try {
       const userId = AuthApi.getLocalItem('UserId');
-      if (!userId) {
-        throw new Error('No user Id provided');
-      }
-      return axios.get(`/api/user/${userId}`);
+
+      axios
+        .get(`/api/user/${userId}`)
+        .then((resp) => {
+          return resp;
+        })
+        .catch((err) => {
+          axiosRequestErrorHandler(err);
+        });
     } catch (err) {
       console.error(err);
       return null;

@@ -1,30 +1,34 @@
-import { createContext } from 'react';
-
 class AuthApi {
+  /** Get token from local storage, if it is absent or expired return null*/
   static getToken() {
     try {
       const token = this.getLocalItem('AccessToken');
       if (!token) {
-        throw new Error('No token provided');
+        throw new Error('Token not provided');
       }
       const expirationTime = new Date(this.getLocalItem('tokenExpiration'));
       const now = new Date();
       if (!expirationTime || expirationTime.getTime() - now.getTime() < 0) {
-        return new Error('Token expired');
+        throw new Error('Token expired');
       }
       return token;
     } catch (err) {
       console.error(err);
+      return null;
     }
   }
 
   static setLocalUserInfo(token, userId, login) {
-    localStorage.setItem('AccessToken', token);
-    localStorage.setItem('UserId', userId);
-    localStorage.setItem('Login', login);
-    const expiration = new Date();
-    expiration.setHours(expiration.getHours() + 1);
-    localStorage.setItem('tokenExpiration', expiration.toISOString());
+    try {
+      localStorage.setItem('AccessToken', token);
+      localStorage.setItem('UserId', userId);
+      localStorage.setItem('Login', login);
+      const expiration = new Date();
+      expiration.setHours(expiration.getHours() + 1);
+      localStorage.setItem('tokenExpiration', expiration.toISOString());
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   static clearLocalUserInfo() {
@@ -33,13 +37,13 @@ class AuthApi {
     localStorage.removeItem('Login');
     localStorage.removeItem('tokenExpiration');
   }
-
+  /** Returns item from local storage or throws error there is none*/
   static getLocalItem(itemName) {
-    try {
-      return localStorage.getItem(itemName);
-    } catch (err) {
-      console.error(err);
+    const item = localStorage.getItem(itemName);
+    if (!item) {
+      throw new Error(`No ${itemName} provided`);
     }
+    return item;
   }
 
   static getPrevLogin() {
@@ -48,5 +52,3 @@ class AuthApi {
 }
 
 export default AuthApi;
-
-
