@@ -1,31 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Message from '../../components/common/message';
+import Spinner from '../../components/common/spinner';
+import SendMsgForm from '../../components/forms/SendMsgForm';
 import ChatApi from '../../core/logic/chatApi';
 import UserApi from '../../core/logic/userApi';
 import { formatHtmlText } from '../../core/logic/utils';
-
-import Message from '../../components/common/message';
-
 import classes from './chat.module.css';
-import Spinner from '../../components/common/spinner';
-
-import SendMsgForm from '../../components/forms/SendMsgForm';
 
 const Chat = () => {
   const [response, setResponse] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  if (!UserApi.IsLoggedIn()) {
-    return (
-      <div className='alert alert-danger'>
-        <strong>Error!</strong> You have to be logged in to access global chat.{' '}
-        <a href='/login' className='alert-link'>
-          Log in page
-        </a>
-      </div>
-    );
+  const navigate = useNavigate();
 
-    // return navigate('/login');
-  }
+  useEffect(() => {
+    if (!UserApi.IsLoggedIn()) {
+      return navigate('/login', { state: { notAuthorised: true } });
+    }
+  }, []);
 
   useEffect(() => {
     setLoading(true);

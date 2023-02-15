@@ -13,9 +13,9 @@ const LoginForm = ({ setError }) => {
   const [pass, setPass] = useState('');
   const [errorLogin, setErrorLogin] = useState();
 
-  const { setUsername } = useContext(UserContext);
-
   const navigate = useNavigate();
+
+  const { setUsername } = useContext(UserContext);
 
   const setFormFields = {
     setLogin,
@@ -52,6 +52,8 @@ const LoginForm = ({ setError }) => {
       });
 
     clearForm(setFormFields);
+
+    return navigate('/home');
   }
 
   const loginInputHandler = (event) => {

@@ -39,11 +39,16 @@ class AuthApi {
   }
   /** Returns item from local storage or throws error if there is none*/
   static getLocalItem(itemName) {
-    const item = localStorage.getItem(itemName);
-    if (!item) {
-      throw new Error(`No ${itemName} provided`);
+    try {
+      const item = localStorage.getItem(itemName);
+      if (!item) {
+        throw new Error(`No ${itemName} provided`);
+      }
+      return item;
+    } catch (err) {
+      console.warn(err);
+      return null;
     }
-    return item;
   }
 
   static getPrevLogin() {
