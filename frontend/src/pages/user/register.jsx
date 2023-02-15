@@ -1,81 +1,12 @@
 import React, { useState } from 'react';
 
-import { Form } from 'react-router-dom';
-
-import Button from '../../components/common/button';
-import Card from '../../components/common/card';
 import ErrorModal from '../../components/common/errorModal';
-import UserApi from '../../core/logic/userApi';
 import classes from './register.module.css';
 
+import RegisterForm from '../../components/forms/registerForm';
+
 const Register = () => {
-  const [login, setLogin] = useState('');
-  const [pass, setPass] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [phone, setPhone] = useState('');
   const [error, setError] = useState();
-
-  async function submitHandler(event) {
-    if (
-      login.trim().length === 0 ||
-      pass.trim().length === 0 ||
-      firstName.trim().length === 0 ||
-      lastName.trim().length === 0 ||
-      phone.trim().length === 0
-    ) {
-      setError({
-        title: 'Invalid input',
-        message: 'Please enter all data',
-      });
-
-      event.preventDefault(); // preventing page from reloading
-      return;
-    }
-
-    const inputData = {
-      login: login,
-      pass: pass,
-      firstName: firstName,
-      lastName: lastName,
-      phone: phone,
-    };
-
-    UserApi.Register(inputData)
-      .then((data) => console.log(data))
-      .catch((error) => {
-        console.log(error);
-      });
-
-    // manually clearing fields
-    setLogin('');
-    setPass('');
-    setFirstName('');
-    setLastName('');
-    setPhone('');
-
-    console.log(inputData);
-  }
-
-  const loginInputHandler = (event) => {
-    setLogin(event.target.value);
-  };
-
-  const passInputHandler = (event) => {
-    setPass(event.target.value);
-  };
-
-  const firstNameInputHandler = (event) => {
-    setFirstName(event.target.value);
-  };
-
-  const lastNameInputHandler = (event) => {
-    setLastName(event.target.value);
-  };
-
-  const phoneInputHandler = (event) => {
-    setPhone(event.target.value);
-  };
 
   const errorHandler = (event) => {
     setError(null);
@@ -85,26 +16,7 @@ const Register = () => {
     <div>
       <h1 className={classes.h1}>Register</h1>
       {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
-      <Card className={classes.input}>
-        <Form method='post' onSubmit={submitHandler}>
-          <label>Login:</label>
-          <input onChange={loginInputHandler} value={login} type='email' name='login'></input>
-          <br></br>
-          <label>Password:</label>
-          <input onChange={passInputHandler} value={pass} type='password' name='pass'></input>
-          <br></br>
-          <label>First name:</label>
-          <input onChange={firstNameInputHandler} value={firstName} type='text' name='firstName'></input>
-          <br></br>
-          <label>Last name:</label>
-          <input onChange={lastNameInputHandler} value={lastName} type='text' name='lastName'></input>
-          <br></br>
-          <label>Phone number:</label>
-          <input onChange={phoneInputHandler} value={phone} type='number' name='phone'></input>
-          <br></br>
-          <Button type='submit'>Register</Button>
-        </Form>
-      </Card>
+      <RegisterForm setError={setError} />
     </div>
   );
 };
