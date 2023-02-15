@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../core/contexts/userContext';
 import AuthApi from '../../core/logic/authApi';
 import UserApi from '../../core/logic/userApi';
+import { clearForm } from '../../core/logic/utils';
 import Button from '../common/button';
 import Card from '../common/card';
 import classes from './loginForm.module.css';
@@ -15,6 +16,11 @@ const LoginForm = ({ setError }) => {
   const { setUsername } = useContext(UserContext);
 
   const navigate = useNavigate();
+
+  const setFormFields = {
+    setLogin,
+    setPass,
+  };
 
   function submitHandler(event) {
     event.preventDefault();
@@ -37,7 +43,6 @@ const LoginForm = ({ setError }) => {
         setErrorLogin(null);
         setUsername(data.data.login);
         AuthApi.setLocalUserInfo(data.data.token, data.data.userId, data.data.login);
-        return navigate('/home');
       })
       .catch((error) => {
         if (error.response.status === 400) {
@@ -46,8 +51,7 @@ const LoginForm = ({ setError }) => {
         }
       });
 
-    setLogin('');
-    setPass('');
+    clearForm(setFormFields);
   }
 
   const loginInputHandler = (event) => {

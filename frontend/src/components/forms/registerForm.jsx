@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '../../components/common/button';
 import Card from '../../components/common/card';
 import UserApi from '../../core/logic/userApi';
-import { useState } from 'react';
+import { clearForm } from '../../core/logic/utils';
 
 import classes from './registerForm.module.css';
 
@@ -12,6 +12,14 @@ const RegisterForm = ({ setError }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
+
+  const setFormFields = {
+    setLogin,
+    setPass,
+    setFirstName,
+    setLastName,
+    setPhone,
+  };
 
   const loginInputHandler = (event) => {
     setLogin(event.target.value);
@@ -63,11 +71,7 @@ const RegisterForm = ({ setError }) => {
         console.error(error);
       });
 
-    setLogin('');
-    setPass('');
-    setFirstName('');
-    setLastName('');
-    setPhone('');
+    clearForm(setFormFields);
   }
   return (
     <Card className={classes.input}>
