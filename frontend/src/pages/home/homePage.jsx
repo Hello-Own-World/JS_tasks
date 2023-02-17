@@ -2,7 +2,11 @@ import React from 'react';
 
 import classes from './HomePage.module.css';
 
+import { io } from 'socket.io-client';
+
 const Home = () => {
+  var socket = io();
+
   return (
     <div>
       <h1 className={classes.h1}>About Chat App:</h1>
