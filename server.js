@@ -10,14 +10,19 @@ const { initConnection } = require('./config/db');
 const defaultQueue = require('./queue');
 
 const apiRouter = require('./routes/api/index');
+const checkUsernameInSocket = require('./middleware/userSocket');
 
 const { PORT } = process.env;
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  /* options */
+  cors: {
+    origin: 'http://localhost:4000',
+  },
 });
+
+io.use(checkUsernameInSocket);
 
 app.use(expressLayouts);
 app.set('layout', 'layouts/layout');
@@ -41,6 +46,22 @@ app.use('*', (req, res) => {
 
 io.on('connection', (socket) => {
   console.log('New user connected');
+
+  // get list of all current users and send it to new user
+  const users = [];
+  for (let [id, socket] of io.of('/').sockets) {
+    users.push({
+      userID: id,
+      username: socket.username,
+    });
+  }
+  socket.emit('users', users);
+
+  // warn all users that new user has connected (used to update local lists of users)
+  socket.broadcast.emit('user connected', {
+    userID: socket.id,
+    username: socket.username,
+  });
 
   socket.on('disconnect', () => {
     console.log('User was disconnected');

@@ -8,6 +8,8 @@ import Button from '../common/button';
 import Card from '../common/card';
 import classes from './loginForm.module.css';
 
+import Sockets from '../../core/socket/socket';
+
 const LoginForm = ({ setError }) => {
   const [login, setLogin] = useState('');
   const [pass, setPass] = useState('');
@@ -43,6 +45,7 @@ const LoginForm = ({ setError }) => {
         setErrorLogin(null);
         setUsername(data.data.login);
         AuthApi.setLocalUserInfo(data.data.token, data.data.userId, data.data.login);
+        Sockets.connectSocket(data.data.login);
       })
       .catch((error) => {
         if (error.response.status === 400) {

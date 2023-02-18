@@ -1,18 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Message from '../../components/common/message';
 import Spinner from '../../components/common/spinner';
 import SendMsgForm from '../../components/forms/SendMsgForm';
+import { ChatContext } from '../../core/contexts/chatContext';
 import ChatApi from '../../core/logic/chatApi';
 import UserApi from '../../core/logic/userApi';
 import { formatHtmlText } from '../../core/logic/utils';
 import classes from './chat.module.css';
 
+import { socket } from '../../core/socket/socket';
+
+socket.on('users', (users) => {
+  // console.log('list of all users: ' + users);
+  console.log('before function2');
+  saveUsers(users);
+  console.log('after function');
+});
+
 const Chat = () => {
   const [response, setResponse] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const { userArray, setUserArray } = useContext(ChatContext);
+
   const navigate = useNavigate();
+
+  function saveUsers(users) {
+    console.log('function');
+    setUserArray(users);
+  }
+
+  socket.on('users', (users) => {
+    // console.log('list of all users: ' + users);
+    console.log('before function2');
+    saveUsers(users);
+    console.log('after function');
+  });
+
+  useEffect(() => {
+    socket.on('users', (users) => {
+      // console.log('list of all users: ' + users);
+      console.log('before function3');
+      saveUsers(users);
+      console.log('after function');
+    });
+  }, [socket]);
 
   useEffect(() => {
     if (!UserApi.IsLoggedIn()) {

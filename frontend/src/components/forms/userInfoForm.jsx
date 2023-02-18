@@ -9,6 +9,7 @@ import Button from '../../components/common/button';
 import Card from '../../components/common/card';
 
 import classes from './userInfoForm.module.css';
+import { socket } from '../../core/socket/socket';
 
 const UserInfoForm = () => {
   const [response, setResponse] = useState(true);
@@ -34,6 +35,9 @@ const UserInfoForm = () => {
     console.log('set username guest triggered');
     setUsername('Guest');
     AuthApi.clearLocalUserInfo();
+
+    socket.disconnect();
+
     return navigate('/home');
   };
 
