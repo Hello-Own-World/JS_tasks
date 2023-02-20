@@ -8,14 +8,14 @@ import Button from '../common/button';
 import Card from '../common/card';
 import classes from './loginForm.module.css';
 
-const LoginForm = ({ setError }) => {
+const LoginForm = ({ setError, socket }) => {
   const [login, setLogin] = useState('');
   const [pass, setPass] = useState('');
   const [errorLogin, setErrorLogin] = useState();
 
   const navigate = useNavigate();
 
-  const { setUsername } = useContext(UserContext);
+  const { username, setUsername } = useContext(UserContext);
 
   const setFormFields = {
     setLogin,
@@ -43,12 +43,15 @@ const LoginForm = ({ setError }) => {
         setErrorLogin(null);
         setUsername(data.data.login);
         AuthApi.setLocalUserInfo(data.data.token, data.data.userId, data.data.login);
+        socket.auth = { username: data.data.login };
+        socket.connect();
       })
       .catch((error) => {
-        if (error.response.status === 400) {
+        if (error.response && error.response.status === 400) {
           setErrorLogin('Wrong input');
           return null;
         }
+        console.error(error);
       });
 
     clearForm(setFormFields);

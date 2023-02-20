@@ -47,21 +47,31 @@ app.use('*', (req, res) => {
 io.on('connection', (socket) => {
   console.log('New user connected');
 
-  // get list of all current users and send it to new user
-  const users = [];
-  for (let [id, socket] of io.of('/').sockets) {
-    users.push({
-      userID: id,
+  socket.on('user joined room', () => {
+    // get list of all current users and send it to new user
+    const users = [];
+    for (let [id, socket] of io.of('/').sockets) {
+      users.push({
+        userID: id,
+        username: socket.username,
+        status: 'Online',
+      });
+    }
+    socket.emit('users', users);
+
+    // warn all users that new user has connected (used to update local lists of users)
+    socket.broadcast.emit('user connected', {
+      userID: socket.id,
+      username: socket.username,
+      status: 'Online',
+    });
+  });
+
+  socket.on('leave room', () => {
+    socket.broadcast.emit('user left room', {
+      userID: socket.id,
       username: socket.username,
     });
-  }
-  socket.emit('users', users);
-  console.log('emited users');
-
-  // warn all users that new user has connected (used to update local lists of users)
-  socket.broadcast.emit('user connected', {
-    userID: socket.id,
-    username: socket.username,
   });
 
   socket.onAny((event, ...args) => {
@@ -69,6 +79,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
+    socket.broadcast.emit('user disconnected', {
+      userID: socket.id,
+      username: socket.username,
+    });
     console.log('User was disconnected');
   });
 });

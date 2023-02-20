@@ -22,6 +22,7 @@ function App() {
       autoConnect: false,
     });
     setSocket(newSocket);
+
     return () => newSocket.close();
   }, [setSocket]);
 

@@ -31,12 +31,11 @@ const UserInfoForm = ({ socket }) => {
   }, []);
 
   const logout = () => {
-    console.log('set username guest triggered');
     setUsername('Guest');
     AuthApi.clearLocalUserInfo();
 
     socket.disconnect();
-    
+
     return navigate('/home');
   };
 

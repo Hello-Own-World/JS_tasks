@@ -7,6 +7,8 @@ import { UserContext } from '../../core/contexts/userContext';
 import UserApi from '../../core/logic/userApi';
 import { formatHtmlText } from '../../core/logic/utils';
 import classes from './chat.module.css';
+import Card from '../../components/common/card';
+import UserCard from '../../components/common/userCard';
 
 const Chat = ({ socket }) => {
   const [response, setResponse] = useState([]); // used foe msgs
@@ -15,7 +17,7 @@ const Chat = ({ socket }) => {
   const { username } = useContext(UserContext);
 
   const [messages, setMessages] = useState({});
-  const [usersArr, setUsersArr] = useState({});
+  const [usersArr, setUsersArr] = useState([{}]);
 
   const navigate = useNavigate();
 
@@ -24,61 +26,98 @@ const Chat = ({ socket }) => {
       return navigate('/login', { state: { notAuthorised: true } });
     }
 
-    socket.auth = { username: username };
-    socket.connect();
+    socket.emit('user joined room');
 
     socket.on('users', (users) => {
-      console.log(users);
-      setUsersArr(users); //overwrite local udser storage on new connection
-      console.log('After successful local save ' + usersArr);
+      setUsersArr(users); //overwrite local user storage on new connection
     });
 
     socket.on('user connected', (user) => {
+      let present = false;
+
       setUsersArr((prevArr) => {
-        const newArr = [...prevArr, user];
+        const newArr = [...prevArr];
+        newArr.forEach((el) => {
+          if (el.userID === user.userID) {
+            el.status = 'Online';
+            present = true;
+            D;
+          }
+        });
+        return newArr;
+      });
+
+      if (!present) {
+        setUsersArr((prevArr) => {
+          user.status = 'Online';
+          const newArr = [...prevArr, user];
+          return newArr;
+        });
+      }
+    });
+
+    socket.on('user left room', (user) => {
+      // change status to away
+      setUsersArr((prevArr) => {
+        const newArr = [...prevArr];
+        newArr.forEach((el) => {
+          if (el.userID === user.userID) {
+            el.status = 'Away';
+          }
+        });
+
+        // newArr.forEach((el) => console.log(el));
+
+        return newArr;
+      });
+    });
+
+    socket.on('user disconnected', (user) => {
+      // del user from userArr in chat
+      setUsersArr((prevArr) => {
+        const newArr = [...prevArr];
+        newArr.splice(newArr.indexOf(user));
         return newArr;
       });
     });
 
     return () => {
+      socket.emit('leave room');
       socket.off('users');
-      socket.disconnect();
+      socket.off('user connected');
+      socket.off('user disconnected');
     };
   }, [socket]);
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   ChatApi.GetMsg()
-  //     .then((resp) => {
-  //       setResponse(resp.data);
-  //       setLoading(false);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
-
   return (
-    <div>
-      <h1 className={classes.h1}>Chat</h1>
+    <div className='row'>
+      <div className='col'>
+        <h1 className={classes.h1}>Chat</h1>
+        <SendMsgForm setResponse={setResponse} />
+        <Spinner loading={loading} />
 
-      <SendMsgForm setResponse={setResponse} />
-
-      <Spinner loading={loading} />
-
-      <div className={classes.chat}>
-        {response.map((el) => {
-          return (
-            <Message
-              message={formatHtmlText(el.body)}
-              username={el.author.login}
-              time={new Date(el.updatedAt).toString().substring(0, 24)}
-              key={el._id}
-              className={classes.msg}></Message>
-          );
-        })}
+        <div className={classes.chat}>
+          {response.map((el) => {
+            return (
+              <Message
+                message={formatHtmlText(el.body)}
+                username={el.author.login}
+                time={new Date(el.updatedAt).toString().substring(0, 24)}
+                key={el._id}
+                className={classes.msg}></Message>
+            );
+          })}
+        </div>
       </div>
 
-      
-
+      <div className='col'>
+        <h1 className={classes.h1}>Users</h1>
+        <div className={classes.chat}>
+          {usersArr.map((el) => {
+            return <UserCard username={el.username} key={el.userID} status={el.status} />;
+          })}
+        </div>
+      </div>
     </div>
   );
 };

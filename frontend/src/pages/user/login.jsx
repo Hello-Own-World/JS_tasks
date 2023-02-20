@@ -6,7 +6,7 @@ import LoginForm from '../../components/forms/loginForm';
 
 import classes from './login.module.css';
 
-const Login = () => {
+const Login = ({ socket }) => {
   const [error, setError] = useState();
 
   const { state } = useLocation();
@@ -20,7 +20,7 @@ const Login = () => {
       {state && state.notAuthorised ? <WarningMsg /> : null}
       <h1 className={classes.h1}>Login</h1>
       {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
-      <LoginForm setError={setError} />
+      <LoginForm setError={setError} socket={socket} />
     </div>
   );
 };
