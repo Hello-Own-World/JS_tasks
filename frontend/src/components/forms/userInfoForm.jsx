@@ -9,9 +9,8 @@ import Button from '../../components/common/button';
 import Card from '../../components/common/card';
 
 import classes from './userInfoForm.module.css';
-import { socket } from '../../core/socket/socket';
 
-const UserInfoForm = () => {
+const UserInfoForm = ({ socket }) => {
   const [response, setResponse] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -37,7 +36,7 @@ const UserInfoForm = () => {
     AuthApi.clearLocalUserInfo();
 
     socket.disconnect();
-
+    
     return navigate('/home');
   };
 

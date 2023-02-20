@@ -1,7 +1,6 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { UserContext } from './core/contexts/userContext';
-import { ChatContext } from './core/contexts/chatContext';
 
 import { useState } from 'react';
 import '../src/styles.scss';
@@ -11,32 +10,39 @@ import Home from './pages/home/homePage';
 import Login from './pages/user/login';
 import Register from './pages/user/register';
 import UserInfo from './pages/user/userInfo';
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Header />,
-    children: [
-      { path: '/register', element: <Register /> },
-      { path: '/login', element: <Login /> },
-      { path: '/chat', element: <Chat /> },
-      { path: '/home', element: <Home /> },
-      { path: '/userInfo', element: <UserInfo /> },
-    ],
-  },
-]);
+import io from 'socket.io-client';
+import { useEffect } from 'react';
 
 function App() {
   const [username, setUsername] = useState('Guest');
-  const [userArray, setUserArray] = useState([]);
-  const [msgArray, setMsgArray] = useState([]);
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const newSocket = io(`http://${window.location.hostname}:3000`, {
+      autoConnect: false,
+    });
+    setSocket(newSocket);
+    return () => newSocket.close();
+  }, [setSocket]);
+
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <Header />,
+      children: [
+        { path: '/register', element: <Register /> },
+        { path: '/login', element: <Login socket={socket} /> },
+        { path: '/chat', element: <Chat socket={socket} /> },
+        { path: '/home', element: <Home /> },
+        { path: '/userInfo', element: <UserInfo socket={socket} /> },
+      ],
+    },
+  ]);
 
   return (
     <div>
       <UserContext.Provider value={{ username, setUsername }}>
-        <ChatContext.Provider value={{ userArray, setUserArray, msgArray, setMsgArray }}>
-          <RouterProvider router={router} />
-        </ChatContext.Provider>
+        <RouterProvider router={router} />
       </UserContext.Provider>
     </div>
   );

@@ -56,11 +56,16 @@ io.on('connection', (socket) => {
     });
   }
   socket.emit('users', users);
+  console.log('emited users');
 
   // warn all users that new user has connected (used to update local lists of users)
   socket.broadcast.emit('user connected', {
     userID: socket.id,
     username: socket.username,
+  });
+
+  socket.onAny((event, ...args) => {
+    console.log(event, args);
   });
 
   socket.on('disconnect', () => {

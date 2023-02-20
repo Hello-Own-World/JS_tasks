@@ -5,7 +5,7 @@ import classes from './UserInfo.module.css';
 
 import UserInfoForm from '../../components/forms/userInfoForm';
 
-const UserInfo = () => {
+const UserInfo = ({ socket }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const UserInfo = () => {
       {
         <div>
           <h1 className={classes.h1}>User info:</h1>
-          <UserInfoForm />
+          <UserInfoForm socket={socket} />
         </div>
       }
     </div>
