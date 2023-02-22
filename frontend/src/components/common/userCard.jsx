@@ -5,9 +5,9 @@ import classes from './userCard.module.css';
 const UserCard = (props) => {
   function displayStatus(status) {
     if (status === 'Online') {
-      return <span class='badge rounded-pill bg-success'>Online</span>;
+      return <span className='badge rounded-pill bg-success'>Online</span>;
     } else if (status === 'Away') {
-      return <span class='badge rounded-pill bg-warning'>Away</span>;
+      return <span className='badge rounded-pill bg-warning'>Away</span>;
     } else {
       console.log(status);
       return null;

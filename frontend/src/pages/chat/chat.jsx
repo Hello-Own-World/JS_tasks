@@ -26,67 +26,99 @@ const Chat = ({ socket }) => {
       return navigate('/login', { state: { notAuthorised: true } });
     }
 
-    socket.emit('user joined room');
+    if (socket) {
+      // wait on socket creation after page refresh
+      console.log('socket ' + socket);
+      if (!socket.connected) {
+        console.log('try connect to socket');
+        const sessionID = localStorage.getItem('sessionID');
+        socket.auth = { sessionID, username };
+        socket.connect();
+      }
 
-    socket.on('users', (users) => {
-      setUsersArr(users); //overwrite local user storage on new connection
-    });
+      socket.emit('user joined room');
 
-    socket.on('user connected', (user) => {
-      let present = false;
-
-      setUsersArr((prevArr) => {
-        const newArr = [...prevArr];
-        newArr.forEach((el) => {
-          if (el.userID === user.userID) {
-            el.status = 'Online';
-            present = true;
-            D;
-          }
-        });
-        return newArr;
+      socket.on('session', ({ sessionID, userID }) => {
+        console.log('SESSION RECIEVED');
+        // attach the session ID to the next reconnection attempts
+        socket.auth = { sessionID };
+        // store it in the localStorage
+        localStorage.setItem('sessionID', sessionID);
+        // save the ID of the user
+        socket.userID = userID;
       });
 
-      if (!present) {
+      socket.on('users', (users) => {
+        setUsersArr(users); //overwrite local user storage on new connection
+      });
+
+      socket.on('user connected', (user) => {
+        let present = false;
+
         setUsersArr((prevArr) => {
-          user.status = 'Online';
-          const newArr = [...prevArr, user];
+          const newArr = [...prevArr];
+          newArr.forEach((el) => {
+            if (el.userID === user.userID) {
+              el.status = 'Online';
+              present = true;
+            }
+          });
           return newArr;
         });
-      }
-    });
 
-    socket.on('user left room', (user) => {
-      // change status to away
-      setUsersArr((prevArr) => {
-        const newArr = [...prevArr];
-        newArr.forEach((el) => {
-          if (el.userID === user.userID) {
-            el.status = 'Away';
-          }
+        if (!present) {
+          setUsersArr((prevArr) => {
+            user.status = 'Online';
+            const newArr = [...prevArr, user];
+            return newArr;
+          });
+        }
+      });
+
+      socket.on('user left room', (user) => {
+        // change status to away
+        setUsersArr((prevArr) => {
+          const newArr = [...prevArr];
+          newArr.forEach((el) => {
+            if (el.userID === user.userID) {
+              el.status = 'Away';
+            }
+          });
+
+          // newArr.forEach((el) => console.log(el));
+
+          return newArr;
         });
-
-        // newArr.forEach((el) => console.log(el));
-
-        return newArr;
       });
-    });
 
-    socket.on('user disconnected', (user) => {
-      // del user from userArr in chat
-      setUsersArr((prevArr) => {
-        const newArr = [...prevArr];
-        newArr.splice(newArr.indexOf(user));
-        return newArr;
+      socket.on('user disconnected', (user) => {
+        // del user from userArr in chat
+        setUsersArr((prevArr) => {
+          const newArr = [...prevArr];
+          newArr.splice(newArr.indexOf(user));
+          return newArr;
+        });
       });
-    });
 
-    return () => {
-      socket.emit('leave room');
-      socket.off('users');
-      socket.off('user connected');
-      socket.off('user disconnected');
-    };
+      socket.on('disconnect', () => {
+        console.log('disconnect triggered');
+        // const sessionID = socket.handshake.auth.sessionID;
+        // const username = socket.handshake.auth.username;
+        // socket.auth = { sessionID, username };
+        socket.connect();
+      });
+
+      socket.on('reconnect', () => {
+        console.log('Socket reconnected:', socket.id);
+      });
+
+      return () => {
+        socket.emit('leave room');
+        // socket.off('users');
+        // socket.off('user connected');
+        // socket.off('user disconnected');
+      };
+    }
   }, [socket]);
 
   return (

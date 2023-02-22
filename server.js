@@ -10,7 +10,8 @@ const { initConnection } = require('./config/db');
 const defaultQueue = require('./queue');
 
 const apiRouter = require('./routes/api/index');
-const checkUsernameInSocket = require('./middleware/userSocket');
+const { checkUsernameInSocket, checkSessionId } = require('./middleware');
+const { SessionStore } = require('./modules/sessionStore');
 
 const { PORT } = process.env;
 
@@ -23,6 +24,10 @@ const io = new Server(httpServer, {
 });
 
 io.use(checkUsernameInSocket);
+
+const sessionStore = new SessionStore();
+
+io.use(checkSessionId(sessionStore));
 
 app.use(expressLayouts);
 app.set('layout', 'layouts/layout');
@@ -45,9 +50,14 @@ app.use('*', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  console.log('New user connected');
+  console.log('New user connected' + socket.id);
 
   socket.on('user joined room', () => {
+    socket.emit('session', {
+      sessionID: socket.sessionID,
+      userID: socket.userID,
+    });
+
     // get list of all current users and send it to new user
     const users = [];
     for (let [id, socket] of io.of('/').sockets) {
@@ -83,6 +93,7 @@ io.on('connection', (socket) => {
       userID: socket.id,
       username: socket.username,
     });
+
     console.log('User was disconnected');
   });
 });

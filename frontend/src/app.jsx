@@ -17,13 +17,19 @@ function App() {
   const [username, setUsername] = useState('Guest');
   const [socket, setSocket] = useState(null);
 
+  const sessionID = localStorage.getItem('sessionID');
+
   useEffect(() => {
     const newSocket = io(`http://${window.location.hostname}:3000`, {
       autoConnect: false,
     });
     setSocket(newSocket);
 
-    return () => newSocket.close();
+    return () => {
+      if (socket.readyState === 1) {
+        newSocket.close();
+      }
+    };
   }, [setSocket]);
 
   const router = createBrowserRouter([
