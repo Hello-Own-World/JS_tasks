@@ -10,7 +10,7 @@ const { initConnection } = require('./config/db');
 const defaultQueue = require('./queue');
 
 const apiRouter = require('./routes/api/index');
-const { checkUsernameInSocket, checkSessionId } = require('./middleware');
+const { checkSessionId } = require('./middleware');
 const { SessionStore } = require('./modules/sessionStore');
 
 const { PORT } = process.env;
@@ -22,8 +22,6 @@ const io = new Server(httpServer, {
     origin: 'http://localhost:4000',
   },
 });
-
-io.use(checkUsernameInSocket);
 
 const sessionStore = new SessionStore();
 
@@ -52,26 +50,35 @@ app.use('*', (req, res) => {
 io.on('connection', (socket) => {
   console.log('New user connected' + socket.id);
 
-  socket.on('user joined room', () => {
-    socket.emit('session', {
-      sessionID: socket.sessionID,
-      userID: socket.userID,
-    });
+  socket.emit('session', {
+    sessionID: socket.sessionID,
+    userID: socket.userID,
+  });
 
+  sessionStore.saveSession(socket.sessionID, {
+    userID: socket.userID,
+    username: socket.username,
+  });
+
+  socket.on('user joined room', () => {
     // get list of all current users and send it to new user
     const users = [];
-    for (let [id, socket] of io.of('/').sockets) {
-      users.push({
-        userID: id,
-        username: socket.username,
-        status: 'Online',
-      });
+    const savedUserIds = []; // to avoid diferent sockets that are used by sa,e pc but in different tabs
+    for (let [id, sockets] of io.of('/').sockets) {
+      if (!savedUserIds.includes(sockets.userID)) {
+        console.log('sockets.userID ' + sockets.userID + ' socket.userID' + socket.userID);
+        users.push({
+          userID: sockets.userID,
+          username: sockets.username,
+          status: 'Online',
+        });
+        savedUserIds.push(sockets.userID);
+      }
     }
     socket.emit('users', users);
-
     // warn all users that new user has connected (used to update local lists of users)
     socket.broadcast.emit('user connected', {
-      userID: socket.id,
+      userID: socket.userID,
       username: socket.username,
       status: 'Online',
     });
@@ -79,7 +86,7 @@ io.on('connection', (socket) => {
 
   socket.on('leave room', () => {
     socket.broadcast.emit('user left room', {
-      userID: socket.id,
+      userID: socket.userID,
       username: socket.username,
     });
   });
@@ -88,11 +95,23 @@ io.on('connection', (socket) => {
     console.log(event, args);
   });
 
-  socket.on('disconnect', () => {
-    socket.broadcast.emit('user disconnected', {
-      userID: socket.id,
-      username: socket.username,
-    });
+  socket.on('disconnect', async () => {
+    console.log('check matching sockets ' + socket.userID);
+    const matchingSockets = await io.in(socket.sessionID).fetchSockets();
+    console.log('matching sockets ' + matchingSockets);
+    if (matchingSockets) {
+      socket.broadcast.emit('user disconnected', {
+        userID: socket.userID,
+        username: socket.username,
+      });
+
+      sessionStore.saveSession(socket.sessionID, {
+        userID: socket.userID,
+        username: socket.username,
+      });
+
+      console.log('session was saved lcoaly ');
+    }
 
     console.log('User was disconnected');
   });

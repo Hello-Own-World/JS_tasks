@@ -38,15 +38,7 @@ const Chat = ({ socket }) => {
 
       socket.emit('user joined room');
 
-      socket.on('session', ({ sessionID, userID }) => {
-        console.log('SESSION RECIEVED');
-        // attach the session ID to the next reconnection attempts
-        socket.auth = { sessionID };
-        // store it in the localStorage
-        localStorage.setItem('sessionID', sessionID);
-        // save the ID of the user
-        socket.userID = userID;
-      });
+
 
       socket.on('users', (users) => {
         setUsersArr(users); //overwrite local user storage on new connection
@@ -54,19 +46,34 @@ const Chat = ({ socket }) => {
 
       socket.on('user connected', (user) => {
         let present = false;
-
+        console.log('USER CONECTED TRIGGERED');
         setUsersArr((prevArr) => {
           const newArr = [...prevArr];
           newArr.forEach((el) => {
+            console.log(
+              'el.userID: ' +
+                el.userID +
+                ' el.username: ' +
+                el.userID +
+                ' vs ' +
+                'user.userID: ' +
+                user.userID +
+                'user.username: ' +
+                user.userID
+            );
+
             if (el.userID === user.userID) {
               el.status = 'Online';
               present = true;
             }
           });
+
           return newArr;
         });
 
+        console.log('present ' + present);
         if (!present) {
+          console.log('add user ' + user.username);
           setUsersArr((prevArr) => {
             user.status = 'Online';
             const newArr = [...prevArr, user];
@@ -76,7 +83,7 @@ const Chat = ({ socket }) => {
       });
 
       socket.on('user left room', (user) => {
-        // change status to away
+        // change user status to "away"
         setUsersArr((prevArr) => {
           const newArr = [...prevArr];
           newArr.forEach((el) => {
@@ -84,9 +91,6 @@ const Chat = ({ socket }) => {
               el.status = 'Away';
             }
           });
-
-          // newArr.forEach((el) => console.log(el));
-
           return newArr;
         });
       });
@@ -95,28 +99,13 @@ const Chat = ({ socket }) => {
         // del user from userArr in chat
         setUsersArr((prevArr) => {
           const newArr = [...prevArr];
-          newArr.splice(newArr.indexOf(user));
+          newArr.splice(newArr.indexOf(user - 1));
           return newArr;
         });
       });
 
-      socket.on('disconnect', () => {
-        console.log('disconnect triggered');
-        // const sessionID = socket.handshake.auth.sessionID;
-        // const username = socket.handshake.auth.username;
-        // socket.auth = { sessionID, username };
-        socket.connect();
-      });
-
-      socket.on('reconnect', () => {
-        console.log('Socket reconnected:', socket.id);
-      });
-
       return () => {
         socket.emit('leave room');
-        // socket.off('users');
-        // socket.off('user connected');
-        // socket.off('user disconnected');
       };
     }
   }, [socket]);

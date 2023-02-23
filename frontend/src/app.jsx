@@ -32,6 +32,17 @@ function App() {
     };
   }, [setSocket]);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on('session', ({ sessionID, userID }) => {
+        console.log('SESSION RECIEVED');
+        socket.auth = { sessionID };
+        localStorage.setItem('sessionID', sessionID);
+        socket.userID = userID;
+      });
+    }
+  }, [socket]);
+
   const router = createBrowserRouter([
     {
       path: '/',
