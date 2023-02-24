@@ -36,7 +36,7 @@ const Chat = ({ socket }) => {
     <div className='row'>
       <div className='col'>
         <h1 className={classes.h1}>Chat</h1>
-        <SendMsgForm socket={socket} />
+        <SendMsgForm socket={socket} setMessages={setMessages} />
         <Spinner loading={loading} />
 
         <div className={classes.chat}>

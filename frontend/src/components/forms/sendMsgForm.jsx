@@ -5,8 +5,9 @@ import classes from './sendMsgForm.module.css';
 
 import { useState } from 'react';
 import ChatApi from '../../core/logic/chatApi';
+import { addMsg } from '../../core/logic/socketManager';
 
-const SendMsgForm = ({ socket }) => {
+const SendMsgForm = ({ socket, setMessages }) => {
   const [msg, setMsg] = useState('');
 
   const msgInputHandler = (event) => {
@@ -29,15 +30,9 @@ const SendMsgForm = ({ socket }) => {
     ChatApi.SendMsg(inputData)
       .then((data) => {
         // after we got response that message was saved in DB
-        console.log('data ' + data);
-
-        for (const prop in data.data) {
-          console.log('prop in data.data ' + prop);
-        }
-
         const msg = data.data;
         socket.emit('Send message', msg);
-        console.log('EMIT SEND MESSAGE');
+        addMsg(setMessages, msg);
       })
       .catch((error) => console.log(error));
 

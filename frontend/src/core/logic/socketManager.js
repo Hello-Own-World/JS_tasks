@@ -4,12 +4,16 @@ const usersHandler = (socket, setUsersArr) => {
   });
 };
 
+export const addMsg = (setMessages, msg) => {
+  setMessages((prevArr) => {
+    const newArr = [...prevArr, msg];
+    return newArr;
+  }); //overwrite local user storage on new connection
+};
+
 const sentMessageHandler = (socket, setMessages) => {
   socket.on('Sent message', (msg) => {
-    setMessages((prevArr) => {
-      const newArr = [...prevArr, msg];
-      return newArr;
-    }); //overwrite local user storage on new connection
+    addMsg(setMessages, msg);
   });
 };
 
