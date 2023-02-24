@@ -1,5 +1,3 @@
-import { object } from 'joi';
-
 /* Change escape characters with HTML <br> tag for proper rendering on page
 Requires dangerouslySetInnerHTML property in HTML tag */
 export function formatHtmlText(text) {
