@@ -6,7 +6,7 @@ import classes from './sendMsgForm.module.css';
 import { useState } from 'react';
 import ChatApi from '../../core/logic/chatApi';
 
-const SendMsgForm = ({ setResponse }) => {
+const SendMsgForm = ({ socket }) => {
   const [msg, setMsg] = useState('');
 
   const msgInputHandler = (event) => {
@@ -24,21 +24,24 @@ const SendMsgForm = ({ setResponse }) => {
       body: msg,
     };
 
-    setMsg('');
-
     console.log(inputData);
 
     ChatApi.SendMsg(inputData)
       .then((data) => {
-        console.log('Successful delivery' + data.status);
+        // after we got response that message was saved in DB
+        console.log('data ' + data);
+
+        for (const prop in data.data) {
+          console.log('prop in data.data ' + prop);
+        }
+
+        const msg = data.data;
+        socket.emit('Send message', msg);
+        console.log('EMIT SEND MESSAGE');
       })
       .catch((error) => console.log(error));
 
-    ChatApi.GetMsg()
-      .then((resp) => {
-        setResponse(resp.data);
-      })
-      .catch((err) => console.log(err));
+    setMsg('');
   }
 
   return (

@@ -7,16 +7,14 @@ import { UserContext } from '../../core/contexts/userContext';
 import UserApi from '../../core/logic/userApi';
 import { formatHtmlText } from '../../core/logic/utils';
 import classes from './chat.module.css';
-import Card from '../../components/common/card';
 import UserCard from '../../components/common/userCard';
 
 const Chat = ({ socket }) => {
-  const [response, setResponse] = useState([]); // used foe msgs
   const [loading, setLoading] = useState(true);
 
   const { username } = useContext(UserContext);
 
-  const [messages, setMessages] = useState({});
+  const [messages, setMessages] = useState(null);
   const [usersArr, setUsersArr] = useState([{}]);
 
   const navigate = useNavigate();
@@ -38,10 +36,26 @@ const Chat = ({ socket }) => {
 
       socket.emit('user joined room');
 
-
-
       socket.on('users', (users) => {
         setUsersArr(users); //overwrite local user storage on new connection
+      });
+
+      socket.on('Sent message', (msg) => {
+
+
+
+        setMessages((prevArr) => {
+          const newArr = [...prevArr, msg];
+          return newArr;
+        }); //overwrite local user storage on new connection
+        console.log('GOT ANOTHER USERS MESSAGE' + msg.body);
+      });
+
+      socket.on('messages', (messages) => {
+        console.log('MESSAGES EVENT TRIGGERED ' + messages);
+
+        setMessages(messages); //overwrite local message storage on new connection
+        setLoading(false);
       });
 
       socket.on('user connected', (user) => {
@@ -114,20 +128,24 @@ const Chat = ({ socket }) => {
     <div className='row'>
       <div className='col'>
         <h1 className={classes.h1}>Chat</h1>
-        <SendMsgForm setResponse={setResponse} />
+        <SendMsgForm socket={socket} />
         <Spinner loading={loading} />
 
         <div className={classes.chat}>
-          {response.map((el) => {
-            return (
-              <Message
-                message={formatHtmlText(el.body)}
-                username={el.author.login}
-                time={new Date(el.updatedAt).toString().substring(0, 24)}
-                key={el._id}
-                className={classes.msg}></Message>
-            );
-          })}
+          {messages &&
+            messages
+              .slice(0)
+              .reverse()
+              .map((el) => {
+                return (
+                  <Message
+                    message={formatHtmlText(el.body)}
+                    username={el.author.login}
+                    time={new Date(el.updatedAt).toString().substring(0, 24)}
+                    key={el._id}
+                    className={classes.msg}></Message>
+                );
+              })}
         </div>
       </div>
 

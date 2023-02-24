@@ -5,6 +5,7 @@ const path = require('path');
 const cors = require('cors');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
+const Message = require('./models/message');
 
 const { initConnection } = require('./config/db');
 const defaultQueue = require('./queue');
@@ -60,7 +61,7 @@ io.on('connection', (socket) => {
     username: socket.username,
   });
 
-  socket.on('user joined room', () => {
+  socket.on('user joined room', async () => {
     // get list of all current users and send it to new user
     const users = [];
     const savedUserIds = []; // to avoid diferent sockets that are used by sa,e pc but in different tabs
@@ -75,7 +76,25 @@ io.on('connection', (socket) => {
         savedUserIds.push(sockets.userID);
       }
     }
+
     socket.emit('users', users);
+    console.log('users were emited ');
+
+    // const messages = [];
+
+    const GetMessages = async () => {
+      return await Message.find().populate('author', '-pass');
+    };
+
+    const messages = await GetMessages();
+
+    messages.map((el) => {
+      console.log(el.body);
+    });
+
+    socket.emit('messages', messages);
+    console.log('mesagges were emited ');
+
     // warn all users that new user has connected (used to update local lists of users)
     socket.broadcast.emit('user connected', {
       userID: socket.userID,
@@ -89,6 +108,15 @@ io.on('connection', (socket) => {
       userID: socket.userID,
       username: socket.username,
     });
+  });
+
+  socket.on('Send message', (msg) => {
+    console.log('GOT SEND MESSAGE');
+    console.log('msg ' + msg);
+    console.log('body ' + msg.body);
+    console.log('author' + msg.author);
+    socket.broadcast.emit('Sent message', msg);
+    console.log('EMIT SENT USER MESSAGE');
   });
 
   socket.onAny((event, ...args) => {
