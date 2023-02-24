@@ -17,8 +17,6 @@ function App() {
   const [username, setUsername] = useState('Guest');
   const [socket, setSocket] = useState(null);
 
-  const sessionID = localStorage.getItem('sessionID');
-
   useEffect(() => {
     const newSocket = io(`http://${window.location.hostname}:3000`, {
       autoConnect: false,
@@ -35,10 +33,9 @@ function App() {
   useEffect(() => {
     if (socket) {
       socket.on('session', ({ sessionID, userID }) => {
-        console.log('SESSION RECIEVED');
-        socket.auth = { sessionID };
-        localStorage.setItem('sessionID', sessionID);
+        socket.auth = sessionID;
         socket.userID = userID;
+        localStorage.setItem('sessionID', sessionID);
       });
     }
   }, [socket]);

@@ -33,9 +33,7 @@ const UserInfoForm = ({ socket }) => {
   const logout = () => {
     setUsername('Guest');
     AuthApi.clearLocalUserInfo();
-
     socket.disconnect();
-
     return navigate('/home');
   };
 
