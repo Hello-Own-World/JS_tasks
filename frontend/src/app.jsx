@@ -32,10 +32,10 @@ function App() {
 
   useEffect(() => {
     if (socket) {
-      socket.on('session', ({ sessionID, userID }) => {
-        socket.auth = sessionID;
-        socket.userID = userID;
-        localStorage.setItem('sessionID', sessionID);
+      socket.on('session', ({ sessionId, userId }) => {
+        socket.auth = sessionId;
+        socket.userId = userId;
+        localStorage.setItem('sessionId', sessionId);
       });
     }
   }, [socket]);

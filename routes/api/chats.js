@@ -13,7 +13,7 @@ router.get('/', auth, async (req, res, next) => {
 
     res.send(messages);
   } catch {
-    next(createError(500, 'Error occured while retrieving messages from DB'));
+    next(createError(500, 'Error occurred while retrieving messages from DB'));
   }
 });
 
@@ -29,7 +29,7 @@ router.post('/message', [validate(chatSchema.msgBodyPostPut, 'body'), auth], asy
     res.status(200).json(newMsg);
   } catch (err) {
     console.error(err);
-    next(createError(500, 'Error occured while saving messages into DB'));
+    next(createError(500, 'Error occurred while saving messages into DB'));
   }
 });
 
@@ -49,7 +49,7 @@ router.delete('/message/:id', [validate(chatSchema.msgParamDelPut, 'body'), auth
       await Message.deleteOne({ _id: id });
       res.status(200).json({ msg: `Successful deletion of message: ${message.body}` });
     } catch {
-      next(createError(500, 'Error occured while deleting messages from DB'));
+      next(createError(500, 'Error occurred while deleting messages from DB'));
     }
   } else {
     next(createError(403, 'Forbidden action'));
@@ -78,7 +78,7 @@ router.put(
 
         res.status(200).json({ msg: `Successful message update: ${message.body}` });
       } catch {
-        next(createError(500, 'Error occured while updating messages in DB'));
+        next(createError(500, 'Error occurred while updating messages in DB'));
       }
     } else {
       next(createError(403, 'Forbidden action'));

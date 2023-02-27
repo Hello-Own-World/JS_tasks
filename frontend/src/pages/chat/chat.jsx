@@ -61,7 +61,7 @@ const Chat = ({ socket }) => {
         <h1 className={classes.h1}>Users</h1>
         <div className={classes.chat}>
           {usersArr.map((el) => {
-            return <UserCard username={el.username} key={el.userID} status={el.status} />;
+            return <UserCard username={el.username} key={el.userId} status={el.status} />;
           })}
         </div>
       </div>

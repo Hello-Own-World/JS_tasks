@@ -44,9 +44,9 @@ const LoginForm = ({ setError, socket }) => {
         setUsername(data.data.login);
         AuthApi.setLocalUserInfo(data.data.token, data.data.userId, data.data.login);
 
-        const sessionID = localStorage.getItem('sessionID');
+        const sessionId = localStorage.getItem('sessionId');
 
-        socket.auth = { sessionID, username: data.data.login };
+        socket.auth = { sessionId, username: data.data.login };
         socket.connect();
       })
       .catch((error) => {

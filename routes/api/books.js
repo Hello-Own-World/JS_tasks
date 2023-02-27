@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
     const books = await Book.find(searchOptions);
     res.send(books);
   } catch {
-    next(createError(500, 'Error occured while retrieving books from DB'));
+    next(createError(500, 'Error occurred while retrieving books from DB'));
   }
 });
 
@@ -37,7 +37,7 @@ router.post(
       await book.save();
       res.status(200).json({ msg: 'Success' });
     } catch {
-      next(createError(500, 'Error occured while saving book to DB'));
+      next(createError(500, 'Error occurred while saving book to DB'));
     }
   }
 );
@@ -58,7 +58,7 @@ router.delete('/:author/:title', async (req, res, next) => {
 
     res.status(200).json({ msg: `Successful deletion of book: ${title}` });
   } catch {
-    next(createError(500, 'Error occured while deleting the book from DB'));
+    next(createError(500, 'Error occurred while deleting the book from DB'));
   }
 });
 
@@ -76,7 +76,7 @@ router.get('/:author/:title', async (req, res, next) => {
 
     res.status(200).send(bookExist);
   } catch {
-    next(createError(500, 'Error occured while retrieving the book from DB'));
+    next(createError(500, 'Error occurred while retrieving the book from DB'));
   }
 });
 
@@ -109,7 +109,7 @@ router.put(
 
       res.status(200).send(newBook);
     } catch {
-      next(createError(500, 'Error occured while updating the book from DB'));
+      next(createError(500, 'Error occurred while updating the book from DB'));
     }
   }
 );

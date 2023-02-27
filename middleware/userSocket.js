@@ -1,16 +1,16 @@
 const { v4: uuidv4 } = require('uuid');
 
 const checkSessionId = (sessionStore) => {
-  // Check if there is sessionID saved in browser,
-  // if so asign same sessionID,
+  // Check if there is sessionId saved in browser,
+  // if so assign same sessionId,
   // otherwise create new one
   return (socket, next) => {
-    const sessionID = socket.handshake.auth.sessionID;
-    if (sessionID) {
-      const session = sessionStore.findSession(sessionID);
+    const sessionId = socket.handshake.auth.sessionId;
+    if (sessionId) {
+      const session = sessionStore.findSession(sessionId);
       if (session) {
-        socket.sessionID = sessionID;
-        socket.userID = session.userID;
+        socket.sessionId = sessionId;
+        socket.userId = session.userId;
         socket.username = session.username;
         return next();
       }
@@ -20,8 +20,8 @@ const checkSessionId = (sessionStore) => {
       return next(new Error('invalid username'));
     }
     // create new session
-    socket.sessionID = uuidv4();
-    socket.userID = uuidv4();
+    socket.sessionId = uuidv4();
+    socket.userId = uuidv4();
     socket.username = username;
     next();
   };

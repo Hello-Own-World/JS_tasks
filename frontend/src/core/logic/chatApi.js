@@ -3,7 +3,6 @@ import axios from 'axios';
 import { axiosRequestErrorHandler } from '../errors/axiosErrors';
 
 class ChatApi {
-  
   static SendMsg(inputData) {
     return axios
       .post('/api/chat/message', inputData, {

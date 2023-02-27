@@ -21,9 +21,9 @@ router.post('/register', validate(userSchema.regBodyPost, 'body'), async (req, r
 
     await User.create(userData);
 
-    res.status(200).json({ msg: 'User successfuly created' });
+    res.status(200).json({ msg: 'User successfully created' });
   } catch {
-    next(createError(500, 'Error occured while creating user in DB'));
+    next(createError(500, 'Error occurred while creating user in DB'));
   }
 });
 
@@ -59,7 +59,7 @@ router.get('/:id', [validate(userSchema.paramDelPut, 'params')], async (req, res
     userExists.pass = undefined;
     res.status(200).send(userExists);
   } catch {
-    next(createError(500, 'Error occured while getting user info from DB'));
+    next(createError(500, 'Error occurred while getting user info from DB'));
   }
 });
 
@@ -87,7 +87,7 @@ router.put(
 
         res.status(200).send(userExists);
       } catch (err) {
-        next(createError(500, 'Error occured while updating user info in DB'));
+        next(createError(500, 'Error occurred while updating user info in DB'));
       }
     } else {
       next(createError(403, 'Forbidden action'));
@@ -111,7 +111,7 @@ router.delete('/:id', [validate(userSchema.paramDelPut, 'params'), auth], async 
       await User.deleteOne({ id });
       res.status(200).json({ msg: `Successful deletion of user: ${userExists.login}` });
     } catch {
-      next(createError(500, 'Error occured while deleting the user from DB'));
+      next(createError(500, 'Error occurred while deleting the user from DB'));
     }
   } else {
     next(createError(403, 'Forbidden action'));

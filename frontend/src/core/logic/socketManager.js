@@ -6,7 +6,7 @@ const usersHandler = (socket, setUsersArr) => {
 
 export const addMsg = (setMessages, msg) => {
   setMessages((prevArr) => {
-    const newArr = [...prevArr, msg];
+    const newArr = prevArr.concat(msg);
     return newArr;
   }); //overwrite local user storage on new connection
 };
@@ -24,14 +24,14 @@ const messagesHandler = (socket, setMessages, setLoading) => {
   });
 };
 
-const userConectedHandler = (socket, setUsersArr) => {
+const userConnectedHandler = (socket, setUsersArr) => {
   socket.on('user connected', (user) => {
     let present = false;
     setUsersArr((prevArr) => {
       const newArr = [...prevArr];
-      // if user alredy is present set status to "Online"
+      // if user already is present set status to "Online"
       newArr.forEach((el) => {
-        if (el.userID === user.userID) {
+        if (el.userId === user.userId) {
           el.status = 'Online';
           present = true;
         }
@@ -42,7 +42,7 @@ const userConectedHandler = (socket, setUsersArr) => {
     if (!present) {
       setUsersArr((prevArr) => {
         user.status = 'Online';
-        const newArr = [...prevArr, user];
+        const newArr = prevArr.concat(user);
         return newArr;
       });
     }
@@ -55,7 +55,7 @@ const userLeftRoomHandler = (socket, setUsersArr) => {
     setUsersArr((prevArr) => {
       const newArr = [...prevArr];
       newArr.forEach((el) => {
-        if (el.userID === user.userID) {
+        if (el.userId === user.userId) {
           el.status = 'Away';
         }
       });
@@ -78,9 +78,9 @@ const disconnectHandler = (socket, setUsersArr) => {
 export const chatSocketHandler = (socket, setUsersArr, setMessages, setLoading, username) => {
   // Wait on socket creation after page refresh
   if (!socket.connected) {
-    // Connect after pafe refresh
-    const sessionID = localStorage.getItem('sessionID');
-    socket.auth = { sessionID, username };
+    // Connect after page refresh
+    const sessionId = localStorage.getItem('sessionId');
+    socket.auth = { sessionId, username };
     socket.connect();
   }
 
@@ -89,7 +89,7 @@ export const chatSocketHandler = (socket, setUsersArr, setMessages, setLoading, 
   usersHandler(socket, setUsersArr);
   sentMessageHandler(socket, setMessages);
   messagesHandler(socket, setMessages, setLoading);
-  userConectedHandler(socket, setUsersArr);
+  userConnectedHandler(socket, setUsersArr);
   userLeftRoomHandler(socket, setUsersArr);
   disconnectHandler(socket, setUsersArr);
 };
