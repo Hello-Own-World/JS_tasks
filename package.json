@@ -7,7 +7,9 @@
     "server": "node server.js",
     "server:dev": "nodemon --ignore frontend/  -L server.js",
     "worker": "node worker.js",
-    "worker:dev": "nodemon --ignore frontend/ worker.js"
+    "worker:dev": "nodemon --ignore frontend/ worker.js",
+    "depcruise:FE": "npx depcruise frontend --config --output-type dot | dot -T svg > dependency-graph-FE.svg",
+    "depcruise:all": "npx depcruise frontend middleware models modules routes  --config --output-type dot | dot -T svg > dependency-graph-all.svg"
   },
   "keywords": [],
   "author": "",
