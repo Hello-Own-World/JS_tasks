@@ -21,10 +21,16 @@ router.get('/', auth, async (req, res, next) => {
 router.post('/message', [validate(chatSchema.msgBodyPostPut, 'body'), auth], async (req, res, next) => {
   try {
     const { body } = req.body;
+    const { io } = req;
 
     const msg = new Message({ body, author: req.user });
 
     const newMsg = await msg.save();
+
+    if (io) {
+      // notify all users that message was sent
+      io.emit('Sent message', newMsg);
+    }
 
     res.status(200).json(newMsg);
   } catch (err) {

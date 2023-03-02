@@ -27,14 +27,7 @@ const SendMsgForm = ({ socket, setMessages }) => {
 
     console.log(inputData);
 
-    ChatApi.SendMsg(inputData)
-      .then((data) => {
-        // after we got response that message was saved in DB
-        const msg = data.data;
-        socket.emit('Send message', msg);
-        addMsg(setMessages, msg);
-      })
-      .catch((error) => console.log(error));
+    ChatApi.SendMsg(inputData).catch((error) => console.log(error));
 
     setMsg('');
   }

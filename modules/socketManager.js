@@ -51,13 +51,6 @@ const userLeftRoomHandler = (socket) => {
   });
 };
 
-const sendMessageHandler = (socket) => {
-  // Warn all users that msg was sent
-  socket.on('Send message', (msg) => {
-    socket.broadcast.emit('Sent message', msg);
-  });
-};
-
 const disconnectHandler = (socket) => {
   // Warn all users that user disconnected
   socket.on('disconnect', async () => {
@@ -85,8 +78,6 @@ const connectionHandler = (io, sessionStore) => {
 
     userLeftRoomHandler(socket);
 
-    sendMessageHandler(socket);
-
     disconnectHandler(socket);
   });
 };
@@ -94,7 +85,6 @@ const connectionHandler = (io, sessionStore) => {
 module.exports = {
   userJoinedRoomHandler,
   userLeftRoomHandler,
-  sendMessageHandler,
   disconnectHandler,
   connectionHandler,
 };

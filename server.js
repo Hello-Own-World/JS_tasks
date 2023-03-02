@@ -37,6 +37,7 @@ app.use(cors());
 
 app.use((req, res, next) => {
   req.defaultQueue = defaultQueue;
+  req.io = io;
   next();
 });
 

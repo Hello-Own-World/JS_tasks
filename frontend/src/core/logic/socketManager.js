@@ -1,6 +1,6 @@
 const usersHandler = (socket, setUsersArr) => {
   socket.on('users', (users) => {
-    setUsersArr(users); //overwrite local user storage on new connection
+    setUsersArr(users); // overwrite local user storage on new connection
   });
 };
 
@@ -8,7 +8,7 @@ export const addMsg = (setMessages, msg) => {
   setMessages((prevArr) => {
     const newArr = prevArr.concat(msg);
     return newArr;
-  }); //overwrite local user storage on new connection
+  }); // overwrite local user storage on new connection
 };
 
 const sentMessageHandler = (socket, setMessages) => {
@@ -19,7 +19,7 @@ const sentMessageHandler = (socket, setMessages) => {
 
 const messagesHandler = (socket, setMessages, setLoading) => {
   socket.on('messages', (messages) => {
-    setMessages(messages); //overwrite local message storage on new connection
+    setMessages(messages); // overwrite local message storage on new connection
     setLoading(false);
   });
 };
