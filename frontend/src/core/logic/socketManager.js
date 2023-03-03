@@ -1,26 +1,20 @@
-const usersHandler = (socket, setUsersArr) => {
-  socket.on('users', (users) => {
-    setUsersArr(users); // overwrite local user storage on new connection
-  });
-};
+/**Subscribe to events:
+ * usersHandler
+ * sentMessageHandler
+ * messagesHandler
+ * userConnectedHandler
+ * userLeftRoomHandler
+ * disconnectHandler
+ *
+ * Emitters:
+ * userJoinedRoomEmitter
+ * userLeftRoomEmitter
+ */
 
-export const addMsg = (setMessages, msg) => {
-  setMessages((prevArr) => {
-    const newArr = prevArr.concat(msg);
-    return newArr;
-  }); // overwrite local user storage on new connection
-};
 
 const sentMessageHandler = (socket, setMessages) => {
   socket.on('Sent message', (msg) => {
     addMsg(setMessages, msg);
-  });
-};
-
-const messagesHandler = (socket, setMessages, setLoading) => {
-  socket.on('messages', (messages) => {
-    setMessages(messages); // overwrite local message storage on new connection
-    setLoading(false);
   });
 };
 
@@ -84,12 +78,30 @@ export const chatSocketHandler = (socket, setUsersArr, setMessages, setLoading, 
     socket.connect();
   }
 
-  socket.emit('user joined room');
+    userJoinedRoomEmitter(socket, setUsersArr, setMessages, setLoading);
 
-  usersHandler(socket, setUsersArr);
   sentMessageHandler(socket, setMessages);
-  messagesHandler(socket, setMessages, setLoading);
   userConnectedHandler(socket, setUsersArr);
   userLeftRoomHandler(socket, setUsersArr);
   disconnectHandler(socket, setUsersArr);
+};
+
+const userJoinedRoomEmitter = (socket, setUsersArr, setMessages, setLoading) => {
+  socket.emit('user:join-room', function (users, messages) {
+    setUsersArr(users); // overwrite local user storage on new connection
+
+    setMessages(messages); // overwrite local message storage on new connection
+    setLoading(false);
+  });
+};
+
+export const userLeftRoomEmitter = (socket) => {
+  socket.emit('user:leave-room');
+};
+
+export const addMsg = (setMessages, msg) => {
+  setMessages((prevArr) => {
+    const newArr = prevArr.concat(msg);
+    return newArr;
+  }); // overwrite local user storage on new connection
 };

@@ -5,7 +5,7 @@ import Spinner from '../../components/common/spinner';
 import UserCard from '../../components/common/userCard';
 import SendMsgForm from '../../components/forms/SendMsgForm';
 import { UserContext } from '../../core/contexts/userContext';
-import { chatSocketHandler } from '../../core/logic/socketManager';
+import { chatSocketHandler, userLeftRoomEmitter } from '../../core/logic/socketManager';
 import UserApi from '../../core/logic/userApi';
 import { formatHtmlText } from '../../core/logic/utils';
 import classes from './chat.module.css';
@@ -27,7 +27,7 @@ const Chat = ({ socket }) => {
       // Wait on socket creation after page refresh
       chatSocketHandler(socket, setUsersArr, setMessages, setLoading, username);
       return () => {
-        socket.emit('leave room');
+        userLeftRoomEmitter(socket);
       };
     }
   }, [socket]);

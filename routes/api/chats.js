@@ -25,14 +25,17 @@ router.post('/message', [validate(chatSchema.msgBodyPostPut, 'body'), auth], asy
 
     const msg = new Message({ body, author: req.user });
 
-    const newMsg = await msg.save();
+    let newMsg = await msg.save();
+
+    newMsg = newMsg.toObject();
+    delete newMsg.author.pass;
 
     if (io) {
       // notify all users that message was sent
       io.emit('Sent message', newMsg);
     }
 
-    res.status(200).json(newMsg);
+    res.status(200);
   } catch (err) {
     console.error(err);
     next(createError(500, 'Error occurred while saving messages into DB'));

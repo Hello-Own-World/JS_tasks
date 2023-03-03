@@ -1,4 +1,10 @@
 const Message = require('../models/message');
+/**Subscribe to events:
+ * connectionHandler
+ * userJoinedRoomHandler
+ * userLeftRoomHandler
+ * disconnectHandler
+ * */
 
 const getUserList = (io) => {
   // Get list of all current users from sockets
@@ -23,14 +29,17 @@ const GetMessages = async () => {
 };
 
 const userJoinedRoomHandler = (socket, io) => {
-  socket.on('user joined room', async () => {
+  socket.on('user:join-room', async (callback) => {
     // Send new user list of users in chat
     const users = getUserList(io);
-    socket.emit('users', users);
+
+    // socket.emit('users', users);
 
     // Send new user list of messages in chat
     const messages = await GetMessages();
-    socket.emit('messages', messages);
+    // socket.emit('messages', messages);
+
+    callback(users, messages);
 
     // Warn all users that new user has connected (used to update local lists of users)
     socket.broadcast.emit('user connected', {
@@ -43,7 +52,7 @@ const userJoinedRoomHandler = (socket, io) => {
 
 const userLeftRoomHandler = (socket) => {
   // Warn all users that user left room
-  socket.on('leave room', () => {
+  socket.on('user:leave-room', () => {
     socket.broadcast.emit('user left room', {
       userId: socket.userId,
       username: socket.username,
@@ -64,10 +73,12 @@ const disconnectHandler = (socket) => {
 const connectionHandler = (io, sessionStore) => {
   io.on('connection', (socket) => {
     // Assign sessionId used to distinguish sessions from same browser
+
     socket.emit('session', {
       sessionId: socket.sessionId,
       userId: socket.userId,
     });
+
     // Save assigned sessionId on server
     sessionStore.saveSession(socket.sessionId, {
       userId: socket.userId,
@@ -75,16 +86,11 @@ const connectionHandler = (io, sessionStore) => {
     });
 
     userJoinedRoomHandler(socket, io);
-
     userLeftRoomHandler(socket);
-
     disconnectHandler(socket);
   });
 };
 
 module.exports = {
-  userJoinedRoomHandler,
-  userLeftRoomHandler,
-  disconnectHandler,
   connectionHandler,
 };
