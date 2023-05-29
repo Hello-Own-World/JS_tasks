@@ -11,6 +11,7 @@ import Login from './pages/user/login';
 import Register from './pages/user/register';
 import UserInfo from './pages/user/userInfo';
 import io from 'socket.io-client';
+
 import { useEffect } from 'react';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
   useEffect(() => {
     const newSocket = io(`http://${window.location.hostname}:3000`, {
       autoConnect: false,
+
     });
     setSocket(newSocket);
 

@@ -74,26 +74,43 @@ const RegisterForm = ({ setError }) => {
     clearForm(setFormFields);
   }
   return (
-    <Card className={classes.input}>
+    <div>
       <form method='post' onSubmit={submitHandler}>
-        <label>Login:</label>
-        <input onChange={loginInputHandler} value={login} type='email' name='login'></input>
-        <br />
-        <label>Password:</label>
-        <input onChange={passInputHandler} value={pass} type='password' name='pass'></input>
-        <br />
-        <label>First name:</label>
-        <input onChange={firstNameInputHandler} value={firstName} type='text' name='firstName'></input>
-        <br />
-        <label>Last name:</label>
-        <input onChange={lastNameInputHandler} value={lastName} type='text' name='lastName'></input>
-        <br />
-        <label>Phone number:</label>
-        <input onChange={phoneInputHandler} value={phone} type='number' name='phone'></input>
-        <br />
-        <Button type='submit'>Register</Button>
+        <div className={classes.formGroup}>
+          <label for='login'>Login:</label>
+          <input onChange={loginInputHandler} value={login} type='email' name='login' id='login' required />
+        </div>
+
+        <div className={classes.formGroup}>
+          <label for='password'>Password:</label>
+          <input onChange={passInputHandler} value={pass} type='password' name='pass' id='password' required />
+        </div>
+        <div className={classes.formGroup}>
+          <label for='firstname'>First Name:</label>
+          <input
+            onChange={firstNameInputHandler}
+            value={firstName}
+            type='text'
+            name='firstName'
+            id='firstname'
+            required
+          />
+        </div>
+        <div className={classes.formGroup}>
+          <label for='lastname'>Last Name:</label>
+          <input onChange={lastNameInputHandler} value={lastName} type='text' name='lastName' id='lastname' required />
+        </div>
+        <div className={classes.formGroup}>
+          <label for='phonenumber'>Phone Number:</label>
+          <input onChange={phoneInputHandler} value={phone} type='tel' name='phone' id='phonenumber' required />
+        </div>
+        <div className={classes.formGroup}>
+          <button type='submit' class='button'>
+            Register
+          </button>
+        </div>
       </form>
-    </Card>
+    </div>
   );
 };
 

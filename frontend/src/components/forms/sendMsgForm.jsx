@@ -33,13 +33,22 @@ const SendMsgForm = ({ socket, setMessages }) => {
   }
 
   return (
-    <Card className={classes.input}>
+    <div>
       <form onSubmit={msgSubmitHandler}>
-        <textarea onChange={msgInputHandler} value={msg} type='text' name='body' className='form-control'></textarea>
-        <br />
-        <Button type='submit'>Send</Button>
+        <div className={classes.messageInput}>
+          <input onChange={msgInputHandler} value={msg} type='text' name='body' className='form-control'></input>
+          <button type='submit'>Send</button>
+        </div>
       </form>
-    </Card>
+
+      {/* <Card className={classes.input}>
+        <form onSubmit={msgSubmitHandler}>
+          <textarea onChange={msgInputHandler} value={msg} type='text' name='body' className='form-control'></textarea>
+          <br />
+          <Button type='submit'>Send</Button>
+        </form>
+      </Card> */}
+    </div>
   );
 };
 

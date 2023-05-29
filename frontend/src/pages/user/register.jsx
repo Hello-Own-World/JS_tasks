@@ -14,9 +14,22 @@ const Register = () => {
 
   return (
     <div>
-      <h1 className={classes.h1}>Register</h1>
+      <main className={classes.wrapper}>
+        <div className={classes.registerContainer}>
+          <h1>Register</h1>
+          {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
+
+          <RegisterForm setError={setError} />
+
+          <p>
+            Already have an account? <a href='/login'>Log in</a>
+          </p>
+        </div>
+      </main>
+
+      {/* <h1 className={classes.h1}>Register</h1>
       {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
-      <RegisterForm setError={setError} />
+      <RegisterForm setError={setError} /> */}
     </div>
   );
 };

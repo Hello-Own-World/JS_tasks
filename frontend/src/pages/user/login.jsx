@@ -16,12 +16,25 @@ const Login = ({ socket }) => {
   };
 
   return (
-    <div>
-      {state && state.notAuthorised ? <WarningMsg /> : null}
-      <h1 className={classes.h1}>Login</h1>
-      {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
-      <LoginForm setError={setError} socket={socket} />
-    </div>
+    <main className={classes.wrapper}>
+      <div className={classes.loginContainer}>
+        <h1>Login</h1>
+        {state && state.notAuthorised ? <WarningMsg /> : null}
+        {/* // new warning modal */}
+        {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
+        {/* // new err modal */}
+        <LoginForm setError={setError} socket={socket} />
+        <p>
+          Don't have an account?
+          <a href='/register'>Sign up</a>
+        </p>
+      </div>
+
+      {/* {state && state.notAuthorised ? <WarningMsg /> : null} */}
+      {/* <h1 className={classes.h1}>Login</h1> */}
+      {/* {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />} */}
+      {/* <LoginForm setError={setError} socket={socket} /> */}
+    </main>
   );
 };
 

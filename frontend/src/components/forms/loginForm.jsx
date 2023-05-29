@@ -71,18 +71,37 @@ const LoginForm = ({ setError, socket }) => {
   };
 
   return (
-    <Card className={classes.input}>
+    <div>
+      {/* <Card className={classes.input}>
+        <form onSubmit={submitHandler}>
+          <label>Login:</label>
+          <input onChange={loginInputHandler} value={login} type='email' name='login'></input>
+          <br />
+          <label>Password:</label>
+          <input onChange={passInputHandler} value={pass} type='password' name='pass'></input>
+          <br />
+          <Button type='submit'>Login</Button>
+        </form>
+        {errorLogin ? <label className={classes.errorMsg}>{errorLogin}</label> : null}
+      </Card> */}
+
       <form onSubmit={submitHandler}>
-        <label>Login:</label>
-        <input onChange={loginInputHandler} value={login} type='email' name='login'></input>
-        <br />
-        <label>Password:</label>
-        <input onChange={passInputHandler} value={pass} type='password' name='pass'></input>
-        <br />
-        <Button type='submit'>Login</Button>
+        <div className={classes.formGroup}>
+          <label for='login'>Login:</label>
+          <input onChange={loginInputHandler} value={login} type='email' id='login' name='login' required />
+        </div>
+        <div className={classes.formGroup}>
+          <label for='password'>Password:</label>
+          <input onChange={passInputHandler} value={pass} type='password' id='password' name='password' required />
+        </div>
+        <div className={classes.formGroup}>
+          <button type='submit' className={classes.button}>
+            Login
+          </button>
+        </div>
       </form>
       {errorLogin ? <label className={classes.errorMsg}>{errorLogin}</label> : null}
-    </Card>
+    </div>
   );
 };
 

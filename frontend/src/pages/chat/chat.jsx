@@ -33,38 +33,81 @@ const Chat = ({ socket }) => {
   }, [socket]);
 
   return (
-    <div className='row'>
-      <div className='col'>
-        <h1 className={classes.h1}>Chat</h1>
-        <SendMsgForm socket={socket} setMessages={setMessages} />
-        <Spinner loading={loading} />
-
-        <div className={classes.chat}>
-          {messages &&
-            messages
-              .slice(0)
-              .reverse()
-              .map((el) => {
-                return (
-                  <Message
-                    message={formatHtmlText(el.body)}
-                    username={el.author.login}
-                    time={new Date(el.updatedAt).toString().substring(0, 24)}
-                    key={el._id}
-                    className={classes.msg}></Message>
-                );
-              })}
-        </div>
-      </div>
-
-      <div className='col'>
-        <h1 className={classes.h1}>Users</h1>
-        <div className={classes.chat}>
+    <div>
+      <div className={classes.mainView}>
+        <div className={classes.userList}>
           {usersArr.map((el) => {
             return <UserCard username={el.username} key={el.userId} status={el.status} />;
           })}
         </div>
+
+        <main>
+          <div className={classes.chatView}>
+            {messages &&
+              messages
+                .slice(0)
+                .reverse()
+                .map((el) => {
+                  return (
+                    // to do: display proper own messages
+                    <Message
+                      message={formatHtmlText(el.body)}
+                      username={el.author.login}
+                      time={new Date(el.updatedAt).toString().substring(0, 24)}
+                      key={el._id}
+                      className={classes.msg}></Message>
+                  );
+                })}
+
+            <div className={classes.messageBoxOwn}>
+              <h2>Username</h2>
+              <p>Message text small</p>
+              <p className={classes.time}>YYYY-MM-DD HH:mm</p>
+            </div>
+          </div>
+
+          <Spinner loading={loading} />
+
+          <SendMsgForm socket={socket} setMessages={setMessages} />
+          
+        </main>
       </div>
+
+      {/* <div className='row'>
+        <div className='col'>
+          <h1 className={classes.h1}>Chat</h1>
+
+          <SendMsgForm socket={socket} setMessages={setMessages} />
+
+          <Spinner loading={loading} />
+
+          <div className={classes.chat}>
+            {messages &&
+              messages
+                .slice(0)
+                .reverse()
+                .map((el) => {
+                  return (
+                    <Message
+                      message={formatHtmlText(el.body)}
+                      username={el.author.login}
+                      time={new Date(el.updatedAt).toString().substring(0, 24)}
+                      key={el._id}
+                      className={classes.msg}></Message>
+                  );
+                })}
+          </div>
+        </div>
+
+        <div className='col'>
+          <h1 className={classes.h1}>Users</h1>
+          <div className={classes.chat}>
+            {usersArr.map((el) => {
+              return <UserCard username={el.username} key={el.userId} status={el.status} />;
+            })}
+          </div>
+        </div>
+      </div> */}
     </div>
   );
 };

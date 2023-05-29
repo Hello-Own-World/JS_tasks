@@ -4,9 +4,9 @@
   "description": "React app for messenger",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server .",
+    "start": "webpack-dev-server --mode development --hot true . ",
     "build": "Webpack .",
-    "test": "test",
+    "test": "jest",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
@@ -48,6 +48,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
+    "jest": "^29.5.0",
     "path": "^0.12.7",
     "postcss-loader": "^7.0.2",
     "prettier": "^2.8.3",

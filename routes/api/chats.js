@@ -38,6 +38,7 @@ router.post('/message', [validate(chatSchema.msgBodyPostPut, 'body'), auth], asy
     res.status(200);
   } catch (err) {
     console.error(err);
+    console.log("ERROR GOT HERE")
     next(createError(500, 'Error occurred while saving messages into DB'));
   }
 });

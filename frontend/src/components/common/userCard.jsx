@@ -15,11 +15,13 @@ const UserCard = (props) => {
   }
 
   return (
-    <Card key={props.id}>
-      <h5 className={classes.nickname}>
-        {props.username} {displayStatus(props.status)}
-      </h5>
-    </Card>
+    <div>
+      <div className={classes.userBox} key={props.id}>
+        <div className={classes.imageContainerSmall}></div>
+        {props.username}
+        <span className={props.status === 'Online' ? classes.badge : classes.badgeWarn}>{props.status}</span>
+      </div>
+    </div>
   );
 };
 

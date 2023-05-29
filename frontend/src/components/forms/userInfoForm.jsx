@@ -39,17 +39,27 @@ const UserInfoForm = ({ socket }) => {
 
   return (
     <div>
-      <Card className={classes.input}>
-        <h2>Login:</h2>
-        <p>{response.login}</p>
-        <h2>First name:</h2>
-        <p>{response.firstName}</p>
-        <h2>Last name:</h2>
-        <p>{response.lastName}</p>
-        <h2>Phone:</h2>
-        <p>{response.phone}</p>
-        <Button onClick={logout}>Log out</Button>
-      </Card>
+      <div className={classes.formGroup}>
+        <label for='login'>Login:</label>
+        <span>{response.login}</span>
+      </div>
+      <div className={classes.formGroup}>
+        <label for='firstName'>First Name:</label>
+        <span>{response.firstName}</span>
+      </div>
+      <div className={classes.formGroup}>
+        <label for='lastName'>Last Name:</label>
+        <span>{response.lastName}</span>
+      </div>
+      <div className={classes.formGroup}>
+        <label for='phoneNumber'>Phone Number:</label>
+        <span>{response.phone}</span>
+      </div>
+      <div className={classes.formGroup}>
+        <button onClick={logout} type='submit' class='button'>
+          Logout
+        </button>
+      </div>
 
       <Spinner loading={loading} />
     </div>

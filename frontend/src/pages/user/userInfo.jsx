@@ -15,14 +15,12 @@ const UserInfo = ({ socket }) => {
   }, []);
 
   return (
-    <div>
-      {
-        <div>
-          <h1 className={classes.h1}>User info:</h1>
-          <UserInfoForm socket={socket} />
-        </div>
-      }
-    </div>
+    <main className={classes.wrapper}>
+      <div className={classes.formWrapper}>
+        <h1>User info:</h1>
+        <UserInfoForm socket={socket} />
+      </div>
+    </main>
   );
 };
 

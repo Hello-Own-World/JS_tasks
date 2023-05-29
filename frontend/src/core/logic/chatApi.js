@@ -12,7 +12,8 @@ class ChatApi {
       })
       .then((resp) => resp)
       .catch((err) => {
-        axiosRequestErrorHandler(err);
+        console.log(err)
+        // axiosRequestErrorHandler(err);
       });
   }
 
