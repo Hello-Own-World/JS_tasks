@@ -1,14 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../../core/contexts/userContext';
-import Spinner from '../common/spinner';
-import AuthApi from '../../core/logic/authApi';
-import UserApi from '../../core/logic/userApi';
+import { UserContext } from '../../../core/contexts/userContext';
+import Spinner from '../../common/Spinner/spinner';
+import AuthApi from '../../../core/logic/authApi';
+import UserApi from '../../../core/logic/userApi';
 
-import Button from '../../components/common/button';
-import Card from '../../components/common/card';
-
-import classes from './userInfoForm.module.css';
+import classes from './userInfoForm.css';
 
 const UserInfoForm = ({ socket }) => {
   const [response, setResponse] = useState(true);

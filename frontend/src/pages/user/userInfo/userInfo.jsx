@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import UserApi from '../../core/logic/userApi';
-import classes from './UserInfo.module.css';
+import UserApi from '../../../core/logic/userApi';
+import classes from './UserInfo.css';
 
-import UserInfoForm from '../../components/forms/userInfoForm';
+import UserInfoForm from '../../../components/forms/userInfo/userInfoForm';
 
 const UserInfo = ({ socket }) => {
   const navigate = useNavigate();

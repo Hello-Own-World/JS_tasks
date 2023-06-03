@@ -1,11 +1,9 @@
 import React from 'react';
-import Button from '../common/button';
-import Card from '../common/card';
-import classes from './sendMsgForm.module.css';
+import classes from './sendMsgForm.css';
 
 import { useState } from 'react';
-import ChatApi from '../../core/logic/chatApi';
-import { addMsg } from '../../core/logic/socketManager';
+import ChatApi from '../../../core/logic/chatApi';
+import { addMsg } from '../../../core/logic/socketManager';
 
 const SendMsgForm = ({ socket, setMessages }) => {
   const [msg, setMsg] = useState('');
@@ -40,14 +38,6 @@ const SendMsgForm = ({ socket, setMessages }) => {
           <button type='submit'>Send</button>
         </div>
       </form>
-
-      {/* <Card className={classes.input}>
-        <form onSubmit={msgSubmitHandler}>
-          <textarea onChange={msgInputHandler} value={msg} type='text' name='body' className='form-control'></textarea>
-          <br />
-          <Button type='submit'>Send</Button>
-        </form>
-      </Card> */}
     </div>
   );
 };

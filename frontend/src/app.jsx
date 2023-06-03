@@ -4,12 +4,12 @@ import { UserContext } from './core/contexts/userContext';
 
 import { useState } from 'react';
 import '../src/styles.scss';
-import Header from './components/header';
+import Header from './components/Header/header';
 import Chat from './pages/chat/chat';
 import Home from './pages/home/homePage';
-import Login from './pages/user/login';
-import Register from './pages/user/register';
-import UserInfo from './pages/user/userInfo';
+import Login from './pages/user/login/login';
+import Register from './pages/user/register/register';
+import UserInfo from './pages/user/userInfo/userInfo';
 import io from 'socket.io-client';
 
 import { useEffect } from 'react';
@@ -21,7 +21,6 @@ function App() {
   useEffect(() => {
     const newSocket = io(`http://${window.location.hostname}:3000`, {
       autoConnect: false,
-
     });
     setSocket(newSocket);
 

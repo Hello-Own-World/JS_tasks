@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 
-import ErrorModal from '../../components/common/errorModal';
-import classes from './register.module.css';
+import classes from './register.css';
 
-import RegisterForm from '../../components/forms/registerForm';
+import RegisterForm from '../../../components/forms/registerForm/registerForm';
 
 const Register = () => {
   const [error, setError] = useState();
@@ -17,7 +16,6 @@ const Register = () => {
       <main className={classes.wrapper}>
         <div className={classes.registerContainer}>
           <h1>Register</h1>
-          {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
 
           <RegisterForm setError={setError} />
 
@@ -26,10 +24,6 @@ const Register = () => {
           </p>
         </div>
       </main>
-
-      {/* <h1 className={classes.h1}>Register</h1>
-      {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
-      <RegisterForm setError={setError} /> */}
     </div>
   );
 };

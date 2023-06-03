@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import Button from '../../components/common/button';
-import Card from '../../components/common/card';
-import UserApi from '../../core/logic/userApi';
-import { clearForm } from '../../core/logic/utils';
 
-import classes from './registerForm.module.css';
+import UserApi from '../../../core/logic/userApi';
+import { clearForm } from '../../../core/logic/utils';
+
+import classes from './registerForm.css';
 
 const RegisterForm = ({ setError }) => {
   const [login, setLogin] = useState('');

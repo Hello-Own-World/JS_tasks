@@ -1,6 +1,5 @@
 import React from 'react';
-import Card from './card';
-import classes from './userCard.module.css';
+import classes from './userCard.css';
 
 const UserCard = (props) => {
   function displayStatus(status) {

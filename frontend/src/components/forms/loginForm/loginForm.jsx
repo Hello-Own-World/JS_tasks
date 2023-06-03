@@ -1,19 +1,15 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../../core/contexts/userContext';
-import AuthApi from '../../core/logic/authApi';
-import UserApi from '../../core/logic/userApi';
-import { clearForm } from '../../core/logic/utils';
-import Button from '../common/button';
-import Card from '../common/card';
-import classes from './loginForm.module.css';
+import { UserContext } from '../../../core/contexts/userContext';
+import AuthApi from '../../../core/logic/authApi';
+import UserApi from '../../../core/logic/userApi';
+import { clearForm } from '../../../core/logic/utils';
+import classes from './loginForm.css';
 
 const LoginForm = ({ setError, socket }) => {
   const [login, setLogin] = useState('');
   const [pass, setPass] = useState('');
   const [errorLogin, setErrorLogin] = useState();
-
-  const navigate = useNavigate();
 
   const { username, setUsername } = useContext(UserContext);
 
@@ -21,6 +17,7 @@ const LoginForm = ({ setError, socket }) => {
     setLogin,
     setPass,
   };
+  const navigate = useNavigate();
 
   function submitHandler(event) {
     event.preventDefault();
@@ -72,19 +69,6 @@ const LoginForm = ({ setError, socket }) => {
 
   return (
     <div>
-      {/* <Card className={classes.input}>
-        <form onSubmit={submitHandler}>
-          <label>Login:</label>
-          <input onChange={loginInputHandler} value={login} type='email' name='login'></input>
-          <br />
-          <label>Password:</label>
-          <input onChange={passInputHandler} value={pass} type='password' name='pass'></input>
-          <br />
-          <Button type='submit'>Login</Button>
-        </form>
-        {errorLogin ? <label className={classes.errorMsg}>{errorLogin}</label> : null}
-      </Card> */}
-
       <form onSubmit={submitHandler}>
         <div className={classes.formGroup}>
           <label for='login'>Login:</label>

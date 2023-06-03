@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import { UserContext } from '../core/contexts/userContext';
-import AuthApi from '../core/logic/authApi';
+import { UserContext } from '../../core/contexts/userContext';
+import AuthApi from '../../core/logic/authApi';
 
-import classes from './Header.module.css';
+import classes from './Header.css';
 
 const Header = (props) => {
   const { username, setUsername } = useContext(UserContext);
@@ -44,7 +44,7 @@ const Header = (props) => {
               {username}
             </Link>
           </span>
-          <img className={classes.img} src={require('../images/image1.png').default} alt='Avatar' />
+          <img className={classes.img} src={require('../../images/image1.png').default} alt='Avatar' />
         </div>
       </header>
       <div className={classes.mainContent}>
