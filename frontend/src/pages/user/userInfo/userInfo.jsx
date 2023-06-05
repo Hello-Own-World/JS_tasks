@@ -17,8 +17,8 @@ const UserInfo = ({ socket }) => {
   return (
     <main className={classes.wrapper}>
       <div className={classes.formWrapper}>
-        <h1>User info:</h1>
-        <UserInfoForm socket={socket} />
+        <h1 id='userInfo'>User info:</h1>
+        <UserInfoForm id='form' socket={socket} />
       </div>
     </main>
   );

@@ -4,7 +4,8 @@ class AuthApi {
     try {
       const token = this.getLocalItem('AccessToken');
       if (!token) {
-        throw new Error('Token not provided');
+        // throw new Error('Token not provided');
+        return null;
       }
       const expirationTime = new Date(this.getLocalItem('tokenExpiration'));
       const now = new Date();

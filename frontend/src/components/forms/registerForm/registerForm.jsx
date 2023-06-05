@@ -73,7 +73,7 @@ const RegisterForm = ({ setError }) => {
     clearForm(setFormFields);
   }
   return (
-    <div>
+    <div id='form'>
       <form method='post' onSubmit={submitHandler}>
         <div className={classes.formGroup}>
           <label for='login'>Login:</label>

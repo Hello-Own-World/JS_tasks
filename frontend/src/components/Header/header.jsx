@@ -25,7 +25,7 @@ const Header = (props) => {
         </h1>
 
         <div className={classes.routerDiv}>
-          <Link to={'/login'} className={classes.noUnderscore}>
+          <Link id='login_link' to={'/login'} className={classes.noUnderscore}>
             Login
           </Link>
 

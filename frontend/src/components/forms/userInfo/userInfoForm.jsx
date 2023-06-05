@@ -35,21 +35,21 @@ const UserInfoForm = ({ socket }) => {
   };
 
   return (
-    <div>
+    <div id='form'>
       <div className={classes.formGroup}>
-        <label for='login'>Login:</label>
+        <h1>Login:</h1>
         <span>{response.login}</span>
       </div>
       <div className={classes.formGroup}>
-        <label for='firstName'>First Name:</label>
+        <h1>First Name:</h1>
         <span>{response.firstName}</span>
       </div>
       <div className={classes.formGroup}>
-        <label for='lastName'>Last Name:</label>
+        <h1>Last Name:</h1>
         <span>{response.lastName}</span>
       </div>
       <div className={classes.formGroup}>
-        <label for='phoneNumber'>Phone Number:</label>
+        <h1>Phone Number:</h1>
         <span>{response.phone}</span>
       </div>
       <div className={classes.formGroup}>

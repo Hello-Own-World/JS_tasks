@@ -14,7 +14,7 @@ const UserCard = (props) => {
   }
 
   return (
-    <div>
+    <div id='userCard'>
       <div className={classes.userBox} key={props.id}>
         <div className={classes.imageContainerSmall}></div>
         {props.username}

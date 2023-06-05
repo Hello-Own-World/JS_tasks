@@ -35,14 +35,14 @@ const Chat = ({ socket }) => {
   return (
     <div>
       <div className={classes.mainView}>
-        <div className={classes.userList}>
+        <div id='user_card' className={classes.userList}>
           {usersArr.map((el) => {
-            return <UserCard username={el.username} key={el.userId} status={el.status} />;
+            return <UserCard id='user_card' username={el.username} key={el.userId} status={el.status} />;
           })}
         </div>
 
         <main>
-          <div className={classes.chatView}>
+          <div id='messages' className={classes.chatView}>
             {messages &&
               messages
                 .slice(0)
@@ -66,7 +66,7 @@ const Chat = ({ socket }) => {
             </div>
           </div>
 
-          <Spinner loading={loading} />
+          <Spinner id='spinner' loading={loading} />
 
           <SendMsgForm socket={socket} setMessages={setMessages} />
         </main>

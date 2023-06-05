@@ -17,10 +17,13 @@ const Register = () => {
         <div className={classes.registerContainer}>
           <h1>Register</h1>
 
-          <RegisterForm setError={setError} />
+          <RegisterForm id='form' setError={setError} />
 
           <p>
-            Already have an account? <a href='/login'>Log in</a>
+            Already have an account?{' '}
+            <a id='loginLink' href='/login'>
+              Log in
+            </a>
           </p>
         </div>
       </main>

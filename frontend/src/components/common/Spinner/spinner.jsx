@@ -4,7 +4,7 @@ import classes from './spinner.css';
 
 const Spinner = ({ loading }) => {
   return (
-    <div>
+    <div id='spinner'>
       {loading ? (
         <div className={classes.spinner}>
           <div className='spinner-border text-light'></div>
